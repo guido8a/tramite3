@@ -1,6 +1,8 @@
 package tramites
 
-class Anio {
+import audita.Auditable
+
+class Anio implements Auditable{
     static auditable = true
     String numero
     Integer estado          //1-> activo, 0-> no activo
