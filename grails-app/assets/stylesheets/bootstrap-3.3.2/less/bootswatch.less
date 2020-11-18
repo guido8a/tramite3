@@ -1,0 +1,380 @@
+// Readable 3.3.1
+// Bootswatch
+// -----------------------------------------------------
+//@import url("//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700");
+//@import url("//fonts.googleapis.com/css?family=PT+Sans:400,700");
+
+@font-face {
+  font-family : 'PT Sans Narrow';
+  src         : url('../../fonts/PT/PT_Sans_Narrow/PT_Sans-Narrow-Web-Regular.ttf');
+  font-weight : normal;
+  font-style  : normal;
+}
+@font-face {
+  font-family : 'PT Sans Narrow';
+  src         : url('../../fonts/PT/PT_Sans_Narrow/PT_Sans-Narrow-Web-Bold.ttf');
+  font-weight : bold;
+  font-style  : normal;
+}
+@font-face {
+  font-family : 'PT Sans';
+  src         : url('../../fonts/PT/PT_Sans/PT_Sans-Web-Regular.ttf');
+  font-weight : normal;
+  font-style  : normal;
+}
+@font-face {
+  font-family : 'PT Sans';
+  src         : url('../../fonts/PT/PT_Sans/PT_Sans-Web-Bold.ttf');
+  font-weight : bold;
+  font-style  : normal;
+}
+@font-face {
+  font-family : 'PT Mono';
+  src         : url('../../fonts/PT/PT_Mono/PTM55FT.ttf');
+  font-weight : normal;
+  font-style  : normal;
+}
+
+// Navbar =====================================================================
+.navbar {
+  font-family: @headings-font-family;
+  font-size: 14px;
+
+  &-nav,
+  &-form {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  &-nav > li > a {
+    padding: @padding-base-vertical @padding-base-horizontal;
+    margin: 12px 6px;
+    //    border        : 1px solid transparent;
+    border-left: solid 1px transparent;
+    border-right: solid 1px transparent;
+    border-radius: @border-radius-base;
+
+    &:hover {
+      border-left: solid 1px @gray-light;
+      border-right: solid 1px @gray-light;
+      border-top: 3px solid @brand-primary;
+      padding-top: (@padding-base-vertical - 3);
+    }
+  }
+
+  &-nav > .active > a,
+  &-nav > .active > a:hover {
+    border-left: solid 1px @gray-light;
+    border-right: solid 1px @gray-light;
+    border-top: 3px solid @brand-accent;
+    //    box-shadow : inset 0 3px 9px rgba(0, 0, 0, .25);
+  }
+
+  &-nav > .active > a:hover {
+    padding-top: (@padding-base-vertical);
+  }
+
+  &-default .navbar-nav > .active > a:hover {
+    color: @navbar-default-link-hover-color;
+  }
+
+  &-inverse .navbar-nav > .active > a:hover {
+    color: @navbar-inverse-link-hover-color;
+  }
+
+  &-inverse .navbar-nav > li > a:hover, .navbar-nav > li > a:hover {
+    color: @navbar-inverse-link-hover-color;
+    //    box-shadow : inset 0 3px 9px rgba(0, 0, 0, .5);
+  }
+
+  &-brand {
+    padding-top: 20px;
+  }
+
+  .navbar-nav {
+    // Remove background color from open dropdown
+    > .open > a {
+      &,
+      &:hover,
+      &:focus {
+        border-left: solid 1px @gray-light;
+        border-right: solid 1px @gray-light;
+        border-top: 3px solid @brand-accent;
+        //        box-shadow : inset 0 3px 9px rgba(0, 0, 0, .5);
+      }
+    }
+    > .open > a {
+      padding-top: (@padding-base-vertical - 3);
+    }
+
+    > li > .dropdown-menu {
+      border-radius: @border-radius-base;
+      margin-top: -12px;
+      margin-left: 6px;
+    }
+  }
+}
+
+.navbar-fixed-top {
+  top: 50px;
+}
+
+@media (max-width: @grid-float-breakpoint) {
+  .navbar {
+    .navbar-nav > li > a {
+      margin: 0;
+    }
+  }
+}
+
+// Buttons ====================================================================
+
+.btn {
+  font-family: @headings-font-family;
+}
+
+// Typography =================================================================
+
+// Tables =====================================================================
+.table {
+  > thead > tr > th {
+    vertical-align: middle;
+    text-align: center;
+    font-weight: bold;
+    background-color: @brand-info;
+    color: @gray-lighter;
+    border-bottom: 2px solid @table-border-color;
+    &.sortable {
+      background-image: url("../../../images/skin/upDown.png");
+      background-repeat: no-repeat;
+      background-position: right;
+      &.asc {
+        background-image: url("../../../images/skin/up.png");
+      }
+      &.desc {
+        background-image: url("../../../images/skin/down.png");
+      }
+    }
+    > a {
+      color: @gray-lighter;
+    }
+  }
+}
+
+// Forms ======================================================================
+
+legend {
+  font-family: @headings-font-family;
+}
+
+.input-group-addon {
+  font-family: @font-family-sans-serif;
+}
+
+.form-group {
+  margin-bottom: 5px;
+}
+
+// Navs =======================================================================
+
+.nav {
+  .open > a,
+  .open > a:hover,
+  .open > a:focus {
+    border: 1px solid #ddd;
+  }
+}
+
+// Pills
+// -------------------------
+.nav-pills {
+  > li {
+    float: left;
+
+    // Links rendered as pills
+    > a {
+      border-radius: @nav-pills-border-radius;
+      border:solid 1px @brand-primary;
+    }
+    + li {
+      margin-left: 2px;
+    }
+
+    // Active state
+    &.active > a {
+      &,
+      &:hover,
+      &:focus {
+        color: @nav-pills-active-link-hover-color;
+        background-color: @nav-pills-active-link-hover-bg;
+      }
+    }
+  }
+}
+.nav-pills {
+  > li {
+    & > a:hover {
+      background-color: @brand-info;
+      color: @gray-lighter;
+    }
+  }
+}
+
+.pagination {
+
+  font-family: @headings-font-family;
+
+  &-lg > li > a,
+  &-lg > li > span {
+    padding: 14px 24px;
+  }
+}
+
+.pager {
+
+  font-family: @headings-font-family;
+
+  a {
+    color: @text-color;
+  }
+
+  a:hover {
+    border-color: transparent;
+    color: #fff;
+  }
+
+  .disabled a {
+    border-color: @pager-border;
+  }
+}
+
+// Indicators =================================================================
+
+.close {
+  color: #fff;
+  text-decoration: none;
+  text-shadow: none;
+  opacity: 0.4;
+
+  &:hover,
+  &:focus {
+    color: #fff;
+    opacity: 1;
+  }
+}
+
+.alert {
+  border-width: 0 0 0 5px;
+}
+
+.tdn-note, .tdn-note-right {
+  border-width: 1px;
+}
+
+.alert-primary {
+  .alert-variant(@body-bg; lighten(@brand-primary, 10%); @text-color);
+}
+
+.label {
+  font-family: @headings-font-family;
+  font-weight: normal;
+
+  &-default {
+    border: 1px solid #ddd;
+    color: @text-color;
+  }
+
+}
+
+.badge {
+  padding: 1px 7px 5px;
+  vertical-align: 2px;
+  font-family: @headings-font-family;
+  font-weight: normal;
+}
+
+// Progress bars ==============================================================
+
+// Containers =================================================================
+
+.panel {
+  .box-shadow(none);
+
+  &-default {
+    .close {
+      color: @text-color;
+    }
+  }
+
+  &-primary,
+  &-success,
+  &-warning,
+  &-danger,
+  &-info {
+    .panel-heading {
+      color: #fff;
+    }
+
+    .panel-body {
+      border: 1px solid #ddd;
+      border-top-width: 0;
+      border-radius: 0 0 @border-radius-base @border-radius-base;
+    }
+  }
+}
+
+.tdn-tab {
+  &.tdn-tab-primary,
+  &.tdn-tab-success,
+  &.tdn-tab-warning,
+  &.tdn-tab-danger,
+  &.tdn-tab-info {
+    .tdn-tab-heading {
+      a {
+        &.selected {
+          color: @headings-color;
+        }
+      }
+    }
+  }
+  &.tdn-tab-primary {
+    .tdn-tab-heading {
+      a {
+        color: #fff;
+        &.selected {
+          color: #fff;
+        }
+      }
+    }
+  }
+}
+
+.modal {
+  .close {
+    color: @text-color;
+  }
+}
+
+.corner-all {
+  border-radius: @border-radius-base;
+}
+
+.corner-left {
+  border-bottom-left-radius: @border-radius-base;
+  border-top-left-radius: @border-radius-base;
+}
+
+.corner-right {
+  border-bottom-right-radius: @border-radius-base;
+  border-top-right-radius: @border-radius-base;
+}
+
+.corner-top {
+  border-top-right-radius: @border-radius-base;
+  border-top-left-radius: @border-radius-base;
+}
+
+.corner-bottom {
+  border-bottom-right-radius: @border-radius-base;
+  border-bottom-left-radius: @border-radius-base;
+}

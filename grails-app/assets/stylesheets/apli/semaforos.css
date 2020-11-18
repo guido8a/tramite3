@@ -1,0 +1,30 @@
+.semaforo {
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.green {
+    width: 30px;
+    height: 30px;
+    background: green;
+    border: 1px solid #000000;
+    /*border: 3px solid red;*/
+}
+.red {
+    width: 30px;
+    height: 30px;
+    background: red;
+    border: 1px solid #000;
+}
+.yellow {
+    width: 30px;
+    height: 30px;
+    background: yellow;
+    border: 1px solid #000000;
+}
+.orange{
+    width: 30px;
+    height: 30px;
+    background: #ffac2b;
+    border: 1px solid #000000;
+}
