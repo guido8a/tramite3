@@ -3,7 +3,7 @@
 
 <html xmlns="http://www.w3.org/1999/html">
 <head>
-    <title>S.A.D. Web</title>
+    <title>Trámites</title>
     <meta name="layout" content="main"/>
     <style type="text/css">
     @page {
