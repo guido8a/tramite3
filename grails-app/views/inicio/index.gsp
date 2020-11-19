@@ -59,9 +59,9 @@
 <body>
 <div class="dialog">
     <div style="text-align: center;"><h2 class="titl"
-    >S.A.D. Web<br>
-        GOBIERNO AUTÓNOMO DESCENTRALIZADO PROVINCIA DE PICHINCHA<br/>
-        Sistema de Administración de Documentos</h2>
+    >Trámites<br>
+        SISTEMA DE ADMINISTRACIÓN DOCUMENTAL<br/>
+        Tedein S.A.</h2>
     </div>
 
     <g:if test="${!(session.usuario.getPuedeDirector() || session.usuario.getPuedeJefe())}">
