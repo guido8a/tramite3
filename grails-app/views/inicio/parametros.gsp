@@ -27,7 +27,7 @@
             <div class="panel-body">
                 <ul class="fa-ul">
                     <li>
-                        <i class="fa-li far fa-bookmark text-info"></i>
+                        <i class="fa-li far fa-bookmark text-success"></i>
                         <g:link data-info="categoria" class="over text-success" controller="departamento" action="arbol">Estructura Departamental
                         </g:link> del GADPP conforme al organigrama de procesos institucional.
 
@@ -38,8 +38,8 @@
                         </div>
                     </li>
                     <li>
-                        <i class="fa-li fas fa-certificate text-info"></i>
-                        <g:link data-info="categoria" class="over" controller="tipoDocumento" action="list">Tipo de documento</g:link>
+                        <i class="fa-li fas fa-certificate text-success"></i>
+                        <g:link data-info="categoria" class="over text-success" controller="tipoDocumento" action="list">Tipo de documento</g:link>
                         para diferenciar los distintos documentos que se producen dentro de un trámite, ejemplo:
                     Memorando, Oficio, Sumilla, Circular, etc.
 
@@ -51,8 +51,8 @@
                     </li>
 
                     <li>
-                        <i class="fa-li fas fa-map-marker-alt text-info"></i>
-                        <g:link data-info="categoria" class="over" controller="tipoPrioridad" action="list">Tipo de Prioridad</g:link> que posee los
+                        <i class="fa-li fas fa-map-marker-alt text-success"></i>
+                        <g:link data-info="categoria" class="over text-success" controller="tipoPrioridad" action="list">Tipo de Prioridad</g:link> que posee los
                         distintos trámites
 
                         <div class="descripcion hidden">
@@ -62,8 +62,8 @@
                     </li>
 
                     <li>
-                        <i class="fa-li far fa-calendar text-info"></i>
-                        <g:link data-info="categoria" class="over" controller="diaLaborable" action="calendario">Días Laborables</g:link> para determinar
+                        <i class="fa-li far fa-calendar text-success"></i>
+                        <g:link data-info="categoria" class="over text-success" controller="diaLaborable" action="calendario">Días Laborables</g:link> para determinar
                         la secuencia de días que se trabajan y calcular el número de horas laborables requeridos para
                         responder un trámite
 
@@ -76,8 +76,8 @@
                     </li>
 
                     <li>
-                        <i class="fa-li fas fa-scroll text-info"></i>
-                        <g:link data-info="categoria" class="over" controller="parametros" action="list">Parámetros del sistema</g:link> sirve para
+                        <i class="fa-li fas fa-scroll text-success"></i>
+                        <g:link data-info="categoria" class="over text-success" controller="parametros" action="list">Parámetros del sistema</g:link> sirve para
                         fijar las horas de la jornada de trabajo por defecto y las direcciones de conexión para la
                         autenticación de los usuarios
                         <div class="descripcion hidden">
@@ -90,8 +90,8 @@
                     </li>
 
                     <li>
-                        <i class="fa-li fas fa-highlighter text-info"></i>
-                        <g:link data-info="categoria" class="over" controller="numero" action="config">Fijar números consecutivos por tipo de documento</g:link> sirve para
+                        <i class="fa-li fas fa-highlighter text-success"></i>
+                        <g:link data-info="categoria" class="over text-success" controller="numero" action="config">Fijar números consecutivos por tipo de documento</g:link> sirve para
                         fijar los números consecutivos que se aplican por departamento y tipo de documento
 
                         <div class="descripcion hidden">
@@ -105,8 +105,8 @@
                     </li>
 
                     <li>
-                        <i class="fa-li fa fa-calendar text-info"></i>
-                        <g:link data-info="categoria" class="over" controller="estadoTramiteExterno" action="list">Estado de los trámites externos</g:link> sirve para
+                        <i class="fa-li fa fa-calendar text-success"></i>
+                        <g:link data-info="categoria" class="over text-success" controller="estadoTramiteExterno" action="list">Estado de los trámites externos</g:link> sirve para
                         fijar el estado que puede tener un trámite externo
 
                         <div class="descripcion hidden">

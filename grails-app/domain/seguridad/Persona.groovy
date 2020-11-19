@@ -2,6 +2,7 @@ package seguridad
 
 import audita.Auditable
 import tramites.Departamento
+import tramites.PermisoTramite
 
 class Persona implements Auditable{
 
