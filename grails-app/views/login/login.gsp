@@ -23,10 +23,10 @@
 
     <body>
 
-        <div style="text-align: center; margin-top: -60px; height: ${(flash.message) ? '650' : '580'}px;" class="well">
+        <div style="text-align: center; margin-top: 10px; height: ${(flash.message) ? '700' : '630'}px;" class="well">
             %{--<h1 class="titl" style="font-size: 38px; color: #06a; font-family:'Book Antiqua'; margin-top: -20px;">Nuevo S.A.D.</h1>--}%
-            <div class="page-header" style="margin-top: -10px;">
-                <h1>S.A.D. Web</h1>
+            <div class="page-header" style="margin-top: 10px;">
+                <h1>Trámites</h1>
                 %{--</div>--}%
                 <h3>
                     <p class="text-info">GOBIERNO AUTÓNOMO DESCENTRALIZADO PROVINCIA DE ...</p>
@@ -41,7 +41,7 @@
 
             <div class="dialog ui-corner-all" style="height: 295px;padding: 10px;width: 910px;margin: auto;margin-top: 5px">
                 <div style="text-align: center; margin-top: 10px; color: #810;">
-                    <img src="${resource(dir: 'images', file: 'logoSAD.png')}"/>
+                    <asset:image src="apli/portada.png" style="padding: 10px;"/>
                 </div>
 
                 <div style="width: 100%;height: 20px;float: left;margin-top: 20px;text-align: center">
@@ -51,15 +51,14 @@
 
                 <div class="archivo">
                     Le recomendamos descargar y leer el
-                    <a href="${createLink(uri: '/manual del usuario.pdf')}"><img
-                            src="${resource(dir: 'images', file: 'pdf_pq.png')}"/>manual del usuario</a>
+                    <asset:image src="apli/pdf_pq.png" style="padding: 10px;"/> manual del usuario</a>
                 </div>
 
 
                 %{--<div style="text-align: center ; color:#004060; margin-top:120px; font-size: 10px;">Desarrollado por: TEDEIN S.A. Versión ${message(code: 'version', default: '1.1.0x')}</div>--}%
                 <p class="pull-left" style="font-size: 10px;">
                     <a href="#" id="aCreditos">
-                        Créditos
+                        www.tedein.com.ec
                     </a>
                 </p>
 
