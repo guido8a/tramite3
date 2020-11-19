@@ -1,8 +1,9 @@
 package utilitarios
 
+import audita.Auditable
 import tramites.Anio
 
-class DiaLaborable {
+class DiaLaborable implements Auditable{
     static auditable = true
     Date fecha
     String dia              //lun:1, mar:2, mie:3, jue:4, vie:5, sab:6, dom:0

@@ -1,8 +1,9 @@
 package tramites
 
+import audita.Auditable
 import tramites.Departamento
 
-class DepartamentoPara {
+class DepartamentoPara implements Auditable{
     static auditable = true
     Departamento deparatamento
     Departamento deparatamentoPara

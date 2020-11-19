@@ -1,10 +1,11 @@
 package tramites
 
 import apli.DbConnectionService
+import audita.Auditable
 import seguridad.Persona
 import utilitarios.Parametros
 
-class PersonaDocumentoTramite {
+class PersonaDocumentoTramite implements Auditable {
     static auditable = true
     Tramite tramite
 

@@ -1,9 +1,10 @@
 package tramites
 
+import audita.Auditable
 import seguridad.Accs
 import seguridad.Persona
 
-class PermisoUsuario {
+class PermisoUsuario implements Auditable{
     static auditable = true
     Persona persona
     PermisoTramite permisoTramite

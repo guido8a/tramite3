@@ -1,6 +1,8 @@
 package tramites
 
-class Numero {
+import audita.Auditable
+
+class Numero implements Auditable{
     static auditable=true
     Departamento departamento
     TipoDocumento tipoDocumento

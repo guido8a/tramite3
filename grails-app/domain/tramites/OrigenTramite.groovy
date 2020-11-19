@@ -1,6 +1,8 @@
 package tramites
 
-class OrigenTramite {
+import audita.Auditable
+
+class OrigenTramite implements Auditable{
     static auditable = true
     TipoPersona tipoPersona
     String cedula

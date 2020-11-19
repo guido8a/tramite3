@@ -1,8 +1,9 @@
 package tramites
 
+import audita.Auditable
 import seguridad.Persona
 
-class Departamento {
+class Departamento implements Auditable{
     static auditable = true
     Departamento padre
     String codigo

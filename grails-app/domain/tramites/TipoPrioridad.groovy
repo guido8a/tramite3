@@ -1,6 +1,8 @@
 package tramites
 
-class TipoPrioridad {
+import audita.Auditable
+
+class TipoPrioridad implements Auditable{
     static auditable = true
     String codigo
     String descripcion

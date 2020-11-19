@@ -1,6 +1,8 @@
 package tramites
 
-class DocumentoTramite {
+import audita.Auditable
+
+class DocumentoTramite implements Auditable{
     static auditable = true
     Tramite tramite
     Tramite anexo

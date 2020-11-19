@@ -1,12 +1,13 @@
 package tramites
 
+import audita.Auditable
 import groovy.time.TimeCategory
 import seguridad.Persona
 import utilitarios.Parametros
 
 //import happy.utilitarios.DiasLaborablesService
 
-class Tramite {
+class Tramite implements Auditable{
     static auditable = true
     Anio anio
     Tramite padre

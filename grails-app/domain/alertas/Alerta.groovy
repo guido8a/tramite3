@@ -1,10 +1,11 @@
 package alertas
 
+import audita.Auditable
 import seguridad.Persona
 import tramites.Departamento
 import tramites.Tramite
 
-class Alerta {
+class Alerta implements Auditable{
     static auditable = true
     Persona persona
     Departamento departamento

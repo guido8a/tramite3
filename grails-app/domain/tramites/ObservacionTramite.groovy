@@ -1,8 +1,9 @@
 package tramites
 
+import audita.Auditable
 import seguridad.Persona
 
-class ObservacionTramite {
+class ObservacionTramite implements Auditable{
     static auditable = true
     Tramite tramite
     Persona persona

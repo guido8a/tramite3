@@ -1,6 +1,8 @@
 package tramites
 
-class RolPersonaTramite {
+import audita.Auditable
+
+class RolPersonaTramite implements Auditable{
     static auditable = true
     String codigo
     String descripcion

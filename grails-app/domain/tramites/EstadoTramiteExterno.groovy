@@ -1,6 +1,8 @@
 package tramites
 
-class EstadoTramiteExterno {
+import audita.Auditable
+
+class EstadoTramiteExterno implements Auditable {
     static auditable=true
     String codigo
     String descripcion
