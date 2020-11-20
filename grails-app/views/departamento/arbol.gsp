@@ -50,8 +50,9 @@
 
 <body>
 <g:if test="${session.usuario.puedeAdmin}">
-    <g:set var="iconActivar" value="fa-hdd-o"/>
-    <g:set var="iconDesactivar" value="fa-power-off"/>
+    <g:set var="iconActivar" value="fa-power-off text-success"/>
+    <g:set var="iconDesactivar" value="fa-power-off text-danger"/>
+    <g:set var="iconDanger" value="fa-exclamation-triangle text-danger"/>
 
     <div id="list-cuenta" style="width: 900px; display: inline">
 
@@ -231,17 +232,20 @@
 
         function createEditRow(id, tipo) {
             var data = tipo == "Crear" ? {padre : id} : {id : id};
+            var c =  bootbox.dialog({
+                message: '<div class="text-center"><i class="fa fa-spin fa-spinner"></i> Cargando...</div>',
+                closeButton: false
+            });
             $.ajax({
                 type    : "POST",
-                url     : "${createLink(action:'form_ajax')}",
+                url     : "${createLink(controller: 'departamento', action:'form_ajax')}",
                 data    : data,
                 success : function (msg) {
+                    c.modal('hide');
                     var b = bootbox.dialog({
                         id      : "dlgCreateEdit",
-//                            class   : "long",
                         title   : tipo + " Departamento",
                         message : msg,
-
                         buttons : {
                             cancelar : {
                                 label     : "Cancelar",
@@ -286,15 +290,13 @@
             var data = tipo == "Crear" ? {padre : id} : {id : id};
             $.ajax({
                 type    : "POST",
-                url     : "${createLink(action:'tipoDoc_ajax')}",
+                url     : "${createLink(controller: 'departamento', action:'tipoDoc_ajax')}",
                 data    : data,
                 success : function (msg) {
                     var b = bootbox.dialog({
                         id      : "dlgCreateEdit",
-//                            class   : "long",
                         title   : tipo + " Departamento",
                         message : msg,
-
                         buttons : {
                             cancelar : {
                                 label     : "Cancelar",
@@ -317,7 +319,7 @@
                                         }
                                     });
                                     if (!band) {
-                                        bootbox.confirm("<i class='fa fa-warning fa-3x pull-left text-warning text-shadow'></i><p>No ha seleccionado ningún tipoDoc. El usuario no podrá ingresar al sistema. ¿Desea continuar?.</p>", function (result) {
+                                        bootbox.confirm("<i class='fa fa-warning fa-3x pull-left text-warning text-shadow'></i><p>No ha seleccionado ningún tipo. Desea continuar?.</p>", function (result) {
                                             if (result) {
                                                 doSaveTipoDoc(data);
                                             }
@@ -410,20 +412,20 @@
             var icon, textMsg, textBtn, textLoader, url, clase, botones;
             if (tramites != 0) {
                 clase = "default";
-                icon = "";
+                icon = "${iconDanger}";
                 textMsg = "<p>" +
                     "Por favor verifique si el usuario <span class='infoCambioEstado'>" + strUsuario + "</span> que desea " +
                     "<span class='infoCambioEstado'>" + (activar ? 'activar' : 'desactivar') + "</span> tiene " +
                     "trámites en su bandeja de entrada y de salida" +
                     ".</p>";
                 textMsg += "<p>" +
-                    "Puede <span class='infoCambioEstado'> redireccionar los trámites de la bandeja de entrada</span> " +
-                    "o <span class='infoCambioEstado'>" + (activar ? 'activar' : 'desactivar') +
+                    "Puede: <br> <span class='infoCambioEstado'> 1.- Redireccionar los trámites de la bandeja de entrada</span> " +
+                    " <br> <span class='infoCambioEstado'>" + "2.- " + (activar ? 'activar' : 'desactivar') +
                     " la persona dejando sus trámites intactos.</span>" +
                     "</p>";
                 botones = {
                     redireccionar : {
-                        label     : "<i class='fa fa-refresh'></i> Redireccionar trámites",
+                        label     : "<i class='fa fa-exchange-alt'></i> Redireccionar trámites",
                         className : "btn-success",
                         callback  : function () {
                             location.href = "${createLink(controller: 'tramiteAdmin', action: 'redireccionarTramites')}/" + itemId;
@@ -675,23 +677,16 @@
             }
             else if (nodeType.contains('padre') || nodeType.contains('hijo')) {
                 items = {
-                    crear        : {
-                        label  : "Nuevo departamento hijo",
-                        icon   : "fa fa-plus-circle text-success",
-                        action : function (obj) {
-                            createEditRow(nodeId, "Crear");
-                        }
-                    },
                     editar       : {
                         label  : "Editar departamento",
-                        icon   : "fa fa-pencil text-info",
+                        icon   : "fa fa-edit text-info",
                         action : function (obj) {
                             createEditRow(nodeId, "Editar");
                         }
                     },
                     tpDocumento  : {
                         label  : "Fijar tipo de documentos",
-                        icon   : "fa fa-files-o text-info",
+                        icon   : "fa fa-check text-info",
                         action : function (obj) {
                             createEditTipo(nodeId, "Tipo de Documentos por");
                         }
@@ -723,8 +718,15 @@
                             });
                         }
                     },
-                    crearPersona : {
+                    crear        : {
                         separator_before : true,
+                        label  : "Nuevo departamento hijo",
+                        icon   : "fa fa-plus-circle text-success",
+                        action : function (obj) {
+                            createEditRow(nodeId, "Crear");
+                        }
+                    },
+                    crearPersona : {
                         label            : "Nueva persona",
                         icon             : "fa fa-user text-success",
                         action           : function (obj) {
@@ -760,17 +762,6 @@
                             }
                         };
                     }
-                }
-
-                if(nodeType.contains('padreActivo')){
-                    items.desactivar = {
-                        separator_before : true,
-                        label            : "Desactivar Departamento",
-                        icon             : "fa ${iconDesactivar}",
-                        action           : function (obj) {
-                            cambiarEstadoRow(nodeId, nodeStrId, false, nodeTramites);
-                        }
-                    };
                 }
 
                 if (!nodeHasChildren && !nodeOcupado) {
@@ -869,6 +860,17 @@
                     }
                 };
 
+                if(nodeType.contains('padreActivo')){
+                    items.desactivar = {
+                        separator_before : true,
+                        label            : "Desactivar Departamento",
+                        icon             : "fa ${iconDesactivar}",
+                        action           : function (obj) {
+                            cambiarEstadoRow(nodeId, nodeStrId, false, nodeTramites);
+                        }
+                    };
+                }
+
                 if (nodeType.contains('hijo')) {
                     delete items.imprimir.submenu.no
                 }
@@ -878,7 +880,7 @@
                 items = {
                     editar : {
                         label  : "Editar persona",
-                        icon   : "fa fa-pencil text-info",
+                        icon   : "fa fa-edit text-info",
                         action : function (obj) {
                             createEditRowPersona(nodeId, "Editar");
                         }
@@ -916,7 +918,7 @@
                     items.ausentismo = {
                         separator_before : true,
                         label            : "Ausentismo",
-                        icon             : "fa fa-refresh",
+                        icon             : "fa fa-user-injured",
                         action           : function () {
                             location.href = "${createLink(controller: 'persona', action: 'personalAdm')}/" + nodeId;
                         }
@@ -927,7 +929,7 @@
                     items.redireccionar = {
                         separator_before : true,
                         label            : "Redireccionar trámites",
-                        icon             : "fa fa-refresh",
+                        icon             : "fa fa-fa-exchange-alt",
                         action           : function () {
                             location.href = "${createLink(controller: 'tramiteAdmin', action: 'redireccionarTramites')}/" + nodeId;
                         }

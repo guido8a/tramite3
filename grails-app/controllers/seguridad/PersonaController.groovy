@@ -1,15 +1,26 @@
 package seguridad
 
 import groovy.json.JsonBuilder
+import alertas.Alerta
+import tramites.Departamento
+import tramites.PermisoTramite
+import tramites.PermisoUsuario
+import tramites.PersonaDocumentoTramite
+import tramites.RolPersonaTramite
+import tramites.Tramite
+import utilitarios.Parametros
 import org.apache.commons.lang.WordUtils
-import javax.imageio.ImageIO
+import static java.awt.RenderingHints.*
 import java.awt.image.BufferedImage
-import static java.awt.RenderingHints.KEY_INTERPOLATION
-import static java.awt.RenderingHints.VALUE_INTERPOLATION_BICUBIC
+import javax.imageio.ImageIO
+//import org.apache.directory.groovyldap.LDAP
+//import org.apache.directory.groovyldap.SearchScope
+
 
 class PersonaController {
 
     def tramitesService
+    def dbConnectionService
 
     static allowedMethods = [save: "POST", delete: "POST", save_ajax: "POST", delete_ajax: "POST"]
 
@@ -18,7 +29,11 @@ class PersonaController {
     } //index
 
     def getLista(params, all) {
-        println "getLista: " + params
+//        println "PARAMS: " + params
+//        String llega = params.search
+//        println llega
+//        println "iso***" + llega.getBytes('ISO-8859-1')
+//        println "utf-8***" + llega.getBytes('UTF-8')
         params.offset = params.offset ?: 0
         if (params.search) {
             def tx = params.search.toList()
@@ -42,10 +57,10 @@ class PersonaController {
             prms.remove("offset")
             prms.remove("max")
         }
+        def permisoAdmin = PermisoTramite.findByCodigo("P013")
         def lista
 
         def c = Persona.createCriteria()
-
         lista = c.list(prms) {
             and {
                 if (prms.search) {
@@ -65,7 +80,6 @@ class PersonaController {
                         eq("perfil", Prfl.get(params.perfil.toLong()))
                     }
                 }
-
                 if (params.estado) {
                     if (params.estado == "jefe") {
                         eq("jefe", 1)
@@ -80,7 +94,6 @@ class PersonaController {
             }
         }
 
-        lista.unique()
 
         if (params.estado == "usuario") {
             lista = lista.findAll { it.estaActivo }
@@ -99,7 +112,6 @@ class PersonaController {
                 lista = lista.subList(init, fin)
             }
         }
-
         return lista
     }
 
@@ -269,10 +281,10 @@ class PersonaController {
 
         int newW = 300 * 0.7
         int newH = 400 * 0.7
-        int newX = params.x?.toInteger()
-        int newY = params.y?.toInteger()
-        def rx = newW / (params.w?.toDouble())
-        def ry = newH / (params.h?.toDouble())
+        int newX = params.x.toInteger()
+        int newY = params.y.toInteger()
+        def rx = newW / (params.w.toDouble())
+        def ry = newH / (params.h.toDouble())
 
         int resW = oldW * rx
         int resH = oldH * ry
@@ -293,9 +305,10 @@ class PersonaController {
 
     def personal() {
         def usuario = Persona.get(session.usuario.id)
-        def dep = usuario.unidadEjecutora
+        def dep = usuario.departamento
+        def triangulos = dep.getTriangulos()
 
-        def personas = Persona.findAllByUnidadEjecutoraAndActivo(dep, 1, [sort: 'apellido', order: 'apellido'])
+        def personas = Persona.findAllByDepartamentoAndActivo(dep, 1, [sort: 'apellido', order: 'apellido'])
         def personasFiltradas = []
 
         personas.each {
@@ -306,10 +319,7 @@ class PersonaController {
         }
 
         personasFiltradas.remove(usuario)
-
-        println("usuario " + usuario?.id)
-
-        return [usuario: usuario, params: params, personas: personasFiltradas]
+        return [usuario: usuario, params: params, triangulos: triangulos, personas: personasFiltradas]
     }
 
     def personalAdm() {
@@ -341,12 +351,10 @@ class PersonaController {
         def img
         def w
         def h
-        if (usuario?.foto) {
-            if(ImageIO?.read(new File(path + usuario.foto))){
-                img = ImageIO?.read(new File(path + usuario.foto));
-                w = img.getWidth();
-                h = img.getHeight();
-            }
+        if (usuario.foto) {
+            img = ImageIO.read(new File(path + usuario.foto));
+            w = img.getWidth();
+            h = img.getHeight();
         } else {
             w = 0
             h = 0
@@ -359,67 +367,19 @@ class PersonaController {
         render usuario.password == params.password_actual.toString().trim().encodeAsMD5()
     }
 
-    def validar_aut_previa_ajax() {
-        println "validar_aut_previa_ajax $params"
-        params.input1 = params.input1.trim()
-        def obj = Persona.get(params.id)
-        if (obj.autorizacion == params.input1.encodeAsMD5()) {
-            render true
-        } else {
-            render false
-        }
-    }
-
-
-//    def savePass_ajax() {
-//        println "savePass_ajax  $params"
-//        def persona = Persona.get(params.id)
-//        def str = params.tipo == "pass" ? "contraseña" : "autorización"
-//        params.input2 = params.input2.trim()
-//        params.input3 = params.input3.trim()
-//        if (params.input2 == params.input3) {
-//            println "....1 autoriz: ${persona.autorizacion}"
-//            if (params.tipo == "pass") {
-//                persona.password = params.input2.encodeAsMD5()
-//                persona.save(flush: true)
-//            } else {
-//                if (persona.autorizacion == params.input1.trim().encodeAsMD5() || !persona.autorizacion) {
-//                    persona.autorizacion = params.input2.encodeAsMD5()
-//                    persona.save(flush: true)
-//                } else {
-//                    render "ERROR*La autorización actual es incorrecta"
-//                    return
-//                }
-//            }
-//        } else {
-//            render "ERROR*La ${str} y la verificación no coinciden"
-//            return
-//        }
-//        render "SUCCESS*La ${str} ha sido modificada exitosamente"
-//    }
-
-
     def savePass_ajax() {
-        println "savePass_ajax  $params"
-        def persona = Persona.get(params.id)
-//        params.input2 = params.input2.trim()
-
-        if(params.nuevoPass.trim() == params.passConfirm.trim()){
-
-            persona.password = params.nuevoPass.encodeAsMD5()
-            persona.fecha = new Date() + 90
-            if(!persona.save(flush: true)){
-                println("error al guardar el nuevo password " + persona.errors)
-                render "error*Error al guardar el password"
-            }else{
-                render "SUCCESS*La contraseña ha sido modificada exitosamente"
+        def usuario = Persona.get(session.usuario.id)
+        if (usuario.password == params.password_actual.toString().trim().encodeAsMD5()) {
+            usuario.password = params.password.toString().trim().encodeAsMD5()
+            if (usuario.save(flush: true)) {
+                render "OK_Password actualizado correctamente"
+            } else {
+                render "NO_Ha ocurrido un error al actualizar el password: " + renderErrors(bean: usuario)
             }
-        }else{
-            render "error*El password ingresado y su confirmación no coinciden"
+        } else {
+            render "NO_El password actual no coincide"
         }
     }
-
-
 
     def saveTelf() {
         def usuario = Persona.get(session.usuario.id)
@@ -456,9 +416,18 @@ class PersonaController {
                 pers.add(it.perfil.id)
             }
         }
-
         def permisosUsu = PermisoUsuario.findAllByPersona(usu).permisoTramite.id
         return [usuario: usu, perfilesUsu: pers, permisosUsu: permisosUsu]
+    }
+
+    def savePermisos_ajax() {
+        params.asignadoPor = session.usuario
+        def perm = new PermisoUsuario(params)
+        if (!perm.save(flush: true)) {
+            render "NO_" + g.renderErrors(bean: perm)
+        } else {
+            render "OK_Permiso agregado"
+        }
     }
 
 
@@ -555,11 +524,29 @@ class PersonaController {
                         } else {
                         }
                     }
+                    def alerta = new Alerta()
+                    alerta.persona = asignado
+                    alerta.accion = ""
+                    alerta.controlador = ""
+                    alerta.fechaCreacion = new Date()
+                    alerta.mensaje = "El usuario ${session.usuario.login} te ha asignado como ${perfil} del ${accs.accsFechaInicial.format('dd-MM-yyyy')} al ${accs.accsFechaFinal.format('dd-MM-yyyy')} con motivo de su ausentismo"
+                    alerta.save(flush: true)
                 } else {
                     println "wtf no hay perfil " + params
                 }
             } else {
                 def usu = accs.usuario
+                def jefes = usu.departamento.getJefes()
+                jefes.each {
+                    def alerta = new Alerta()
+                    alerta.persona = it
+                    alerta.accion = ""
+                    alerta.controlador = ""
+                    alerta.fechaCreacion = new Date()
+                    alerta.mensaje = "El usuario ${usu.login} ha registrado un ausentismo del ${accs.accsFechaInicial.format('dd-MM-yyyy')} al ${accs.accsFechaFinal.format('dd-MM-yyyy')}. Por favor reasigne los tramites de dicho usuario durante las fechas mencionadas anteriormente."
+                    alerta.save(flush: true)
+                }
+
             }
             accs.save(flush: true)
             if (session.usuario.id == accs?.usuario?.id) {
@@ -686,16 +673,17 @@ class PersonaController {
             }
         }
 
-        println "ADD " + arrAdd
-        println "REMOVE " + arrRemove
+        println "Añadir: " + arrAdd
+        println "Remover: " + arrRemove
 
         arrRemove.each { pid ->
             def perf = Prfl.get(pid)
-            def sesn = Sesn.findByUsuarioAndPerfil(usu, perf)
+            def sesn = Sesn.findAllByUsuarioAndPerfilAndFechaFinIsNull(usu, perf)  // puede tener varios perfiles repetidos
             try {
-                sesn.fechaFin = new Date()
-//                sesn.fechaInicio = null
-//                sesn.delete(flush: true)
+//                sesn.fechaFin = new Date()
+                sesn.each { sn ->
+                    sn.fechaFin = new Date()
+                }
             } catch (e) {
                 errores += "<li>No se puedo remover el perfil ${perf.nombre}</li>"
             }
@@ -773,36 +761,28 @@ class PersonaController {
     }
 
     def list() {
-//        println "list: $params"
-//        if (session.usuario.puedeAdmin) {
-        params.max = Math.min(params.max ? params.max.toInteger() : 15, 100)
-        params.sort = params.sort ?: "apellido"
-        params.perfil = params.perfil ?: ''
-        params.estado = params.estado ?: ''
-        def personaInstanceList = getLista(params, false)
-        def personaInstanceCount = getLista(params, true).size()
-        if (personaInstanceList.size() == 0 && params.offset && params.max) {
-            params.offset = params.offset - params.max
-            personaInstanceList = getLista(params, false)
+        if (session.usuario.puedeAdmin) {
+            params.max = Math.min(params.max ? params.max.toInteger() : 15, 100)
+            params.sort = params.sort ?: "apellido"
+            params.perfil = params.perfil ?: ''
+            params.estado = params.estado ?: ''
+            def personaInstanceList = getLista(params, false)
+            def personaInstanceCount = getLista(params, true).size()
+            if (personaInstanceList.size() == 0 && params.offset && params.max) {
+                params.offset = params.offset - params.max
+                personaInstanceList = getLista(params, false)
+            }
+
+
+            def parametros = Parametros.findAll()
+
+
+            return [personaInstanceList: personaInstanceList, personaInstanceCount: personaInstanceCount, params: params, parametros: parametros]
+        } else {
+            flash.message = "Está tratando de ingresar a un pantalla restringida para su perfil. Está acción será registrada."
+            response.sendError(403)
         }
-
-
-        println("p " + personaInstanceList)
-//        println("p2 " + personaInstanceCount)
-
-
-        return [personaInstanceList: personaInstanceList, personaInstanceCount: personaInstanceCount, params: params]
-//        } else {
-//            flash.message = "Está tratando de ingresar a un pantalla restringida para su perfil. Está acción será registrada."
-//            response.sendError(403)
-//        }
     } //list
-
-    /**
-     * Acción llamada con ajax que muestra la información de un elemento particular
-     * @return personaInstance el objeto a mostrar cuando se encontró el elemento
-     * @render ERROR*[mensaje] cuando no se encontró el elemento
-     */
 
     def show_ajax() {
         if (params.id) {
@@ -811,50 +791,52 @@ class PersonaController {
                 notFound_ajax()
                 return
             }
+            def w = 0, h = 0
+            if (personaInstance.foto) {
+                def path = servletContext.getRealPath("/") + "images/perfiles/" //web-app/archivos
+                try {
+                    def img = ImageIO.read(new File(path + personaInstance.foto));
+                    w = img.getWidth()
+                    h = img.getHeight()
+                } catch (e) {
+                }
+            }
 
-            def perfiles = Sesn.findAllByUsuarioAndFechaFinIsNull(personaInstance).sort{it.perfil.descripcion}
-
-            return [personaInstance: personaInstance, perfiles: perfiles]
+            return [personaInstance: personaInstance, w: w, h: h]
         } else {
             notFound_ajax()
         }
     } //show para cargar con ajax en un dialog
 
     def form_ajax() {
-        println("params fp " + params)
-        def unidad = null
-        if(params.padre){
-            unidad = UnidadEjecutora.get(params.padre)
-        }
         def personaInstance = new Persona(params)
-        def perfiles = []
         if (params.id) {
             personaInstance = Persona.get(params.id)
             if (!personaInstance) {
                 notFound_ajax()
                 return
             }
-            perfiles = Sesn.withCriteria {
-                eq("usuario", personaInstance)
-                perfil {
-                    order("nombre", "asc")
-                }
-            }
         }
-        personaInstance.properties = params
-        return [personaInstance: personaInstance, perfiles: perfiles, unidad: unidad]
+        return [personaInstance: personaInstance]
     } //form para cargar con ajax en un dialog
 
     def activar_ajax() {
         def persona = Persona.get(params.id)
-        persona.activo = 1
-        persona.fechaInicio = new Date()
-        persona.fechaFin = null
-        if (persona.save(flush: true)) {
-            render "OK_Persona activada exitosamente"
-        } else {
-            render "NO_Ha ocurrido un error: " + renderErrors(bean: persona)
+        def departamento = persona.departamento
+
+        if(persona.departamento.activo == 1){
+            persona.activo = 1
+            persona.fechaInicio = new Date()
+            persona.fechaFin = null
+            if (persona.save(flush: true)) {
+                render "OK_Persona activada exitosamente"
+            } else {
+                render "NO_Ha ocurrido un error: " + renderErrors(bean: persona)
+            }
+        }else{
+            render "NO_No se puede activar la persona </br> El departamento al que pertenece esta INACTIVO"
         }
+
     }
 
     def redireccionarTramites(params) {
@@ -884,6 +866,11 @@ class PersonaController {
                 }
                 obs += " el ${new Date().format('dd-MM-yyyy HH:mm')} por ${session.usuario.login}"
                 def tramite = pr.tramite
+                def alerta = new Alerta()
+                alerta.mensaje = "entro a redireccionar tramite deprecated!!!!!!"
+                alerta.controlador = "personaController"
+                alerta.accion = "redireccionarTramites"
+                alerta.save(flush: true)
 
                 println "NO DEBERIA IMPRIMIR ESTO NUNCA"
                 tramite.observaciones = tramitesService.modificaObservaciones(tramite.observaciones, obs)
@@ -945,7 +932,6 @@ class PersonaController {
         return [personaInstance: personaInstance]
     }
 
-
     def validarMail_ajax() {
         params.mail = params.mail.toString().trim()
         if (params.id) {
@@ -980,9 +966,15 @@ class PersonaController {
         }
     }
 
-
     def save_ajax() {
-//        println "save_ajx: $params"
+        def msgDpto = ""
+        if (params.password) {
+            if (params.password != 'pandagnaros') {
+                params.password = params.password.toString().encodeAsMD5()
+            } else {
+                params.password = Persona.get(params.id).password
+            }
+        }
 
         params.mail = params.mail.toString().toLowerCase()
         def personaInstance = new Persona()
@@ -992,66 +984,87 @@ class PersonaController {
                 notFound_ajax()
                 return
             }
-        } else {
-            params.fecha = new Date()
-            params.password = '123'.encodeAsMD5()
-        }
+
+            if (params.departamento.id.toString() != personaInstance.departamentoId.toString()) {
+                def rolPara = RolPersonaTramite.findByCodigo('R001');
+                def rolCopia = RolPersonaTramite.findByCodigo('R002');
+                def rolImprimir = RolPersonaTramite.findByCodigo('I005')
+
+//                println("prsn id " + params.id)
+
+//
+//                def tramites = PersonaDocumentoTramite.findAll("from PersonaDocumentoTramite as p inner join fetch p.tramite as tramites " +
+//                        "where p.persona = ${params.id} and p.rolPersonaTramite in (${rolPara.id + "," + rolCopia.id + "," + rolImprimir.id}) and " +
+//                        "p.fechaEnvio is not null and tramites.estadoTramite in (3,4) order by p.fechaEnvio desc ")
+
+                def sql = "SELECT * FROM entrada_prsn(${params.id})"
+//                println("sql " + sql)
+                def cn = dbConnectionService.getConnection()
+                def tramitesQ = cn.rows(sql?.toString())
+                def tramites = tramitesQ?.prtr__id
+
+                def cantTramites = tramites.size()
+
+                println "cambioDpto_ajax:" + tramites
+//                println "size: " + cantTramites
+//
+                if (params.departamento.id != personaInstance.departamentoId) {
+                    msgDpto = "<i class='fa fa-warning fa-3x pull-left text-warning text-shadow'></i>" +
+                            "<h4 class='text-warning text-shadow'>Está cambiando a ${personaInstance.toString()} de departamento," +
+                            "de ${WordUtils.capitalizeFully(personaInstance.departamento.descripcion)} a " +
+                            "${WordUtils.capitalizeFully(Departamento.get(params.departamento.id.toLong()).descripcion)}</h4>" +
+                            "<p style='font-size:larger;'>Se redireccionará${cantTramites == 1 ? '' : 'n'} ${cantTramites} trámite${cantTramites == 1 ? '' : 's'} " +
+                            "de su bandeja de entrada personal a la bandeja de entrada de la oficina agregando una observación de " +
+                            "notificación de esta acción.</p>" +
+                            "<div class='row'>" +
+                            "<div class='col-md-12'>" +
+                            g.select("data-dpto": params.departamento.id, name: "selWarning", class: 'form-control', optionKey: "key", optionValue: "value",
+                                    from: [0: "Cancelar el cambio", 1: "Cambiar y efectuar el redireccionamiento"]) +
+                            "</div>" +
+                            "</div>"
+                }
+                params.departamento.id = personaInstance.departamentoId
+            }
+        } //update
+        else {
+            params.activo = 0
+            params.jefe = 0
+        } //create
         personaInstance.properties = params
 
-        if (!personaInstance.save(flush: true)) {
-            println "error al guardar la persona " + personaInstance.errors
-            render "ERROR*Ha ocurrido un error al guardar Persona: "
-        }else{
-            render "SUCCESS*${params.id ? 'Actualización' : 'Creación'} de Persona exitosa."
-        }
 
-//        def perfiles = params.perfilUsuario
-//
-//        if (perfiles) {
-//            def perfilesOld = Sesn.findAllByUsuario(personaInstance)
-//            def perfilesSelected = []
-//            def perfilesInsertar = []
-//            (perfiles.split("_")).each { perfId ->
-//                def perf = Prfl.get(perfId.toLong())
-//                if (!perfilesOld.perfil.id.contains(perf.id)) {
-//                    perfilesInsertar += perf
-//                } else {
-//                    perfilesSelected += perf
-//                }
-//            }
-//            def commons = perfilesOld.perfil.intersect(perfilesSelected)
-//            def perfilesDelete = perfilesOld.perfil.plus(perfilesSelected)
-//            perfilesDelete.removeAll(commons)
-//
-//            def errores = ""
-//
-//            perfilesInsertar.each { perfil ->
-//                def sesion = new Sesn()
-//                sesion.usuario = personaInstance
-//                sesion.perfil = perfil
-//                if (!sesion.save(flush: true)) {
-//                    errores += renderErrors(bean: sesion)
-//                    println "error al guardar sesion: " + sesion.errors
-//                }
-//            }
-//            perfilesDelete.each { perfil ->
-//                def sesion = Sesn.findAllByPerfilAndUsuario(perfil, personaInstance)
-//                try {
-//                    if (sesion.size() == 1) {
-//                        sesion.first().delete(flush: true)
-//                    } else {
-//                        errores += "Existen ${sesion.size()} registros del permiso " + perfil.nombre
-//                    }
-//                } catch (Exception e) {
-//                    errores += "Ha ocurrido un error al eliminar el perfil " + perfil.nombre
-//                    println "error al eliminar perfil: " + e
-//                }
-//            }
-//        }
+        personaInstance.departamentoDesde = Departamento.get(params.departamento.id)
+
+        if (!personaInstance.save(flush: true)) {
+            println "ERROR"
+            def msg = "NO_No se pudo ${params.id ? 'actualizar' : 'crear'} Persona."
+            msg += renderErrors(bean: personaInstance)
+            render msg
+            return
+        } else {
+            def perfiles = Sesn.countByUsuario(personaInstance)
+            if (perfiles == 0) {
+                def perfilUsuario = Prfl.findByCodigo("USU")
+                def sesion = new Sesn([
+                        usuario: personaInstance,
+                        perfil : perfilUsuario
+                ])
+                if (!sesion.save(flush: true)) {
+                    println "error asignando el perfil usuario"
+                }
+            }
+            if (msgDpto != "") {
+                render "INFO_" + msgDpto
+            } else {
+                render "OK_${params.id ? 'Actualización' : 'Creación'} de Persona exitosa."
+            }
+        }
     } //save para grabar desde ajax
 
+    /* todo: se debe implementar algo que cambie el usuario de departamento y se lleve sus bandejas actuales pero no
+    * los trámites anteriores */
 
-    def cambioDpto_ajax() {
+    def cambioDpto_ajax_no() {
         def persona = Persona.get(params.id)
         def dpto = Departamento.get(params.dpto)
         def dptoOld = persona.departamento
@@ -1111,6 +1124,22 @@ class PersonaController {
         }
     } //cambio dpto
 
+
+
+    /* todo: se debe implementar algo que cambie el usuario de departamento y se lleve sus bandejas actuales pero no
+      * los trámites anteriores */
+
+    def cambioDpto_ajax() {
+        def persona = Persona.get(params.id)
+        def dpto = Departamento.get(params.dpto)
+        persona.departamento = dpto
+        if (persona.save(flush: true)) {
+            render "OK_Cambio realizado exitosamente"
+        } else {
+            render "NO_Ha ocurrido un error al cambiar el departamento de la persona.<br/>" + renderErrors(bean: persona)
+        }
+    } //cambio dpto
+
     /*** se puede boirrar el usaurio siempre y cuando no haya registros en:
      *   trmt.prsn__de: Persona.de
      *   prtr.prsn__id: Persona.persona
@@ -1121,19 +1150,12 @@ class PersonaController {
         if (params.id) {
             def personaInstance = Persona.get(params.id)
             /** comprueba que se pueda borrar **/
-/*
-            if (Base.findByPersona(personaInstance)) {
-                mnsj += "La persona tiene entradas en la base de conocimiento\n"
+            if (Tramite.findByDe(personaInstance)) {
+                mnsj += "La persona tiene trámites creados\n"
             }
-*/
-/*
-            if (Actividad.findByIngresa(personaInstance)) {
-                mnsj += "La persona ha ingresado actividades\n"
+            if (PersonaDocumentoTramite.findByPersona(personaInstance)) {
+                mnsj += "La persona se halla relacionada a trámites\n"
             }
-            if (Actividad.findByResponsable(personaInstance)) {
-                mnsj += "La persona posee actividades que realziar\n"
-            }
-*/
             if (Accs.findByUsuario(personaInstance)) {
                 mnsj += "La persona tiene permisos de ausentismo\n"
             }
@@ -1146,9 +1168,18 @@ class PersonaController {
             if (PermisoUsuario.findByModificadoPor(personaInstance)) {
                 mnsj += "La persona ha realizado Modificación de permisos\n"
             }
+            if (personaInstance.esTriangulo) {
+                mnsj += "La persona es recepcionista de oficina\n"
+            }
+            if (personaInstance.puedeAdmin) {
+                mnsj += "La persona tiene permios de administración\n"
+            }
             if (personaInstance.activo) {
                 mnsj += "La persona se halla activa\n"
             }
+
+//            println "prsn:" + personaInstance.id + personaInstance
+//            println "mnsj:" + mnsj
 
             if (!mnsj) {
                 def prsn = personaInstance.nombre + " " + personaInstance.apellido
@@ -1183,6 +1214,339 @@ class PersonaController {
         render "NO_No se encontró Persona."
     } //notFound para ajax
 
+    def cargarUsuariosLdap() {
+//        if (session.usuario.puedeAdmin) {
+//            def prmt = Parametros.findAll()[0]
+//            LDAP ldap = LDAP.newInstance('ldap://' + prmt.ipLDAP, prmt.textoCn, prmt.passAdm)
+//            println "'ldap://192.168.0.60:389', 'cn=AdminSAD SAD,OU=GESTION DE SISTEMAS Y TECNOLOGIAS DE INFORMACION,OU=DIRECCION DE GESTION DE TALENTO HUMANO Y ADMINISTRACION,ou=PREFECTURA,ou=GADPP,dc=pichincha,dc=local', 'SADmaster'"
+//            println "LADP: " + "ldap://${prmt.ipLDAP}, ${prmt.textoCn}, ${prmt.passAdm}"
+//            println "conectado " + ldap.class
+//            println "!!!!!!!######3&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&######!!!!!"
+//
+//            def registrados = Persona.list()
+//            def users = []
+//            def nuevos = []
+//            def mod = []
+//            def results = ldap.search('(objectClass=*)', prmt.ouPrincipal, SearchScope.ONE)
+//            def band = true
+//            def cont = 0
+//            def n1 = Departamento.get(11)
+//            def sinDep = Departamento.get(20)
+//            def secuencia = 1
+//            def noNombre = []
+//            def noApellido = []
+//            def noMail = []
+//            for (entry in results) {
+//                println "----------------------------"
+//                def ou = entry["ou"]
+//                if (ou) {
+//                    //println "es ou lvl1 " + ou
+//                    //     println "encode hex "+entry["objectguid"]?.encodeAsHex()
+////                    println "bytes "+entry["objectguid"].encodeAsMD5Bytes()
+////                    println "decode hex "+entry["objectguid"]?.decodeHex()
+//
+//                    def dep = Departamento.findByDescripcion(ou)
+//                    if (!dep) {
+//                        println "no encontro " + ou
+//                        println "buscando por uid " + entry["objectguid"]?.encodeAsHex()
+//                        println "busqueda todos " + Departamento.findAllByObjectguid(entry["objectguid"]?.encodeAsHex())
+//                        dep = Departamento.findByObjectguid(entry["objectguid"]?.encodeAsHex())
+//                        println "result " + dep
+//                        if (!dep) {
+//                            if (ou && (ou.toString().toLowerCase().indexOf('equipo') == -1)) {
+//                                def sec = new Date().format("ss")
+//                                dep = new Departamento()
+//                                dep.descripcion = ou
+//                                dep.codigo = "NUEVO-" + sec + secuencia++
+//                                dep.activo = 1
+//                                dep.padre = n1
+//
+//                                dep.objectguid = entry["objectguid"]?.encodeAsHex()
+//                                if (!dep.save(flush: true)) {
+//                                    println "errores dep " + dep.errors
+//                                }
+//                            }
+//                        } else {
+//                            println "update del nombre"
+//                            dep.descripcion = ou
+//                            dep.save(flush: true)
+//                        }
+//
+//                    } else {
+//                        println "save del objectuid " + entry["objectguid"]?.encodeAsHex() + " en " + dep + "  " + dep.id
+//                        dep.objectguid = entry["objectguid"]?.encodeAsHex()
+//                        if (!dep.save(flush: true)) {
+//                            println "error en el save del uid " + dep.errors
+//                        }
+//                    }
+//
+//                    def searchString = 'ou=' + ou + "," + prmt.ouPrincipal
+//                    def res2 = ldap.search('(objectClass=*)', searchString, SearchScope.SUB)
+//                    for (e2 in res2) {
+//                        def ou2 = e2["ou"]
+//                        def gn = e2["givenname"]
+//                        if (gn) {
+//                            def logn = e2["samaccountname"]
+//                            def mail = e2["mail"]
+//                            //  println "buscando e2 " + logn + "  mail " + mail + "     campo mail  " + entry["mail"]
+//                            if (!mail || mail == "") {
+//                                noMail.add(["nombre": logn])
+//                            }
+//
+//                            def prsn = Persona.findByLogin(logn)
+//                            if (!prsn) {
+//                                def nombres = WordUtils.capitalizeFully(e2["givenname"])
+//                                def apellido = WordUtils.capitalizeFully(e2["sn"])
+//                                if (!apellido) {
+//                                    noApellido.add(["nombre": logn])
+//                                }
+//                                if (!nombres) {
+//                                    noNombre.add(["nombre": logn])
+//                                }
+//                                prsn = new Persona()
+//                                prsn.nombre = nombres
+//                                prsn.apellido = apellido
+//                                prsn.mail = mail
+//                                prsn.login = logn
+//                                prsn.activo = 0
+//                                prsn.password = "123".encodeAsMD5()
+//                                prsn.connect = e2["dn"]
+//                                def datos = e2["dn"].split(",")
+//                                def dpto = null
+//                                if (datos.size() > 1) {
+//                                    dpto = datos[1].split("=")
+//                                    dpto = Departamento.findByDescripcion(dpto[1])
+//                                } else {
+//                                    dpto = null
+//                                }
+//
+//                                if (!dpto) {
+//                                    dpto = sinDep
+//                                }
+//                                prsn.departamento = dpto
+////                                println "al crear persona pone dptodsde: ${dpto}"
+//                                if (!prsn.save(flush: true)) {
+////                                    println "error save prns " + prsn.errors
+//                                } else {
+//                                    nuevos.add(prsn)
+//                                    def sesn = new Sesn()
+//                                    sesn.perfil = Prfl.findByCodigo("USU")
+//                                    sesn.usuario = prsn
+//                                    sesn.fechaInicio = new Date()
+//                                    sesn.save(flush: true)
+//                                    /* inserta permisos de usuario */
+//                                    def prpf = Prpf.findAllByPerfil(sesn.perfil)
+//                                    prpf.each {
+//                                        def prus = new PermisoUsuario()
+//                                        prus.asignadoPor = session.usuario
+//                                        prus.persona = prsn
+//                                        prus.fechaInicio = new Date()
+//                                        prus.permisoTramite = PermisoTramite.get(it.permiso.id)
+//                                        prus.save(flush: true)
+//                                    }
+//
+//                                }
+//                            } else {
+//                                //println "encontro"
+//                                if (prsn.nombre != WordUtils.capitalizeFully(e2["givenname"]) || prsn.apellido != WordUtils.capitalizeFully(e2["sn"]) || prsn.mail != e2["mail"] || prsn.connect != e2["dn"] || prsn.departamento == null) {
+//                                    //    println "update"
+//                                    prsn.nombre = WordUtils.capitalizeFully(e2["givenname"])
+//                                    prsn.apellido = WordUtils.capitalizeFully(e2["sn"])
+//                                    prsn.mail = mail
+//                                    if (prsn.connect != e2["dn"]) {
+//                                        prsn.connect = e2["dn"]
+//                                        prsn.activo = 0
+//                                    }
+//                                    def datos = e2["dn"].split(",")
+//                                    def dpto = null
+//                                    // println "datos "+datos
+//                                    if (datos.size() > 1) {
+//                                        if (datos) {
+//                                            dpto = datos[1].split("=")
+//                                        }
+//                                        //println "dpto "+dpto
+//                                        if (dpto.size() > 1) {
+//                                            dpto = Departamento.findByDescripcion(dpto[1])
+//                                        }
+//                                        println "departamento(1)   " + dpto
+//
+//                                    } else {
+//                                        dpto = null
+//                                    }
+//                                    if (!dpto) {
+//                                        dpto = sinDep
+//                                    }
+//                                    if (prsn.departamento != dpto) {
+//                                        println "actualiza depatamento(1) con ${dpto}, antes: ${prsn.departamento.id}"
+//                                        prsn.departamentoDesde = prsn.departamento
+//                                        prsn.departamento = dpto
+//                                        prsn.activo = 0
+//                                    }
+//
+//
+//                                    if (!prsn.apellido) {
+//                                        prsn.apellido = "N.A."
+//                                    }
+//                                    // println "update " + prsn.apellido
+//                                    if (!prsn.save(flush: true)) {
+////                                        println "error save prns " + prsn.errors
+//                                    } else {
+//                                        mod.add(prsn)
+//                                    }
+//                                }
+//                            }
+//                            users.add(prsn)
+//                            cont++
+//                        }
+//                        if (ou2 && (ou2.toString().toLowerCase().indexOf('equipo') == -1)) {
+//                            dep = Departamento.findByDescripcion(ou2)
+//                            if (!dep) {
+//
+//                                println "no encontro ou2 " + ou2
+//                                println "buscando por uid " + e2["objectguid"]?.encodeAsHex()
+//                                println "busqueda todos " + Departamento.findAllByObjectguid(e2["objectguid"]?.encodeAsHex())
+//                                dep = Departamento.findByObjectguid(e2["objectguid"]?.encodeAsHex())
+//                                println "result " + dep
+//                                if (!dep) {
+//                                    def sec = new Date().format("ss")
+//                                    def datos = e2["dn"].split(",")
+//                                    def padre = null
+//                                    if (datos) {
+//                                        padre = datos[1].split("=")
+//                                    }
+//                                    padre = Departamento.findByDescripcion(padre[1])
+//                                    if (!padre) {
+//                                        padre = n1
+//                                    }
+//                                    dep = new Departamento()
+//                                    dep.descripcion = ou2
+//                                    dep.codigo = "NUEVO-" + sec + secuencia++
+//                                    dep.activo = 1
+//                                    dep.padre = padre
+//                                    dep.objectguid = e2["objectguid"]?.encodeAsHex()
+//                                    if (!dep.save(flush: true)) {
+//                                        println "errores dep " + dep.errors
+//                                    }
+//                                } else {
+//                                    println "update del nombre"
+//                                    dep.descripcion = ou2
+//                                    dep.save(flush: true)
+//                                }
+//
+//
+//                            } else {
+//                                println "actualizando uid " + e2["objectguid"]?.encodeAsHex() + " en " + dep + "  " + dep.id
+//                                dep.objectguid = e2["objectguid"]?.encodeAsHex()
+//                                if (!dep.save(flush: true)) {
+//                                    println "error en el save del uid " + dep.errors
+//                                }
+//                                def datos = e2["dn"].split(",")
+//                                def padre = null
+//                                if (datos) {
+//                                    padre = datos[1].split("=")
+//                                }
+//                                padre = Departamento.findByDescripcion(padre[1])
+//                                if (!padre) {
+//                                    padre = n1
+//                                }
+//                                if (dep.padre?.id != padre.id) {
+//                                    dep.padre = padre
+//                                    dep.save(flush: true)
+//                                }
+//                            }
+//                        }
+//                    }
+//
+//                    //println "*********************************\n"
+//                }
+//                if (entry["givenname"]) {
+//
+//
+//                    def logn = entry["samaccountname"]
+//                    def mail = entry["mail"]
+//                    if (!mail || mail == "") {
+//                        noMail.add(["nombre": logn])
+//                    }
+//                    def prsn = Persona.findByLogin(logn)
+//                    if (!prsn) {
+//                        // println "no encontro nuevo usuario"
+//                        def nombres = WordUtils.capitalizeFully(entry["givenname"])
+//                        def apellido = WordUtils.capitalizeFully(entry["sn"])
+//                        prsn = new Persona()
+//                        prsn.nombre = nombres
+//                        prsn.apellido = apellido
+//                        prsn.mail = mail
+//                        prsn.login = logn
+//                        prsn.password = "123".encodeAsMD5()
+//                        prsn.connect = entry["dn"]
+//                        def datos = entry["dn"].split(",")
+//                        def dpto = null
+//                        if (datos) {
+//                            dpto = datos[1].split("=")
+//                        }
+//                        dpto = Departamento.findByDescripcion(dpto[1])
+//                        if (!dpto) {
+//                            dpto = sinDep
+//                        }
+//                        prsn.departamento = dpto
+////                        println "al crear persona buscado por login... pone dptodsde: ${dpto}"
+//                        if (!prsn.save(flush: true)) {
+////                            println "error save prns " + prsn.errors
+//                        } else {
+//                            nuevos.add(prsn)
+//                            users.add(prsn)
+//                            def sesn = new Sesn()
+//                            sesn.perfil = Prfl.findByCodigo("USU")
+//                            sesn.usuario = prsn
+//                            sesn.fechaInicio = new Date()
+//                            sesn.save(flush: true)
+//                        }
+//                    } else {
+//                        if (prsn.nombre != WordUtils.capitalizeFully(entry["givenname"]) || prsn.apellido != WordUtils.capitalizeFully(entry["sn"]) || prsn.mail != mail || prsn.connect != entry["dn"] || prsn.departamento == null) {
+//                            if (entry["sn"] && entry["sn"] != "") {
+//                                prsn.nombre = WordUtils.capitalizeFully(entry["givenname"])
+//                                prsn.apellido = WordUtils.capitalizeFully(entry["sn"])
+//                                if (!prsn.apellido) {
+//                                    prsn.apellido = "N.A."
+//                                }
+//                                prsn.mail = entry["mail"]
+//                                if (prsn.connect != entry["dn"]) {
+//                                    prsn.connect = entry["dn"]
+//                                    prsn.activo = 0
+//                                }
+//                                def datos = entry["dn"].split(",")
+//                                def dpto = null
+//                                if (datos) {
+//                                    dpto = datos[1].split("=")
+//                                }
+//                                dpto = Departamento.findByDescripcion(dpto[1])
+//                                if (prsn.departamento != dpto) {
+//                                    println "actualiza depatamento(2) con ${dpto}, antes: ${prsn.departamento.id}"
+//                                    prsn.departamentoDesde = prsn.departamento
+//                                    prsn.departamento = dpto
+//                                    prsn.activo = 0
+//                                }
+//                                if (!prsn.save(flush: true)) {
+////                                    println "error save prns update " + prsn.errors
+//                                } else {
+//                                    mod.add(prsn)
+//                                }
+//                            }
+//
+//                        }
+//                    }
+//                    users.add(prsn)
+//                    cont++
+//                }
+//            }
+//            return [users: users, reg: registrados, nuevos: nuevos, mod: mod, noNombre: noNombre, noMail: noMail, noApellido: noApellido]
+//
+//        } else {
+//            flash.message = "Está tratando de ingresar a un pantalla restringida para su perfil. Está acción será registrada."
+//            response.sendError(403)
+//        }
+
+    }
 
     def cambiarNombresUsuarios() {
         Persona.list().each { p ->
@@ -1192,231 +1556,5 @@ class PersonaController {
         }
     }
 
-    def guardarPerfiles_ajax () {
-//        println("params prfl " + params)
 
-        def personaInstance = Persona.get(params.id)
-        def perfilActual = Prfl.get(session.perfil.id)
-        def sesionActual = Sesn.findByPerfilAndUsuarioAndFechaFinIsNull(perfilActual, personaInstance)
-        def perfilesOld = Sesn.findAllByUsuarioAndFechaFinIsNull(personaInstance)
-
-//        println("old " + perfilesOld)
-//        println("perfiles " + perfiles)
-//        println("<<<< " + perfiles?.size())
-//        println("se ac " + sesionActual.perfil.descripcion)
-
-//        if (perfiles?.size() > 0) {
-        if (params.perfiles) {
-
-            def perfiles = params.perfiles.split("_")
-            def perfilesSelected = []
-            def perfilesInsertar = []
-
-            perfiles.each { perfId ->
-                def perf = Prfl.get(perfId.toLong())
-                if (!perfilesOld.perfil.id.contains(perf.id)) {
-                    perfilesInsertar += perf
-                } else {
-                    perfilesSelected += perf
-                }
-            }
-            def commons = perfilesOld.perfil.intersect(perfilesSelected)
-            def perfilesDelete = perfilesOld.perfil.plus(perfilesSelected)
-            perfilesDelete.removeAll(commons)
-
-            def errores = ''
-
-//            println("p i " + perfilesInsertar)
-//            println("p b " + perfilesDelete)
-
-            if(perfilesInsertar){
-                perfilesInsertar.each { perfil ->
-                    def sesion = new Sesn()
-                    sesion.usuario = personaInstance
-                    sesion.perfil = perfil
-                    sesion.fechaInicio = new Date();
-                    if (!sesion.save(flush: true)) {
-                        errores += sesion.errors
-                        println "error al guardar sesion: " + sesion.errors
-                        render "no"
-                    }
-                }
-            }
-
-            def bandera = false
-
-            if(errores == ''){
-                if(perfilesDelete){
-                    if(perfilesDelete.contains(sesionActual.perfil)){
-                        bandera = true
-                    }else{
-                        perfilesDelete.each { perfil ->
-                            def perfilB = Sesn.findByPerfilAndUsuarioAndFechaFinIsNull(perfil, personaInstance)
-
-                            if(perfilB){
-                                perfilB.fechaFin = new Date()
-
-                                if(!perfilB.save(flush: true)){
-                                    errores += "Ha ocurrido un error al eliminar el perfil " + perfilB.errors
-                                    println "error al eliminar perfil: " + perfilB.errors
-                                }
-                            }
-                        }
-                    }
-
-                    if(bandera){
-                        render "er_No puede borrar el perfil ${sesionActual}, está actualmente en uso"
-                    }else{
-                        if(errores != ''){
-                            render "no"
-                        }else{
-                            render "ok"
-                        }
-                    }
-                }else{
-                    render "ok"
-                }
-            }else{
-                render "no"
-            }
-        }else{
-            if(sesionActual.usuario == personaInstance){
-                render "er_No puede borrar el perfil ${sesionActual}, está actualmente en uso"
-            }else{
-
-                def perfilesBorrar = Sesn.findAllByUsuario(personaInstance)
-
-                perfilesBorrar.each { perfil ->
-                    def perfilB = Sesn.findByPerfilAndUsuarioAndFechaFinIsNull(perfil, personaInstance)
-
-                    if(perfilB){
-                        perfilB.fechaFin = new Date()
-
-                        if(!perfilB.save(flush: true)){
-                            errores += "Ha ocurrido un error al eliminar el perfil " + perfilB.errors
-                            println "error al eliminar perfil: " + perfilB.errors
-                        }
-                    }
-                }
-
-                if(errores != ''){
-                    render "no"
-                }else{
-                    render "ok"
-                }
-
-            }
-        }
-    }
-
-    def savePersona_ajax(){
-
-//        println("params sp " + params)
-
-        def persona
-        def texto = ''
-
-        if(params.id){
-            persona = Persona.get(params.id)
-            if(params.password != persona.password){
-                params.password = params.password.encodeAsMD5()
-                params.fecha = new Date()
-            }
-            params.autorizacion = params.autorizacion.encodeAsMD5()
-            params.unidadEjecutora = persona.unidadEjecutora
-            texto = "Usuario actualizado correctamente"
-        }else{
-            persona = new Persona()
-            params.password = params.password.encodeAsMD5()
-            params.autorizacion = params.autorizacion.encodeAsMD5()
-            params.fechaInicio = new Date()
-            params.fecha = new Date()
-            texto = "Usuario creado correctamente"
-        }
-
-        if(params.activo == '0'){
-            params.fechaFin = new Date()
-        }else{
-            params.fechaFin = null
-        }
-        persona.properties = params
-
-        if(!persona.save(flush:true)){
-            println("error al guardar el usuario " + persona.errors)
-            render "no_" + texto
-        }else{
-            render "ok_" + texto
-        }
-    }
-
-    def borrarPersona_ajax(){
-
-    }
-
-    def perfiles_ajax(){
-
-        def persona = Persona.get(params.id)
-
-        return[personaInstance: persona]
-    }
-
-
-    def perfilesDisponibles_ajax(){
-        def persona = Persona.get(params.id)
-        def perfilesActuales = Sesn.findAllByUsuarioAndFechaFinIsNull(persona).perfil
-//        println("perfil actual " + perfilesActuales)
-        def perfilesDisponibles
-        if(perfilesActuales){
-            perfilesDisponibles = Prfl.findAllByIdNotInList(perfilesActuales.id).sort{it.nombre}
-        }else{
-            perfilesDisponibles = Prfl.list().sort{it.nombre}
-        }
-
-//        println("perfil disponible " + perfilesDisponibles)
-
-        return[persona: persona, perfiles: perfilesDisponibles]
-    }
-
-    def tablaPerfiles_ajax(){
-        def persona = Persona.get(params.id)
-        def perfilesActuales = Sesn.findAllByUsuarioAndFechaFinIsNull(persona)
-        return[persona: persona, perfiles: perfilesActuales]
-    }
-
-    def borrarPerfil_ajax(){
-
-        def persona = Persona.get(params.id)
-        def perfil =  Prfl.get(params.perfil)
-        def sesionActual = session.pr.id
-        def sesion = Sesn.findByUsuarioAndPerfilAndFechaFinIsNull(persona, perfil)
-//        if(sesionActual.toInteger() == sesion.id.toInteger()){
-//            render "er_No se puede borrar el perfil, está siendo usado por el usuario actual!"
-//        }else{
-        sesion.fechaFin = new Date()
-        if(!sesion.save(flush: true)){
-            println("error al borrar el perfil " + sesion.errors)
-            render "no"
-        }else{
-            render "ok"
-        }
-//        }
-    }
-
-    def agregarPerfil_ajax(){
-        def persona = Persona.get(params.id)
-        def perfil =  Prfl.get(params.perfil)
-        def sesion = new Sesn()
-
-        sesion.fechaInicio = new Date()
-        sesion.perfil = perfil
-        sesion.usuario = persona
-        sesion.permisoPerfil = null
-
-        if(!sesion.save(flush: true)){
-            println("error al guardar el perfil" + sesion.errors)
-            render "no"
-        }else{
-            render "ok"
-        }
-    }
 }

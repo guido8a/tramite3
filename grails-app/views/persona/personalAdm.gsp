@@ -5,15 +5,12 @@
   Time: 12:39 PM
 --%>
 
-<%@ page import="happy.seguridad.Persona; happy.seguridad.Prfl; happy.seguridad.Sesn" contentType="text/html;charset=UTF-8" %>
+<%@ page import="utilitarios.Parametros; seguridad.Prfl; seguridad.Sesn" contentType="text/html;charset=UTF-8" %>
 <html>
     <head>
         <meta name="layout" content="main">
         <title>Configuración personal</title>
 
-        %{--<script src="${resource(dir: 'js/plugins/jQuery-File-Upload-9.5.6/js/vendor', file: 'jquery.ui.widget.js')}"></script>--}%
-        %{--<script src="${resource(dir: 'js/plugins/jQuery-File-Upload-9.5.6/js', file: 'jquery.iframe-transport.js')}"></script>--}%
-        %{--<script src="${resource(dir: 'js/plugins/jQuery-File-Upload-9.5.6/js', file: 'jquery.fileupload.js')}"></script>--}%
 
         <!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
         <script src="${resource(dir: 'js/plugins/jQuery-File-Upload-9.5.6/js/vendor', file: 'jquery.ui.widget.js')}"></script>
@@ -72,14 +69,12 @@
             </div>
         </div>
 
-        %{--${session.perfil}--}%
 
         <div class="panel-group" id="accordion">
 
             <g:set var="abierto" value="${false}"/>
 
-        %{--<g:if test="${Sesn.findAllByUsuarioAndPerfil(session.usuario, Prfl.findByCodigo('ADM')) != 0 || happy.utilitarios.Parametros.list().first().validaLDAP == 0}">--}%
-            <g:if test="${!usuario.connect || happy.utilitarios.Parametros.list().first().validaLDAP == 0}">
+            <g:if test="${!usuario.connect || utilitarios.Parametros.list().first().validaLDAP == 0}">
                 <g:set var="abierto" value="${true}"/>
                 <div class="panel panel-default">
                     <div class="panel-heading">
@@ -94,45 +89,37 @@
                         <div class="panel-body">
                             <g:form class="form-horizontal" name="frmPass" role="form" action="savePass_ajax" method="POST">
                                 <div class="form-group required">
-                                    %{--<div class="form-group required">--}%
-                                    %{--<span class="grupo">--}%
+
                                     <span class="form-grup col-md-3">
                                         <label for="accsFechaInicial" class="control-label text-info">
                                             Contraseña actual
                                         </label>
 
-                                        %{--<div class="col-md-2">--}%
                                         <div class="input-group">
                                             <g:passwordField name="password_actual" class="form-control required"/>
                                             <span class="input-group-addon"><i class="fa fa-unlock"></i></span>
                                         </div>
-                                        %{--</div>--}%
                                     </span>
-                                    %{--</div>--}%
 
                                     <span class="form-grup col-md-3">
                                         <label for="accsFechaInicial" class="control-label text-info">
                                             Nueva contraseña
                                         </label>
 
-                                        %{--<div class="col-md-3">--}%
                                         <div class="input-group">
                                             <g:passwordField name="password" class="form-control required"/>
                                             <span class="input-group-addon"><i class="fa fa-lock"></i></span>
                                         </div>
-                                        %{--</div>--}%
                                     </span>
                                     <span class="form-grup col-md-3">
                                         <label for="accsFechaInicial" class="control-label text-info">
                                             Confirme la contraseña
                                         </label>
 
-                                        %{--<div class="col-md-3">--}%
                                         <div class="input-group">
                                             <g:passwordField name="password_again" class="form-control required" equalTo="#password"/>
                                             <span class="input-group-addon"><i class="fa fa-lock"></i></span>
                                         </div>
-                                        %{--</div>--}%
                                     </span>
 
                                     <div class="col-md-2" style="margin-top: 20px;">
@@ -146,45 +133,6 @@
                     </div>
                 </div>
             </g:if>
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseTelf">
-                            Teléfono
-                        </a>
-                    </h4>
-                </div>
-
-                <div id="collapseTelf" class="panel-collapse collapse ">
-                    <div class="panel-body">
-                        <g:form class="form-horizontal frmTelf" name="frmTelf" role="form" action="saveTelf" method="POST">
-                            <div class="form-group required">
-                                %{--<div class="form-group required">--}%
-                                %{--<span class="grupo">--}%
-                                <span class="form-grup col-md-3">
-                                    <label for="accsFechaInicial" class="control-label text-info">
-                                        Número de teléfono
-                                    </label>
-
-                                    %{--<div class="col-md-2">--}%
-                                    <div class="input-group">
-                                        <g:textField name="telefono" id="telefono" class="form-control digits required" value="${happy.seguridad.Persona.get(session.usuario.id)?.telefono}"/>
-                                        <span class="input-group-addon"><i class="fa fa-phone"></i></span>
-                                    </div>
-                                    %{--</div>--}%
-                                </span>
-                                %{--</div>--}%
-
-                                <div class="col-md-2" style="margin-top: 20px;">
-                                    <a href="#" class="btn btn-success" id="btnTelf">
-                                        <i class="fa fa-save"></i> Guardar
-                                    </a>
-                                </div>
-                            </div>
-                        </g:form>
-                    </div>
-                </div>
-            </div>
 
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -200,7 +148,6 @@
                         <div class="btn btn-success fileinput-button" style="margin-bottom: 10px;">
                             <i class="glyphicon glyphicon-plus"></i>
                             <span>Seleccionar imagen</span>
-                            <!-- The file input field used as target for the file upload widget -->
                             <input type="file" name="file" id="file">
                         </div>
 
@@ -299,7 +246,7 @@
                                             </label>
 
                                             <div class="col-md-3">
-                                                <g:select name="nuevoTriangulo" from="${personas}" id="nuevo-triangulo" class="requires form-control" optionKey="id"></g:select>
+                                                <g:select name="nuevoTriangulo" from="${personas}" id="nuevo-triangulo" class="requires form-control" optionKey="id"/>
                                             </div>
                                         </span>
 
@@ -333,10 +280,8 @@
             }
 
             function validaFechas($elm, e) {
-//                var $ini = $("#accsFechaInicial_input");
                 var $ini = $elm;
                 var $fin = $("#accsFechaFinal_input");
-//                var ini = $ini.datepicker('getDate');
                 var ini = e.date;
                 var fin = $fin.datepicker('getDate');
 
@@ -418,30 +363,9 @@
                             progress + '%'
                     );
                 }).on('fileuploaddone', function (e, data) {
-//                    closeLoader();
                     setTimeout(function () {
                         location.href = "${createLink(action: 'personal', params:[tipo:'foto'])}";
                     }, 1000);
-
-//                    $.each(data.result.files, function (index, file) {
-//                        $('#progress .progress-bar').css(
-//                                'width', '0%'
-//                        );
-//                        $("#files").empty();
-////                        loadFoto();
-//                        if (file.url) {
-////                            var link = $('<a>')
-////                                    .attr('target', '_blank')
-////                                    .prop('href', file.url);
-////                            $(data.context.children()[index])
-////                                    .wrap(link);
-//                        } else if (file.error) {
-//                            var error = $('<span class="text-danger"/>').text(file.error);
-//                            $(data.context.children()[index])
-//                                    .append('<br>')
-//                                    .append(error);
-//                        }
-//                    });
                 }).on('fileuploadfail', function (e, data) {
                     closeLoader();
                     $.each(data.files, function (index, file) {
@@ -489,21 +413,7 @@
                         submitPass();
                     }
                 });
-                var validatorTelf = $(".frmTelf").validate({
-                    errorClass     : "help-block",
-                    errorPlacement : function (error, element) {
-                        if (element.parent().hasClass("input-group")) {
-                            error.insertAfter(element.parent());
-                        } else {
-                            error.insertAfter(element);
-                        }
-                        element.parents(".grupo").addClass('has-error');
-                    },
 
-                    success : function (label) {
-                        label.parents(".grupo").removeClass('has-error');
-                    }
-                });
                 var validatorPass = $frmPass.validate({
                     errorClass     : "help-block",
                     errorPlacement : function (error, element) {
@@ -534,28 +444,6 @@
                 $btnPass.click(function () {
                     submitPass();
                 });
-                $("#btnTelf").click(function () {
-                    var url = $(".frmTelf").attr("action");
-                    var data = $(".frmTelf").serialize();
-                    if ($(".frmTelf").valid()) {
-                        $("#btnTelf").hide().after(spinner);
-                        $.ajax({
-                            type    : "POST",
-                            url     : url,
-                            data    : data,
-                            success : function (msg) {
-
-                                var parts = msg.split("_");
-                                log(parts[1], parts[0] == "OK" ? "success" : "error");
-                                spinner.remove();
-                                $("#btnTelf").show();
-//                        $(".frmTelf").find("input").val("");
-                                validatorTelf.resetForm();
-                            }
-                        });
-                    }
-
-                });
 
                 $frmAccesos.validate({
                     errorClass     : "help-block",
@@ -576,14 +464,12 @@
                         var url = $frmAccesos.attr("action");
                         var data = "usuario.id=${usuario.id}";
                         data += "&" + $frmAccesos.serialize();
-                        $btnAccesos.hide().after(spinner);
                         $.ajax({
                             type    : "POST",
                             url     : url,
                             data    : data,
                             success : function (msg) {
                                 var parts = msg.split("_");
-//                        console.log(parts)
                                 if (parts.length == 3) {
                                     log(parts[1] + ". Usted será desconectado del sistema en 5 segundos", parts[0] == "OK" ? "success" : "error");
                                     spinner.remove();
@@ -651,9 +537,7 @@
                         } else {
                             bootbox.alert("Debe escoger un usuario para asignarle las funciones de recepcón, en caso de no haber usuarios activos comuniquese con el administrador del sistema.")
                         }
-
                     }
-
                     return false;
                 });
             })

@@ -372,13 +372,13 @@ class DepartamentoController {
                 } else if (hijo instanceof Persona) {
                     switch (params.sort) {
                         case 'apellido':
-                            lbl = "${hijo.apellido} ${hijo.nombre} ${hijo.login ? '(' + hijo.login + ')' : ''}"
+                            lbl = "${hijo.apellido} ${hijo.nombre} ${hijo.login ? '<strong>' + '(' + hijo.login + ')' + '</strong>' : ''}"
                             break;
                         case 'nombre':
-                            lbl = "${hijo.nombre} ${hijo.apellido} ${hijo.login ? '(' + hijo.login + ')' : ''}"
+                            lbl = "${hijo.nombre} ${hijo.apellido} ${hijo.login ? '<strong>' + '(' + hijo.login + ')' + '</strong>' : ''}"
                             break;
                         default:
-                            lbl = "${hijo.apellido} ${hijo.nombre} ${hijo.login ? '(' + hijo.login + ')' : ''}"
+                            lbl = "${hijo.apellido} ${hijo.nombre} ${hijo.login ? '<strong>' + '(' + hijo.login + ')' + '</strong>' : ''}"
                     }
 
                     tp = "usu"
