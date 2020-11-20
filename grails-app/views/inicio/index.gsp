@@ -110,72 +110,18 @@
     <div style="text-align: center; margin-top: 70px">
 
         <g:if test="${session.usuario.getPuedeDirector()}">
-        %{--<g:link controller="retrasadosWeb" action="reporteRetrasadosConsolidadoDir" class="openImagenDir" params="[dpto: Persona.get(session.usuario.id).departamento.id, inicio: '1', dir: '1']">--}%
             <g:link controller="departamento" action="arbolReportes" class="openImagenDir" params="[dpto: Persona.get(session.usuario.id).departamento.id, inicio: '1', dir: '1']">
-                <img src="${resource(dir: 'images', file: 'ingreso_adm1.jpeg')}" width="360px" height="360px"/>
+                <asset:image src="ingreso_adm.png" style="width: 360px"/>
             </g:link>
         </g:if>
 
         <g:if test="${session.usuario.getPuedeJefe()}">
-        %{--<g:link controller="retrasadosWeb" action="reporteRetrasadosConsolidado" class="openImagen" params="[dpto: Persona.get(session.usuario.id).departamento.id, inicio: '1']">--}%
             <g:link controller="departamento" action="arbolReportes" class="openImagen" params="[dpto: Persona.get(session.usuario.id).departamento.id, inicio: '1']">
-                <img src="${resource(dir: 'images', file: 'ingreso_adm1.jpeg')}" width="369px" height="360px"/>
+                <asset:image src="ingreso_adm.png" style="width: 360px"/>
             </g:link>
         </g:if>
 
     </div>
-
-    %{--<div class="texto"><b>Trámites externos</b>: recepción de documentos externos</div>--}%
-    %{--</div>--}%
-    %{--</div>--}%
-    %{--<g:if test="${prms.contains('seguimientoExternos')}">--}%
-    %{--</a>--}%
-    %{--</g:if>--}%
-
-    %{--<g:if test="${prms.contains('archivadosDpto')}">--}%
-    %{--<a href= "${createLink(controller:'tramite3', action: 'archivadosDpto')}" style="text-decoration: none">--}%
-    %{--</g:if>--}%
-    %{--<div class="ui-corner-all  item fuera">--}%
-    %{--<div class="ui-corner-all ui-widget-content item">--}%
-    %{--<div class="imagen">--}%
-    %{--<img src="${resource(dir: 'images', file: 'archivo.jpeg')}" width="100%" height="100%"/>--}%
-    %{--</div>--}%
-
-    %{--<div class="texto"><b>Archivo</b>: trámites archivados...</div>--}%
-    %{--</div>--}%
-    %{--</div>--}%
-    %{--<g:if test="${prms.contains('archivadosDpto')}">--}%
-    %{--</a>--}%
-    %{--</g:if>--}%
-
-    %{--<g:link controller="reportes" action="index" style="text-decoration: none">--}%
-    %{--<div class="ui-corner-all  item fuera">--}%
-    %{--<div class="ui-corner-all ui-widget-content item">--}%
-    %{--<div class="imagen">--}%
-    %{--<img src="${resource(dir: 'images', file: 'reporte.jpeg')}" width="100%" height="100%"/>--}%
-    %{--</div>--}%
-
-    %{--<div class="texto"><b>Reportes</b>: formatos pdf, hoja de cálculo, texto plano y html.--}%
-    %{--trámites resagados, tiempos de respuesta...</div>--}%
-    %{--</div>--}%
-    %{--</div>--}%
-    %{--</g:link>--}%
-    %{--<g:link  controller="documento" action="list" title="Documentos de los Proyectos">--}%
-    %{--<div class="ui-corner-all  item fuera">--}%
-    %{--<div class="ui-corner-all ui-widget-content item">--}%
-    %{--<div class="imagen">--}%
-    %{--<img src="${resource(dir: 'images', file: 'manuales1.png')}" width="100%" height="100%"/>--}%
-    %{--</div>--}%
-
-    %{--<div class="texto"><b>Manuales del sistema:</b>--}%
-    %{--<g:link controller="manual" action="manualIngreso" target="_blank">Uso del sistema</g:link>,--}%
-    %{--<g:link controller="manual" action="manualIngreso" target="_blank">Trámites externos</g:link>--}%
-    %{--<g:link controller="manual" action="manualIngreso" target="_blank">Reportes</g:link>,--}%
-    %{--</div>--}%
-    %{--</div>--}%
-    %{--</div>--}%
-
-    %{--<div style="text-align: center ; color:#002040">Desarrollado por: TEDEIN S.A. Versión ${message(code: 'version', default: '0.1.0x')}</div>--}%
 
 </div>
     <script type="text/javascript">
@@ -183,9 +129,6 @@
             var d = $(this).find(".imagen")
             d.width(d.width() + 10)
             d.height(d.height() + 10)
-//        $.each($(this).children(),function(){
-//            $(this).width( $(this).width()+10)
-//        });
         }, function () {
             var d = $(this).find(".imagen")
             d.width(d.width() - 10)
@@ -202,9 +145,6 @@
                 openLoader();
             });
         });
-
-
-
     </script>
 </body>
 </html>

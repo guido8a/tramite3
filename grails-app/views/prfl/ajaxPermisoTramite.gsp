@@ -3,20 +3,20 @@
     <input type="hidden" id="mdlo__id" value="${mdlo__id}">
     <input type="hidden" id="tpac__id" value="${mdlo__id}">
     <g:if test="${datos?.size() > 0}">
-        <div class="ui-corner-all" style="height: 500px; overflow:auto; margin-bottom: 5px; margin-left: -20px; background-color: #efeff8;
+        <div class="ui-corner-all" style="height: 600px; overflow:auto; margin-bottom: 5px; margin-left: -20px; background-color: #efeff8;
         border-style: solid; border-color: #AAA; border-width: 1px; ">
-            <table border="0" width="900px">
-                <thead style="color: #101010; background-color: #69b0d3">
+            <table border="0" width="100%">
+                <thead style="color: #ffffff; background-color: #415880">
                     <tr>
-                        <th style="padding:5px;" width="60px">Activado</th>
-                        <th width="250px" style="text-align: center">Permiso</th>
-                        <th width="590px" style="text-align: center">Descripción</th>
+                        <th style="padding:5px;" width="5%">Activado</th>
+                        <th width="12%" style="text-align: center">Permiso</th>
+                        <th width="81%" style="text-align: center">Descripción</th>
                     </tr>
                 </thead>
                 <tbody>
                 %{--<hr>Hola ${datos}</hr>--}%
                     <g:each in="${datos}" status="i" var="d">
-                        <tr class="${(i % 2) == 0 ? 'odd' : 'even'}" style="background: ${(d[3]) ? '#7cf' : ''}">
+                        <tr class="${(i % 2) == 0 ? 'odd' : 'even'}" style="background: ${(d[3]) ? '#a1c8e0' : ''}">
                             <td style="text-align: center; padding: 4px;"><input type="checkbox" name="cdgo" class="ndm ${d[4]}"
                                                                   value="${d[0].encodeAsHTML()}" ${(d[3]) ? 'checked' : ''}>
                             </td>
@@ -28,7 +28,10 @@
             </table>
         </div>
     </g:if>
-    <input id="aceptaAJX" type="button" class="btn btn-info grabaPrms" value="Fijar permisos del Perfil">
+%{--    <input id="aceptaAJX" type="button" class="btn btn-info grabaPrms" value="Fijar permisos del Perfil">--}%
+    <a href="#" class="btn btn-info btnEdit" id="aceptaAJX">
+        <i class="fa fa-edit fa-lg"></i> Fijar permisos del Perfil
+    </a>
 </g:form>
 
 <script type="text/javascript">
@@ -61,7 +64,7 @@
          */
         var $this = $(this);
         var checked = $this.is(":checked");
-
+        console.log('checked', checked)
         var codDirector = "P001";
         var codJefe = "P002";
         var codRecibir = "P010";
@@ -91,6 +94,7 @@
         var tieneReactivar = $("." + codReactivar).is(":checked");
         var tieneRedirect = $("." + codRedirect).is(":checked");
 
+        console.log("esAdmin", esAdmin);
         if (checked) {
             // que es lo q se checkeo
             var esDirector = $this.hasClass(codDirector);

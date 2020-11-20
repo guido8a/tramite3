@@ -25,13 +25,11 @@
                    Gestionar Permisos y Módulos(Menú)
                 </g:link>
             </div>
-%{--
             <div class="btn-group">
                 <g:link controller="prfl" action="permisos" id="1" class="aPrfl btn btn-warning">
                     <i class="fa fa-users-cog"></i> Gestionar Permisos de Acceso
                 </g:link>
             </div>
---}%
 
             <div class="btn-group">
                 <a href="#" id="cargaCtrl" class="btn btn-info"><i class="fa fa-cogs"></i> Cargar Controladores</a>

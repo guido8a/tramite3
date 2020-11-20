@@ -11,38 +11,50 @@
 
 <div class="btn-toolbar toolbar">
     <div class="btn-group">
+        <g:link controller="acciones" action="acciones" class="btn btn-default">
+            <i class="fa fa-arrow-left"></i> Acciones
+        </g:link>
+    </div>
+    <div class="btn-group" style="margin-left: 60px">
         <g:link action="form" class="btn btn-azul btnCrear">
-            <i class="fa fa-pencil-square-o"></i> Crear perfil
+            <i class="fa fa-file"></i> Crear perfil
         </g:link>
         <a href="#" class="btn btn-primary btnEdit">
-            <i class="fa fa-camera-retro fa-lg"></i> Editar perfil
+            <i class="fa fa-edit fa-lg"></i> Editar perfil
         </a>
         <a href="#" class="btn btn-primary btnDelete">
-            <i class="fa fa-trash-o"></i> Eliminar perfil
+            <i class="fa fa-trash"></i> Eliminar perfil
         </a>
     </div>
 
     <span style="font-size: 10pt; color: black; margin-left: 160px;">Seleccione un Perfil
     <g:select optionKey="id" from="${seguridad.Prfl.list()}" name="perfil" value="${prflInstace?.id}"
-              style="width: 180px;"/>
+              style="width: 240px;"/>
     </span>
+
+    <div class="btn-group modulo" data-toggle="buttons">
+            <input type="hidden" id="check${i}" name="modulo" value="1000" nombre="Permisos">
+
+    </div>
 
 </div>
 
 <div id="tipo" class="alert ">
+            <label class="btn btn-primary col-md-12">
+                        Gestionar los permisos de acceso a los trámites para el <strong>Perfil Seleccionado</strong>
+            </label>
+    <div class="" id="parm">
+        <g:form action="registro" method="post">
+            <input type="hidden" id="prfl__id" name="id" value="${prflInstance?.id}"/>
 
-<div class="" id="parm">
-    <g:form action="registro" method="post">
-        <input type="hidden" id="prfl__id" name="id" value="${prflInstance?.id}"/>
+        </g:form>
+        <div id="ajx" style="width:100%; padding-left: 20px;"></div>
 
-            <div class="alert alert-info modulo" style="text-align: center; width: 900px">
-                <strong>Permisos:</strong>
-                Gestionar los permisos de acceso en el sistema
-            </div>
-    </g:form>
-    <div id="ajx" style="width:900px; padding-left: 20px;"></div>
+%{--        <div id="ajx_prfl" style="width:520px;"></div>--}%
 
-</div>
+%{--        <div id="ajx_menu" style="width:520px;"></div>--}%
+
+    </div>
 
 <div id="datosPerfil" class="container entero  ui-corner-bottom">
 </div>
