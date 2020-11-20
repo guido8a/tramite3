@@ -6,8 +6,6 @@
     <meta name="layout" content="main">
     <title>Departamentos</title>
 
-%{--    <script src="${resource(dir: 'js/plugins/jstree-e22db21/dist', file: 'jstree.min.js')}"></script>--}%
-%{--    <link href="${resource(dir: 'js/plugins/jstree-e22db21/dist/themes/default', file: 'style.min.css')}" rel="stylesheet">--}%
     <asset:javascript src="/jstree-3.0.8/dist/jstree.min.js"/>
     <asset:stylesheet src="/jstree-3.0.8/dist/themes/default/style.min.css"/>
 
@@ -67,10 +65,10 @@
 
             <div class="btn-group" style="margin-top: 4px;">
                 <g:link action="arbol" params="[sort: 'nombre']" class="btn btn-sm btn-info">
-                    <i class="fa fa-sort-alpha-asc"></i> Ordenar por nombre
+                    <i class="fa fa-sort-amount-down"></i> Ordenar por nombre
                 </g:link>
                 <g:link action="arbol" params="[sort: 'apellido']" class="btn btn-sm btn-info">
-                    <i class="fa fa-sort-alpha-asc"></i> Ordenar por apellido
+                    <i class="fa fa-sort-amount-down"></i> Ordenar por apellido
                 </g:link>
             </div>
 
@@ -1054,7 +1052,7 @@
                         icon : "fa fa-folder text-warning"
                     },
                     padreActivo               : {
-                        icon : "fa fa-building-o text-info"
+                        icon : "fa fa-building text-info"
                     },
                     padreInactivo             : {
                         icon : "fa fa-building-o text-muted"
@@ -1078,10 +1076,10 @@
                         icon : "fa fa-home text-muted"
                     },
                     hijoExternoActivo         : {
-                        icon : "fa fa-paper-plane-o text-success"
+                        icon : "fa fa-paper-plane text-success"
                     },
                     hijoExternoInactivo       : {
-                        icon : "fa fa-paper-plane-o text-muted"
+                        icon : "fa fa-paper-plane text-muted"
                     },
                     hijoRemotoActivo          : {
                         icon : "fa fa-rss text-success"
