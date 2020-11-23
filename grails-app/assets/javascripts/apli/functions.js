@@ -236,5 +236,4 @@ function cargarLoader(texto){
     });
 
     return dialog
-
 }

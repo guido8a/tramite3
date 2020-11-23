@@ -1,77 +1,94 @@
-
 <!DOCTYPE html>
 <html>
     <head>
         <meta name="layout" content="main">
-        <title>Lista de Parámetros</title>
+        <title>Lista de Numero</title>
     </head>
+
     <body>
 
-    <div class="btn-toolbar toolbar">
-        <div class="btn-group">
-            <g:link controller="inicio" action="parametros" class="btn btn-default">
-                <i class="fa fa-arrow-left"></i> Parámetros
-            </g:link>
+        <elm:flashMessage tipo="${flash.tipo}" clase="${flash.clase}">${flash.message}</elm:flashMessage>
+
+        <!-- botones -->
+        <div class="btn-toolbar toolbar">
+            <div class="btn-group">
+                <g:link action="form" class="btn btn-default btnCrear">
+                    <i class="fa fa-file-o"></i> Crear
+                </g:link>
+            </div>
+
+            <div class="btn-group pull-right col-md-3">
+                <div class="input-group">
+                    <input type="text" class="form-control span2 input-search" placeholder="Buscar" value="${params.search}">
+                    <span class="input-group-btn">
+                        <g:link action="list" class="btn btn-default btn-search">
+                            <i class="fa fa-search"></i>&nbsp;
+                        </g:link>
+                    </span>
+                </div><!-- /input-group -->
+            </div>
         </div>
-    </div>
 
-    <h3> Parámetros del Sistema</h3>
-
-    <elm:flashMessage tipo="${flash.tipo}" clase="${flash.clase}">${flash.message}</elm:flashMessage>
-
-        <table class="table table-condensed table-bordered table-striped">
+        <table class="table table-condensed table-bordered">
             <thead>
                 <tr>
-                    <g:sortableColumn property="horaInicio" title="Hora Inicio" />
-                    <g:sortableColumn property="horaFin" title="Hora Fin" />
-                    <g:sortableColumn property="ipLDAP" title="IP y puerto LDAP" />
-                    <g:sortableColumn property="ouPrincipal" title="Imágenes" />
+
+                    <th>Departamento</th>
+
+                    <th>Tipo Documento</th>
+
+                    <g:sortableColumn property="valor" title="Valor"/>
+
                 </tr>
             </thead>
             <tbody>
-                <g:each in="${parametrosInstanceList}" status="i" var="parametrosInstance">
-                    <tr data-id="${parametrosInstance.id}">
-                        <td>${parametrosInstance.horaInicio.toString().padLeft(2,'0')}:${parametrosInstance.minutoInicio.toString().padLeft(2,'0')}</td>
-                        <td>${parametrosInstance.horaFin.toString().padLeft(2,'0')}:${parametrosInstance.minutoFin.toString().padLeft(2,'0')}</td>
-                        <td>${fieldValue(bean: parametrosInstance, field: "ipLDAP")}</td>
-                        <td>${fieldValue(bean: parametrosInstance, field: "imagenes")}</td>
+                <g:each in="${numeroInstanceList}" status="i" var="numeroInstance">
+                    <tr data-id="${numeroInstance.id}">
+
+                        <td><elm:textoBusqueda texto='${fieldValue(bean: numeroInstance, field: "departamento")}' search='${params.search}' /></td>
+
+                        <td><elm:textoBusqueda texto='${fieldValue(bean: numeroInstance, field: "tipoDocumento")}' search='${params.search}' /></td>
+
+                        <td><elm:textoBusqueda texto='${fieldValue(bean: numeroInstance, field: "valor")}' search='${params.search}' /></td>
+
                     </tr>
                 </g:each>
             </tbody>
         </table>
 
-        <elm:pagination total="${parametrosInstanceCount}" params="${params}"/>
+        <elm:pagination total="${numeroInstanceCount}" params="${params}"/>
 
         <script type="text/javascript">
             var id = null;
             function submitForm() {
-                var $form = $("#frmParametros");
+                var $form = $("#frmNumero");
                 var $btn = $("#dlgCreateEdit").find("#btnSave");
                 if ($form.valid()) {
-                $btn.replaceWith(spinner);
+                    $btn.replaceWith(spinner);
+                    openLoader("Grabando");
                     $.ajax({
                         type    : "POST",
                         url     : '${createLink(action:'save_ajax')}',
                         data    : $form.serialize(),
-                            success : function (msg) {
-                        var parts = msg.split("_");
-                        log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
-                        if (parts[0] == "OK") {
-                            location.reload(true);
-                        } else {
-                            spinner.replaceWith($btn);
-                            return false;
+                        success : function (msg) {
+                            var parts = msg.split("_");
+                            log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
+                            if (parts[0] == "OK") {
+                                location.reload(true);
+                            } else {
+                                spinner.replaceWith($btn);
+                                return false;
+                            }
                         }
-                    }
-                });
-            } else {
-                return false;
-            } //else
+                    });
+                } else {
+                    return false;
+                } //else
             }
             function deleteRow(itemId) {
                 bootbox.dialog({
                     title   : "Alerta",
-                    message : "<i class='fa fa-trash fa-3x pull-left text-danger text-shadow'></i><p>¿Está seguro que desea eliminar el Parámetro seleccionado? Esta acción no se puede deshacer.</p>",
+                    message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>¿Está seguro que desea eliminar el Numero seleccionado? Esta acción no se puede deshacer.</p>",
                     buttons : {
                         cancelar : {
                             label     : "Cancelar",
@@ -83,6 +100,7 @@
                             label     : "<i class='fa fa-trash-o'></i> Eliminar",
                             className : "btn-danger",
                             callback  : function () {
+                                openLoader("Eliminando");
                                 $.ajax({
                                     type    : "POST",
                                     url     : '${createLink(action:'delete_ajax')}',
@@ -104,7 +122,7 @@
             }
             function createEditRow(id) {
                 var title = id ? "Editar" : "Crear";
-                var data = id ? { id: id } : {};
+                var data = id ? { id : id } : {};
                 $.ajax({
                     type    : "POST",
                     url     : "${createLink(action:'form_ajax')}",
@@ -112,7 +130,7 @@
                     success : function (msg) {
                         var b = bootbox.dialog({
                             id      : "dlgCreateEdit",
-                            title   : title + " Parámetros",
+                            title   : title + " Numero",
                             message : msg,
                             buttons : {
                                 cancelar : {
@@ -132,7 +150,7 @@
                             } //buttons
                         }); //dialog
                         setTimeout(function () {
-                            b.find(".form-control").first().focus()
+                            b.find(".form-control").not(".datepicker").first().focus()
                         }, 500);
                     } //success
                 }); //ajax
@@ -140,7 +158,7 @@
 
             $(function () {
 
-                $(".btnCrear").click(function() {
+                $(".btnCrear").click(function () {
                     createEditRow();
                     return false;
                 });
@@ -164,7 +182,7 @@
                                     },
                                     success : function (msg) {
                                         bootbox.dialog({
-                                            title   : "Ver Parámetros",
+                                            title   : "Ver Número",
                                             message : msg,
                                             buttons : {
                                                 ok : {
@@ -181,10 +199,19 @@
                         },
                         editar   : {
                             label  : "Editar",
-                            icon   : "fa fa-edit",
+                            icon   : "fa fa-pencil",
                             action : function ($element) {
                                 var id = $element.data("id");
                                 createEditRow(id);
+                            }
+                        },
+                        eliminar : {
+                            label            : "Eliminar",
+                            icon             : "fa fa-trash-o",
+                            separator_before : true,
+                            action           : function ($element) {
+                                var id = $element.data("id");
+                                deleteRow(id);
                             }
                         }
                     },
