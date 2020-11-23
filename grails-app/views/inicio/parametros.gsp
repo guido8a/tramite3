@@ -27,7 +27,7 @@
             <div class="panel-body">
                 <ul class="fa-ul">
                     <li>
-                        <i class="fa-li far fa-bookmark text-success"></i>
+                        <i class="fa-li fas fa-users text-success"></i>
                         <g:link data-info="categoria" class="over text-success" controller="departamento" action="arbol">Estructura Departamental
                         </g:link> del GADPP conforme al organigrama de procesos institucional.
 
@@ -38,7 +38,7 @@
                         </div>
                     </li>
                     <li>
-                        <i class="fa-li fas fa-certificate text-success"></i>
+                        <i class="fa-li fas fa-paste text-success"></i>
                         <g:link data-info="categoria" class="over text-success" controller="tipoDocumento" action="list">Tipo de documento</g:link>
                         para diferenciar los distintos documentos que se producen dentro de un trámite, ejemplo:
                     Memorando, Oficio, Sumilla, Circular, etc.
@@ -51,7 +51,7 @@
                     </li>
 
                     <li>
-                        <i class="fa-li fas fa-map-marker-alt text-success"></i>
+                        <i class="fa-li fas fa-clock text-success"></i>
                         <g:link data-info="categoria" class="over text-success" controller="tipoPrioridad" action="list">Tipo de Prioridad</g:link> que posee los
                         distintos trámites
 
