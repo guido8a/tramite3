@@ -91,7 +91,7 @@
 
                     <li>
                         <i class="fa-li fas fa-highlighter text-success"></i>
-                        <g:link data-info="categoria" class="over text-success" controller="numero" action="config">Fijar números consecutivos por tipo de documento</g:link> sirve para
+                        <g:link data-info="categoria" class="over text-success" controller="numero" action="list">Fijar números consecutivos por tipo de documento</g:link> sirve para
                         fijar los números consecutivos que se aplican por departamento y tipo de documento
 
                         <div class="descripcion hidden">
