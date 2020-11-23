@@ -4,6 +4,8 @@ package tramites
 
 class NumeroController {
 
+    def dbConnectionService
+
     def index() {
         redirect(action: "list", params: params)
     } //index
@@ -223,5 +225,28 @@ class NumeroController {
     protected void notFound_ajax() {
         render "NO_No se encontró Numero."
     } //notFound para ajax
+
+    def tablaDepartamentos_ajax(){
+
+        def tipo
+
+        if(params.tipo == '0'){
+            tipo = 'dptocdgo'
+        }else{
+            tipo = 'dptodscr'
+        }
+
+        def sql = "select * from dpto where ${tipo} ilike '%${params.texto}%' order by dptodscr"
+        def cn = dbConnectionService.getConnection()
+        def res = cn.rows(sql.toString())
+
+//        println("--- " + sql)
+
+        return[departamentos: res]
+    }
+
+    def numeracion_ajax(){
+
+    }
 
 }
