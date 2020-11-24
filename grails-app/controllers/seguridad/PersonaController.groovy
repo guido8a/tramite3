@@ -680,7 +680,6 @@ class PersonaController {
             def perf = Prfl.get(pid)
             def sesn = Sesn.findAllByUsuarioAndPerfilAndFechaFinIsNull(usu, perf)  // puede tener varios perfiles repetidos
             try {
-//                sesn.fechaFin = new Date()
                 sesn.each { sn ->
                     sn.fechaFin = new Date()
                 }
@@ -728,15 +727,19 @@ class PersonaController {
             }
 
             permisosAgregar.each {
+
+                def pm = PermisoTramite.findByDescripcion(it)
+
                 def prus = new PermisoUsuario([
                         persona       : usu,
-                        permisoTramite: it,
+//                        permisoTramite: it,
+                        permisoTramite: pm,
                         fechaInicio   : new Date(),
                         asignadoPor   : session.usuario
                 ])
                 if (!prus.save(flush: true)) {
                     println prus.errors
-                    errores += "<li>No se pudo asignar permiso ${prus.permisoTramite.descripcion}</li>"
+                    errores += "<li>No se pudo asignar permiso ${prus?.permisoTramite?.descripcion ?: ''}</li>"
                 }
             }
 

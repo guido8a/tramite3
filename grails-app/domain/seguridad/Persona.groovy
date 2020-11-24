@@ -1,6 +1,7 @@
 package seguridad
 
 import audita.Auditable
+import org.apache.commons.lang.WordUtils
 import tramites.Departamento
 import tramites.PermisoTramite
 
