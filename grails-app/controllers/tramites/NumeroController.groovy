@@ -247,6 +247,60 @@ class NumeroController {
 
     def numeracion_ajax(){
 
+        def departamento = Departamento.get(params.id)
+        def tipos = TipoDocumentoDepartamento.findAllByDepartamentoAndEstado(departamento,1)
+
+        return[tipos:tipos.tipo, departamento: departamento]
+    }
+
+    def valor_ajax(){
+
+//        println("params " + params)
+
+        def departamento = Departamento.get(params.id)
+        def tipoDocumento = TipoDocumento.get(params.tipo)
+        def numero = Numero.findByDepartamentoAndTipoDocumento(departamento, tipoDocumento)
+
+        return[numero:numero]
+    }
+
+    def guardarValor_ajax(){
+//        println("params " + params)
+
+        def numero
+        def departamento = Departamento.get(params.departamento)
+        def tipo
+
+        if(params.tipo){
+            tipo = TipoDocumento.get(params.tipo)
+        }else{
+            render "er_Seleccione un tipo de documento"
+            return
+        }
+
+        if(params.valor){
+            params.valor = params.valor.toInteger();
+        }else{
+            render "er_Ingrese un número válido"
+            return
+        }
+
+        if(params.id){
+            numero = Numero.get(params.id)
+        }else{
+            numero = new Numero()
+            numero.departamento = departamento
+            numero.tipoDocumento = tipo
+        }
+
+        numero.valor = params.valor
+
+        if(!numero.save(flush:true)){
+            println("error al guardar la instancia de numero " + numero.errors)
+            render "no"
+        }else{
+            render "ok"
+        }
     }
 
 }

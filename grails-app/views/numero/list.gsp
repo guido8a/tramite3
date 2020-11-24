@@ -50,6 +50,12 @@
 
 <script type="text/javascript">
 
+    $("#btnLimpiar").click(function () {
+        $("#texto").val('');
+        $("#tipo").val(0);
+        cargarTablaDepartamentos($("#tipo option:selected").val(), $("#texto").val());
+    });
+
     $("#btnBuscar").click(function () {
         cargarTablaDepartamentos($("#tipo option:selected").val(), $("#texto").val());
     });
