@@ -1114,16 +1114,17 @@
                         icon : "far fa-user-circle text-muted"
                     },
                     jefeTrianguloActivo       : {
-                        icon : "fa fa-cloud-download text-warning"
+                        // icon : "fa fa-cloud-download text-warning"
+                        icon : "fas fa-user-tie text-warning"
                     },
                     jefeTrianguloInactivo     : {
-                        icon : "fa fa-cloud-download text-muted"
+                        icon : "fas fa-user-tie text-muted"
                     },
                     directorTrianguloActivo   : {
-                        icon : "fa fa-cloud-download text-danger"
+                        icon : "fas fa-user-tie text-danger"
                     },
                     directorTrianguloInactivo : {
-                        icon : "fa fa-cloud-download text-muted"
+                        icon : "fas fa-user-tie text-muted"
                     }
                 }
             });
