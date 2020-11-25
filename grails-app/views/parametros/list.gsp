@@ -22,19 +22,27 @@
         <table class="table table-condensed table-bordered table-striped">
             <thead>
                 <tr>
+                    <g:sortableColumn property="institucion" title="Institución" />
                     <g:sortableColumn property="horaInicio" title="Hora Inicio" />
                     <g:sortableColumn property="horaFin" title="Hora Fin" />
                     <g:sortableColumn property="ipLDAP" title="IP y puerto LDAP" />
                     <g:sortableColumn property="ouPrincipal" title="Imágenes" />
+                    <g:sortableColumn property="bloqueo" title="Bloqueo interno" />
+                    <g:sortableColumn property="remoto" title="Bloqueo Ext." />
+                    <g:sortableColumn property="telefono" title="Telf. Externo" />
                 </tr>
             </thead>
             <tbody>
                 <g:each in="${parametrosInstanceList}" status="i" var="parametrosInstance">
                     <tr data-id="${parametrosInstance.id}">
+                        <td>${parametrosInstance.institucion}</td>
                         <td>${parametrosInstance.horaInicio.toString().padLeft(2,'0')}:${parametrosInstance.minutoInicio.toString().padLeft(2,'0')}</td>
                         <td>${parametrosInstance.horaFin.toString().padLeft(2,'0')}:${parametrosInstance.minutoFin.toString().padLeft(2,'0')}</td>
                         <td>${fieldValue(bean: parametrosInstance, field: "ipLDAP")}</td>
                         <td>${fieldValue(bean: parametrosInstance, field: "imagenes")}</td>
+                        <td>${parametrosInstance.bloqueo.toString().padLeft(2,'0')} horas</td>
+                        <td>${parametrosInstance.remoto.toString().padLeft(2,'0')} días</td>
+                        <td>${fieldValue(bean: parametrosInstance, field: "telefono")}</td>
                     </tr>
                 </g:each>
             </tbody>
@@ -112,6 +120,7 @@
                     success : function (msg) {
                         var b = bootbox.dialog({
                             id      : "dlgCreateEdit",
+                            class   : "modal-lg",
                             title   : title + " Parámetros",
                             message : msg,
                             buttons : {

@@ -20,16 +20,19 @@
     <div class="col-md-1">
         <label>Buscar por:</label>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
         <g:select name="tipo" from="${[0: 'Código', 1 : 'Nombre']}" class="form-control" optionKey="key" optionValue="value"/>
     </div>
     <div class="col-md-3">
         <g:textField name="texto" class="form-control" />
     </div>
-    <div class="col-md-3">
+    <div class="col-md-5">
         <div class="btn-group">
             <a href="#" class="btn btn-success" id="btnBuscar"><i class="fa fa-search" title="Buscar"></i> Buscar </a>
             <a href="#" class="btn btn-warning" id="btnLimpiar"><i class="fa fa-eraser" title="Limpiar búsqueda"></i> </a>
+        </div>
+        <div style="padding-left: 130px" class="text-info">
+            Use un criterio para buscar los departamentos, se despliegan sólo los 50 primeros
         </div>
     </div>
 </div>
@@ -37,8 +40,8 @@
 <table class="table table-condensed table-bordered">
     <thead>
     <tr style="width: 100%">
-        <th style="width: 25%">Código</th>
-        <th style="width: 75%">Departamento</th>
+        <th style="width: 20%">Código</th>
+        <th style="width: 80%">Departamento</th>
     </tr>
     </thead>
 </table>

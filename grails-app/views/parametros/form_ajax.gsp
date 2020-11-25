@@ -13,9 +13,9 @@
                     Institución
                 </label>
 
-                <div class="col-md-6">
+                <div class="col-md-9">
                     <g:textField name="institucion" required="" class="form-control required"
-                                 value="${parametrosInstance?.institucion}" style="width:400px;" maxlength="255"/>
+                                 value="${parametrosInstance?.institucion}" />
                 </div>
                 *
             </span>
@@ -94,10 +94,10 @@
                         CN
                     </label>
 
-                    <div class="col-md-7">
+                    <div class="col-md-9">
                         <g:textArea name="textoCn" required="" class="form-control required"
                                     value="${parametrosInstance?.textoCn}"
-                                    style="resize:none; width: 445px; height: 85px; font-family: 'Courier New', Courier, monospace; font-size: 12px;
+                                    style="resize:none; height: 85px; font-family: 'Courier New', Courier, monospace; font-size: 12px;
                                 font-weight: bold; " maxlength="511"/>
                     </div>
                     *
@@ -121,17 +121,17 @@
 
         <div class="form-group ${hasErrors(bean: parametrosInstance, field: 'bloqueo', 'error')} required">
             <span class="grupo">
-                <label for="bloqueo" class="col-md-3 control-label text-info">
+                <label for="bloqueo" class="col-md-2 control-label text-info">
                     Bloqueo en Horas por no recepción
                 </label>
 
-                <div class="col-md-2">
+                <div class="col-md-1">
                     <g:select name="bloqueo" from="${1..4}" value="${parametrosInstance?.bloqueo ?: 1}"
                               optionValue="${{ it.toString().padLeft(2, '0') }}"/>
                 </div>
             </span>
             <span class="grupo">
-                <label for="validaLDAP" class="col-md-4 control-label text-info">
+                <label for="validaLDAP" class="col-md-2 control-label text-info">
                     Validar usuarios contra LDAP
                 </label>
 
@@ -140,21 +140,21 @@
                               class="form-control required" required="" optionKey="key" optionValue="value"/>
                 </div>
             </span>
-        </div>
-        <div class="form-group ${hasErrors(bean: parametrosInstance, field: 'telefono', 'error')} ">
+
             <span class="grupo">
-                <label for="telefono" class="col-md-6 control-label text-info">
+                <label for="telefono" class="col-md-2 control-label text-info">
                     Teléfono para trámites Externos
                 </label>
-                <div class="col-md-6 required">
+                <div class="col-md-2 required">
                     <g:textField name="telefono" required="" class="form-control required"
-                                 value="${parametrosInstance?.telefono}" style="width:180px;" min-lenght="7"  maxlength="15"/>
+                                 value="${parametrosInstance?.telefono}" min-lenght="7"  maxlength="15"/>
                 </div>
             </span>
+
         </div>
         <div class="form-group ${hasErrors(bean: parametrosInstance, field: 'remoto', 'error')} ">
             <span class="grupo">
-                <label for="telefono" class="col-md-9 control-label text-info">
+                <label for="telefono" class="col-md-4 control-label text-info">
                     Bloqueo en días para Departamentos u Oficinas Remotas (dias)
                 </label>
                 <div class="col-md-2">
@@ -163,10 +163,9 @@
 
                 </div>
             </span>
-        </div>
 
         <span class="grupo">
-            <label for="validaLDAP" class="col-md-9 control-label text-info">
+            <label for="validaLDAP" class="col-md-3 control-label text-info">
                 Validar cambio de departamento de usuarios al enviar el trámite
             </label>
 
@@ -175,6 +174,8 @@
                           class="form-control required" required="" optionKey="key" optionValue="value"/>
             </div>
         </span>
+        </div>
+
     </g:form>
 
     <script type="text/javascript">

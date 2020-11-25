@@ -236,7 +236,8 @@ class NumeroController {
             tipo = 'dptodscr'
         }
 
-        def sql = "select * from dpto where ${tipo} ilike '%${params.texto}%' and dptoactv = 1 order by dptodscr"
+        def sql = "select * from dpto where ${tipo} ilike '%${params.texto}%' and dptoactv = 1 " +
+                "order by dptodscr limit 50"
         def cn = dbConnectionService.getConnection()
         def res = cn.rows(sql.toString())
 

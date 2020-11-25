@@ -5,13 +5,13 @@
   Time: 15:01
 --%>
 
-<div style="width: 100%;height: 300px;overflow: auto; margin-top: -10px;margin-bottom: 20px;">
+<div style="width: 100%;height: 600px;overflow: auto; margin-top: -10px;margin-bottom: 20px;">
     <table class="table table-condensed table-bordered">
         <tbody>
         <g:each in="${departamentos}" var="departamento">
             <tr style="width: 100%" data-id="${departamento?.dpto__id}">
-                <td style="width: 25%">${departamento.dptocdgo}</td>
-                <td style="width: 75%">${departamento.dptodscr}</td>
+                <td style="width: 20%">${departamento.dptocdgo}</td>
+                <td style="width: 80%">${departamento.dptodscr}</td>
             </tr>
         </g:each>
         </tbody>

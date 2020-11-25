@@ -21,7 +21,7 @@
     }
 
     .dia {
-        width      : 33px;
+        width      : 31px;
         text-align : center;
         cursor     : pointer;
     }
@@ -39,11 +39,11 @@
     }
 
     .vacio {
-        background-color : #AAAAAA;
+        background-color : #d1d1d1;
     }
 
     .vacacion {
-        background-color : #5CAACE;
+        background-color : #89d9ff;
     }
 
     h3 {
@@ -91,11 +91,10 @@
             <i class="icon fa fa-power-off"></i> Cerrar el año de proceso
         </a>
     </div>
+    <div class="col-md-8" style="font-size: x-large; text-align: center; font-weight: bold">
+        Calendario del Año ${anio.numero}
+    </div>
 </div>
-
-<h3>
-    Año ${anio.numero}
-</h3>
 
 <div class="well well-sm">
     <ul>
