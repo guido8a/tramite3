@@ -1605,7 +1605,7 @@ class PersonaController {
 
 
         def cn = dbConnectionService.getConnection()
-        def sql = "select * from usuarios() where ${tipo} ilike '%${params.texto}%' ${estado} ${perfil} limit 30"
+        def sql = "select * from usuarios() where ${tipo} ilike '%${params.texto}%' ${estado} ${perfil} order by usroapll limit 30"
         def usuarios = cn.rows(sql.toString())
 
         println("sql " + sql)
