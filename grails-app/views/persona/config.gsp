@@ -57,7 +57,7 @@
 
 <div class="form-group keeptogether">
     <div>
-        <g:link class="btn btn-default col-md-1" controller="persona" action="list"><i class="fa fa-arrow-left"></i> Regresar</g:link>
+        <g:link class="btn btn-default col-md-1" controller="persona" action="usuarios"><i class="fa fa-arrow-left"></i> Regresar</g:link>
     </div>
 </div>
 

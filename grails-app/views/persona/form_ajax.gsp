@@ -16,7 +16,7 @@
                     </label>
 
                     <div class="col-md-9">
-                        <g:select id="departamento" name="departamento.id" from="${tramites.Departamento.list([sort: 'descripcion'])}"
+                        <g:select id="departamento" name="departamento.id" from="${tramites.Departamento.findAllByActivo(1).sort{it.descripcion}}"
                                   optionKey="id" optionValue="descripcion"
                                   value="${personaInstance?.departamento?.id}" class="many-to-one form-control"/>
                     </div>

@@ -10,7 +10,7 @@
     <table class="table table-condensed table-bordered">
         <tbody>
         <g:each in="${usuarios}" var="usuario">
-            <tr style="width: 100%" data-id="${usuario.usro__id}">
+            <tr style="width: 100%" data-id="${usuario.usro__id}" class="${usuario.usroetdo == 1 ? 'activo' : 'inactivo'}">
                 <td style="width: 10%">${usuario.usrologn}</td>
                 <td style="width: 25%">${usuario.usronmbr}</td>
                 <td style="width: 25%">${usuario.usroapll}</td>
@@ -25,80 +25,67 @@
 <script type="text/javascript">
 
 
-    function guardarValor(){
-        $.ajax({
-            type: 'POST',
-            url: '${createLink(controller: 'numero', action: 'guardarValor_ajax')}',
-            data:{
-                id: $("#idNumero").val(),
-                valor: $("#idValor").val(),
-                tipo: $("#tipoDocumento").val(),
-                departamento: $("#idDepartamento").val()
+    $(function () {
+        $("tr").contextMenu({
+            items  : createContextMenu,
+            onShow : function ($element) {
+                $element.addClass("trHighlight");
             },
-            success: function (msg) {
-                var parts = msg.split("_");
-                if(parts[0] == 'ok'){
-                    log("Número guardado correctamente","success")
-                }else{
-                    if(parts[0] == 'er'){
-                        bootbox.alert('<i class="fa fa-exclamation-triangle text-danger fa-3x"></i> ' + '<strong style="font-size: 14px">' + parts[1] + '</strong>');
-                        return;
-                    }else{
-                        log("Error al guardar el número","error")
-                    }
-                }
+            onHide : function ($element) {
+                $(".trHighlight").removeClass("trHighlight");
             }
         });
-    }
-
-    $("tr").contextMenu({
-        items  : {
-            header   : {
-                label  : "Acciones",
-                header : true
-            },
-            ver      : {
-                label  : "Numeración",
-                icon   : "fa fa-search",
-                action : function ($element) {
-                    var id = $element.data("id");
-                    $.ajax({
-                        type    : "POST",
-                        url     : "${createLink(controller: 'numero', action:'numeracion_ajax')}",
-                        data    : {
-                            id : id
-                        },
-                        success : function (msg) {
-                            bootbox.dialog({
-                                title   : "Numeración por tipo de trámite",
-                                message : msg,
-                                buttons : {
-                                    cancelar : {
-                                        label     : "Cancelar",
-                                        className : "btn-primary",
-                                        callback  : function () {
-                                        }
-                                    },
-                                    guardar : {
-                                        label     : "Guardar",
-                                        className : "btn-success",
-                                        callback  : function () {
-                                            guardarValor();
-                                        }
-                                    }
-                                }
-                            });
-                        }
-                    });
-                }
-            }
-        },
-        onShow : function ($element) {
-            $element.addClass("trHighlight");
-        },
-        onHide : function ($element) {
-            $(".trHighlight").removeClass("trHighlight");
-        }
     });
+
+
+%{--    $("tr").contextMenu({--}%
+%{--        items  : {--}%
+%{--            header   : {--}%
+%{--                label  : "Acciones",--}%
+%{--                header : true--}%
+%{--            },--}%
+%{--            ver      : {--}%
+%{--                label  : "Numeración",--}%
+%{--                icon   : "fa fa-search",--}%
+%{--                action : function ($element) {--}%
+%{--                    var id = $element.data("id");--}%
+%{--                    $.ajax({--}%
+%{--                        type    : "POST",--}%
+%{--                        url     : "${createLink(controller: 'numero', action:'numeracion_ajax')}",--}%
+%{--                        data    : {--}%
+%{--                            id : id--}%
+%{--                        },--}%
+%{--                        success : function (msg) {--}%
+%{--                            bootbox.dialog({--}%
+%{--                                title   : "Numeración por tipo de trámite",--}%
+%{--                                message : msg,--}%
+%{--                                buttons : {--}%
+%{--                                    cancelar : {--}%
+%{--                                        label     : "Cancelar",--}%
+%{--                                        className : "btn-primary",--}%
+%{--                                        callback  : function () {--}%
+%{--                                        }--}%
+%{--                                    },--}%
+%{--                                    guardar : {--}%
+%{--                                        label     : "Guardar",--}%
+%{--                                        className : "btn-success",--}%
+%{--                                        callback  : function () {--}%
+%{--                                            guardarValor();--}%
+%{--                                        }--}%
+%{--                                    }--}%
+%{--                                }--}%
+%{--                            });--}%
+%{--                        }--}%
+%{--                    });--}%
+%{--                }--}%
+%{--            }--}%
+%{--        },--}%
+%{--        onShow : function ($element) {--}%
+%{--            $element.addClass("trHighlight");--}%
+%{--        },--}%
+%{--        onHide : function ($element) {--}%
+%{--            $(".trHighlight").removeClass("trHighlight");--}%
+%{--        }--}%
+%{--    });--}%
 
 </script>

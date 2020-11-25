@@ -1566,7 +1566,7 @@ class PersonaController {
     }
 
     def tablaUsuarios_ajax(){
-        println "tablaUsuarios_ajax: $params"
+//        println "tablaUsuarios_ajax: $params"
 
         def tipo
         def estado
@@ -1608,7 +1608,7 @@ class PersonaController {
         def sql = "select * from usuarios() where ${tipo} ilike '%${params.texto}%' ${estado} ${perfil} order by usroapll limit 30"
         def usuarios = cn.rows(sql.toString())
 
-        println("sql " + sql)
+//        println("sql " + sql)
 
         return[usuarios: usuarios]
 

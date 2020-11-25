@@ -73,10 +73,17 @@
 
 <script type="text/javascript">
 
+    $(".btnCrear").click(function () {
+        createEditRow(null, "persona");
+        return false;
+    });
+
     $("#btnLimpiar").click(function () {
-        // $("#texto").val('');
-        // $("#tipo").val(0);
-        // cargarTablaDepartamentos($("#tipo option:selected").val(), $("#texto").val());
+        $("#texto").val('');
+        $("#tipo").val(0);
+        $("#perfil").val(0);
+        $("#estado").val(0);
+        // cargarTablaUsuarios($("#tipo").val(0), $("#texto").val(''), $("#perfil").val(0), $("#estado").val(0));
     });
 
     $("#btnBuscar").click(function () {
@@ -103,36 +110,96 @@
         })
     }
 
-    var id = null;
-    function submitForm() {
-        var $form = $("#frmNumero");
-        var $btn = $("#dlgCreateEdit").find("#btnSave");
-        if ($form.valid()) {
-            $btn.replaceWith(spinner);
-            openLoader("Grabando");
-            $.ajax({
-                type    : "POST",
-                url     : '${createLink(action:'save_ajax')}',
-                data    : $form.serialize(),
-                success : function (msg) {
-                    var parts = msg.split("_");
-                    log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
-                    if (parts[0] == "OK") {
-                        location.reload(true);
-                    } else {
-                        spinner.replaceWith($btn);
-                        return false;
+
+    function createContextMenu(node) {
+        var $tr = $(node);
+
+        var items = {
+            header : {
+                label  : "Acciones",
+                header : true
+            }
+        };
+
+        var id = $tr.data("id");
+
+        var estaActivo = $tr.hasClass("activo");
+        var estaInactivo = $tr.hasClass("inactivo");
+
+        var puedeEliminar = $tr.hasClass("eliminar");
+        puedeEliminar = true;
+
+        var ver = {
+            label  : 'Ver',
+            icon   : "fa fa-search",
+            action : function () {
+                $.ajax({
+                    type    : "POST",
+                    url     : "${createLink(action:'show_ajax')}",
+                    data    : {
+                        id : id
+                    },
+                    success : function (msg) {
+                        bootbox.dialog({
+                            title   : "Ver Persona",
+                            message : msg,
+                            buttons : {
+                                ok : {
+                                    label     : "Aceptar",
+                                    className : "btn-primary",
+                                    callback  : function () {
+                                    }
+                                }
+                            }
+                        });
                     }
-                }
-            });
-        } else {
-            return false;
-        } //else
+                });
+            }
+        };
+
+        var editar = {
+            label           : 'Editar',
+            icon            : "fa fa-edit",
+            separator_after : true,
+            action          : function (e) {
+                createEditRow(id, "persona");
+            }
+        };
+
+        var config = {
+            label           : 'Perfiles',
+            icon            : "fa fa-cogs",
+            separator_after : true,
+            url             : "${createLink(action: 'config')}/" + id
+        };
+
+        var eliminar = {
+            label            : 'Eliminar Persona',
+            icon             : "fa fa-trash",
+            separator_before : true,
+            action           : function (e) {
+                deleteRow(id);
+            }
+        };
+
+        items.ver = ver;
+        items.editar = editar;
+        if (estaActivo) {
+            items.config = config;
+        }
+
+        if (puedeEliminar) {
+            items.eliminar = eliminar;
+        }
+
+        return items;
     }
+
     function deleteRow(itemId) {
         bootbox.dialog({
-            title   : "Alerta",
-            message : "<i class='fa fa-trash-o fa-3x pull-left text-danger text-shadow'></i><p>¿Está seguro que desea eliminar el Numero seleccionado? Esta acción no se puede deshacer.</p>",
+            title   : "Alerta - Está a punto de Eliminar una Persona del Sistema",
+            message : "<i class='fa fa-trash fa-3x pull-left text-danger text-shadow'></i>" +
+                "<p>¿Está seguro que desea eliminar a la Persona seleccionada? Esta acción no se puede deshacer.</p>",
             buttons : {
                 cancelar : {
                     label     : "Cancelar",
@@ -141,7 +208,7 @@
                     }
                 },
                 eliminar : {
-                    label     : "<i class='fa fa-trash-o'></i> Eliminar",
+                    label     : "<i class='fa fa-trash'></i> Eliminar Persona",
                     className : "btn-danger",
                     callback  : function () {
                         openLoader("Eliminando");
@@ -156,6 +223,8 @@
                                 log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
                                 if (parts[0] == "OK") {
                                     location.reload(true);
+                                } else {
+                                    closeLoader();
                                 }
                             }
                         });
@@ -164,17 +233,30 @@
             }
         });
     }
-    function createEditRow(id) {
-        var title = id ? "Editar" : "Crear";
-        var data = id ? { id : id } : {};
+
+    function createEditRow(id, tipo) {
+        var title = id ? "Editar " : "Crear ";
+        var data = id ? {id : id} : {};
+
+        var url = "";
+        switch (tipo) {
+            case "persona":
+                url = "${createLink(action:'form_ajax')}";
+                break;
+            case "usuario":
+                url = "${createLink(action:'formUsuario_ajax')}";
+                break;
+        }
+
         $.ajax({
             type    : "POST",
-            url     : "${createLink(action:'form_ajax')}",
+            url     : url,
             data    : data,
             success : function (msg) {
                 var b = bootbox.dialog({
                     id      : "dlgCreateEdit",
-                    title   : title + " Numero",
+                    class   : "long",
+                    title   : title + tipo,
                     message : msg,
                     buttons : {
                         cancelar : {
@@ -188,7 +270,7 @@
                             label     : "<i class='fa fa-save'></i> Guardar",
                             className : "btn-success",
                             callback  : function () {
-                                return submitForm();
+                                return submitForm(id);
                             } //callback
                         } //guardar
                     } //buttons
@@ -199,6 +281,77 @@
             } //success
         }); //ajax
     } //createEdit
+
+    function submitForm(id) {
+        var $form = $("#frmPersona");
+        var $btn = $("#dlgCreateEdit").find("#btnSave");
+        var idPersona = id
+        if ($form.valid()) {
+            $btn.replaceWith(spinner);
+            openLoader("Grabando");
+            $.ajax({
+                type    : "POST",
+                url     : '${createLink(action:'save_ajax')}',
+                data    : $form.serialize(),
+                success : function (msg) {
+                    var parts = msg.split("_");
+                    if (parts[0] != "INFO") {
+                        log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
+                        if (parts[0] == "OK") {
+                            location.reload(true);
+                        } else {
+                            spinner.replaceWith($btn);
+                            return false;
+                        }
+                    } else {
+                        closeLoader();
+                        bootbox.dialog({
+                            title   : "Alerta",
+                            message : "<i class='fa fa-warning fa-3x pull-left text-warning text-shadow'></i>" + parts[1],
+                            buttons : {
+                                cancelar : {
+                                    label     : "Cancelar",
+                                    className : "btn-primary",
+                                    callback  : function () {
+                                    }
+                                },
+                                aceptar  : {
+                                    label     : "<i class='fa fa-thumbs-o-up '></i> Continuar",
+                                    className : "btn-success",
+                                    callback  : function () {
+                                        var $sel = $("#selWarning");
+                                        var resp = $sel.val();
+                                        var dpto = $sel.data("dpto");
+                                        if (resp == 1 || resp == "1") {
+                                            openLoader("Cambiando");
+                                            $.ajax({
+                                                type    : "POST",
+                                                url     : '${createLink(action:'cambioDpto_ajax')}',
+                                                data    : {
+                                                    id   : idPersona,
+                                                    dpto : dpto
+                                                },
+                                                success : function (msg) {
+                                                    var parts = msg.split("_");
+                                                    log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
+                                                    if (parts[0] == "OK") {
+                                                        location.reload(true);
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        } else {
+            return false;
+        } //else
+    }
+
 
 </script>
 
