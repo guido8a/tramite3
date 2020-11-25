@@ -1600,7 +1600,7 @@ class PersonaController {
         if(params.perfil == '0'){
             perfil = ''
         }else{
-            perfil = "and usroprfl ilike '${params.perfil}' "
+            perfil = "and usroprfl ilike '%${params.perfil}%' "
         }
 
 
