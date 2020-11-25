@@ -1566,9 +1566,12 @@ class PersonaController {
     }
 
     def tablaUsuarios_ajax(){
+        println "tablaUsuarios_ajax: $params"
 
+        def cn = dbConnectionService.getConnection()
+        def usuarios = cn.rows("select * from usuarios() limit 10".toString())
 
-        return[usuarios: '']
+        return[usuarios: usuarios]
 
     }
 

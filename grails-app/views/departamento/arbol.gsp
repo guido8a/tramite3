@@ -75,7 +75,7 @@
 
             <g:if test="${utilitarios.Parametros.get(1).validaLDAP == 1}">
                 <div class="btn-group" style="margin-top: 4px;">
-                    <a href="#" id="cargaPrsn" class="btn btn-primary btn-sm"><i class="fa fa-users"></i> Cargar / Actualizar LDAP
+                    <a href="#" id="cargaPrsn" class="btn btn-primary btn-sm"><i class="fa fa-user-circles"></i> Cargar / Actualizar LDAP
                     </a>
                 </div>
             </g:if>
@@ -97,10 +97,10 @@
             </div>
 
             <div class="btn-group pull-right ui-corner-all leyenda">
-                <i class="fa fa-user text-info"></i> Usuario activo&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <i class="fa fa-user text-warning"></i> Jefe<br/>
-                <i class="fa fa-user text-muted"></i> Usuario inactivo&nbsp;&nbsp;&nbsp;
-                <i class="fa fa-user text-danger"></i> Director<br/>
+                <i class="fa fa-user-circle text-info"></i> Usuario activo&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <i class="fa fa-user-circle text-warning"></i> Jefe<br/>
+                <i class="fa fa-user-circle text-muted"></i> Usuario inactivo&nbsp;&nbsp;&nbsp;
+                <i class="fa fa-user-circle text-danger"></i> Director<br/>
             </div>
         </div>
 
@@ -659,7 +659,7 @@
                         submenu : {
                             si : {
                                 label  : "Con usuarios",
-                                icon   : "fa fa-users text-info",
+                                icon   : "fa fa-user-circles text-info",
                                 action : function () {
                                     location.href = "${createLink(controller: 'departamentoExport', action: 'crearPdf')}/-1?usu=true&sort=${params.sort}";
                                 }
@@ -728,7 +728,7 @@
                     },
                     crearPersona : {
                         label            : "Nueva persona",
-                        icon             : "fa fa-user text-success",
+                        icon             : "fa fa-user-circle text-success",
                         action           : function (obj) {
                             createEditRowPersona(nodeId, "Crear");
                         }
@@ -829,7 +829,7 @@
                     submenu : {
                         si : {
                             label  : "Con usuarios",
-                            icon   : "fa fa-users text-info",
+                            icon   : "fa fa-user-circles text-info",
                             action : function () {
                                 location.href = "${createLink(controller: 'departamentoExport', action: 'crearPdf')}/" + nodeId + "?usu=true&sort=${params.sort}";
                             }
@@ -918,7 +918,7 @@
                     items.ausentismo = {
                         separator_before : true,
                         label            : "Ausentismo",
-                        icon             : "fa fa-user-injured",
+                        icon             : "fa fa-user-circle-injured",
                         action           : function () {
                             location.href = "${createLink(controller: 'persona', action: 'personalAdm')}/" + nodeId;
                         }
@@ -1090,28 +1090,28 @@
                         icon : "fa fa-rss text-muted"
                     },
                     usuarioActivo             : {
-                        icon : "fa fa-user text-info"
+                        icon : "fa fa-user-circle text-info"
                     },
                     usuarioInactivo           : {
-                        icon : "fa fa-user text-muted"
+                        icon : "fa fa-user-circle text-muted"
                     },
                     jefeActivo                : {
-                        icon : "fa fa-user text-warning"
+                        icon : "fa fa-user-circle text-warning"
                     },
                     jefeInactivo              : {
-                        icon : "fa fa-user text-muted"
+                        icon : "fa fa-user-circle text-muted"
                     },
                     directorActivo            : {
-                        icon : "fa fa-user text-danger"
+                        icon : "fa fa-user-circle text-danger"
                     },
                     directorInactivo          : {
-                        icon : "fa fa-user text-muted"
+                        icon : "fa fa-user-circle text-muted"
                     },
                     usuarioTrianguloActivo    : {
-                        icon : "fa fa-download text-info"
+                        icon : "far fa-user-circle text-info"
                     },
                     usuarioTrianguloInactivo  : {
-                        icon : "fa fa-download text-muted"
+                        icon : "far fa-user-circle text-muted"
                     },
                     jefeTrianguloActivo       : {
                         icon : "fa fa-cloud-download text-warning"
