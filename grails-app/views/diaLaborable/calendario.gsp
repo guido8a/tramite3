@@ -43,7 +43,8 @@
     }
 
     .vacacion {
-        background-color : #89d9ff;
+        /*background-color : #89d9ff;*/
+        background-color : #c6e4b7;
     }
 
     h3 {
