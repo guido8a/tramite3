@@ -57,8 +57,11 @@
 <table class="table table-condensed table-bordered">
     <thead>
     <tr style="width: 100%">
-        <th style="width: 25%">Código</th>
-        <th style="width: 75%">Departamento</th>
+        <th style="width: 10%">Usuario</th>
+        <th style="width: 25%">Nombre</th>
+        <th style="width: 25%">Apellido</th>
+        <th style="width: 25%">Departamento</th>
+        <th style="width: 15%">Perfiles</th>
     </tr>
     </thead>
 </table>
@@ -71,25 +74,27 @@
 <script type="text/javascript">
 
     $("#btnLimpiar").click(function () {
-        $("#texto").val('');
-        $("#tipo").val(0);
-        cargarTablaDepartamentos($("#tipo option:selected").val(), $("#texto").val());
+        // $("#texto").val('');
+        // $("#tipo").val(0);
+        // cargarTablaDepartamentos($("#tipo option:selected").val(), $("#texto").val());
     });
 
     $("#btnBuscar").click(function () {
-        cargarTablaDepartamentos($("#tipo option:selected").val(), $("#texto").val());
+        cargarTablaUsuarios($("#tipo option:selected").val(), $("#texto").val(), $("#perfil option:selected").val(), $("#estado option:selected").val());
     });
 
-    cargarTablaDepartamentos($("#tipo option:selected").val(), $("#texto").val());
+    cargarTablaUsuarios($("#tipo option:selected").val(), $("#texto").val(), $("#perfil option:selected").val(), $("#estado option:selected").val());
 
-    function cargarTablaDepartamentos(tipo, texto){
+    function cargarTablaUsuarios(tipo, texto, perfil, estado){
         var a = cargarLoader("Cargando...");
         $.ajax({
             type:'POST',
-            url:'${createLink(controller: 'numero', action: 'tablaDepartamentos_ajax')}',
+            url:'${createLink(controller: 'persona', action: 'tablaUsuarios_ajax')}',
             data:{
                 tipo: tipo,
-                texto: texto
+                texto: texto,
+                perfil: perfil,
+                estado:estado
             },
             success: function(msg){
                 a.modal("hide");
