@@ -1,19 +1,8 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: luz
-  Date: 2/18/14
-  Time: 12:39 PM
---%>
 
-<%@ page import="happy.seguridad.Persona; happy.seguridad.Prfl; happy.seguridad.Sesn" contentType="text/html;charset=UTF-8" %>
 <html>
     <head>
         <meta name="layout" content="main">
         <title>Configuración personal</title>
-
-        %{--<script src="${resource(dir: 'js/plugins/jQuery-File-Upload-9.5.6/js/vendor', file: 'jquery.ui.widget.js')}"></script>--}%
-        %{--<script src="${resource(dir: 'js/plugins/jQuery-File-Upload-9.5.6/js', file: 'jquery.iframe-transport.js')}"></script>--}%
-        %{--<script src="${resource(dir: 'js/plugins/jQuery-File-Upload-9.5.6/js', file: 'jquery.fileupload.js')}"></script>--}%
 
         <!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
         <script src="${resource(dir: 'js/plugins/jQuery-File-Upload-9.5.6/js/vendor', file: 'jquery.ui.widget.js')}"></script>

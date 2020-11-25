@@ -1,8 +1,15 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: fabricio
+  Date: 25/11/20
+  Time: 9:19
+--%>
+
 <!DOCTYPE html>
 <html>
 <head>
     <meta name="layout" content="main">
-    <title>Numeración</title>
+    <title>Usuarios</title>
 </head>
 
 <body>
@@ -10,29 +17,39 @@
 <elm:flashMessage tipo="${flash.tipo}" clase="${flash.clase}">${flash.message}</elm:flashMessage>
 
 <!-- botones -->
-<div class="btn-toolbar toolbar">
-    <div class="btn-group">
-        <g:link class="btn btn-default col-md-2" style="width: 100px;" controller="inicio" action="parametros"><i class="fa fa-arrow-left"></i> Parámetros</g:link>
-    </div>
+<div class="btn-toolbar toolbar" style="margin-top: 5px">
+    <g:if test="${parametros[0]?.validaLDAP == 0}">
+        <div class="btn-group">
+            <g:link action="form" class="btn btn-info btnCrear">
+                <i class="fa fa-file"></i> Nueva persona
+            </g:link>
+        </div>
+    </g:if>
 </div>
 
 <div class="btn-toolbar toolbar">
-    <div class="col-md-1">
-        <label>Buscar por:</label>
-    </div>
     <div class="col-md-2">
-        <g:select name="tipo" from="${[0: 'Código', 1 : 'Nombre']}" class="form-control" optionKey="key" optionValue="value"/>
+        <label>Buscar por</label>
+        <g:select name="tipo" from="${[0: 'Usuario', 1 : 'Nombre', 2: 'Apellido', 3: 'Departamento']}" class="form-control" optionKey="key" optionValue="value"/>
     </div>
     <div class="col-md-3">
-        <g:textField name="texto" class="form-control" />
+        <label>Criterio</label>
+        <g:textField name="texto" class="form-control" placeholder="Buscar..."/>
     </div>
-    <div class="col-md-5">
+    <div class="col-md-3">
+        <label>Perfil</label>
+        <g:select name="perfil" from="${seguridad.Prfl.list([sort: 'nombre'])}" optionKey="id" optionValue="nombre"
+                  class="form-control input-sm" noSelection="[0: 'Todos']" />
+    </div>
+    <div class="col-md-2">
+        <label>Estado</label>
+        <g:select name="estado" from="${[0: 'Todos', 1: 'Activo', 2 : 'Inactivo', 3 : 'Administrador']}" optionKey="key" optionValue="value" class="form-control input-sm"/>
+    </div>
+
+    <div class="col-md-2" style="margin-top: 20px">
         <div class="btn-group">
             <a href="#" class="btn btn-success" id="btnBuscar"><i class="fa fa-search" title="Buscar"></i> Buscar </a>
             <a href="#" class="btn btn-warning" id="btnLimpiar"><i class="fa fa-eraser" title="Limpiar búsqueda"></i> </a>
-        </div>
-        <div style="padding-left: 130px" class="text-info">
-            Use un criterio para buscar los departamentos, se despliegan sólo los 50 primeros
         </div>
     </div>
 </div>
@@ -40,8 +57,8 @@
 <table class="table table-condensed table-bordered">
     <thead>
     <tr style="width: 100%">
-        <th style="width: 20%">Código</th>
-        <th style="width: 80%">Departamento</th>
+        <th style="width: 25%">Código</th>
+        <th style="width: 75%">Departamento</th>
     </tr>
     </thead>
 </table>

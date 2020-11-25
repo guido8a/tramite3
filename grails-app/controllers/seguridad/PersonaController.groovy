@@ -1559,5 +1559,16 @@ class PersonaController {
         }
     }
 
+    def usuarios (){
+        def parametros = Parametros.findAll()
+
+        return[parametros: parametros]
+    }
+
+    def tablaUsuarios_ajax(){
+
+
+    }
+
 
 }
