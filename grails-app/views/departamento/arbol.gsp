@@ -75,7 +75,7 @@
 
             <g:if test="${utilitarios.Parametros.get(1).validaLDAP == 1}">
                 <div class="btn-group" style="margin-top: 4px;">
-                    <a href="#" id="cargaPrsn" class="btn btn-primary btn-sm"><i class="fa fa-user-circles"></i> Cargar / Actualizar LDAP
+                    <a href="#" id="cargaPrsn" class="btn btn-primary btn-sm"><i class="fas fa-users-cog"></i> Cargar / Actualizar LDAP
                     </a>
                 </div>
             </g:if>
@@ -1054,10 +1054,10 @@
                         icon : "fa fa-folder text-warning"
                     },
                     padreActivo               : {
-                        icon : "fa fa-building text-info"
+                        icon : "fas fa-hotel text-info"
                     },
                     padreInactivo             : {
-                        icon : "fa fa-building-o text-muted"
+                        icon : "fas fa-hotel-o text-muted"
                     },
                     padreExternoActivo        : {
                         icon : "fa fa-paper-plane text-info"
