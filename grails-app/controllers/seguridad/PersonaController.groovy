@@ -1568,8 +1568,47 @@ class PersonaController {
     def tablaUsuarios_ajax(){
         println "tablaUsuarios_ajax: $params"
 
+        def tipo
+        def estado
+        def perfil
+
+        switch(params.tipo) {
+            case '0':
+                tipo = 'usrologn'
+                break;
+            case '1':
+                tipo = 'usronmbr'
+                break;
+            case '2':
+                tipo = 'usroapll'
+                break;
+        }
+
+        switch(params.estado) {
+            case '0':
+                estado = ''
+                break;
+            case '1':
+                estado = ' and usroetdo = 1 '
+                break;
+            case '2':
+                estado = ' and usroetdo = 0 '
+                break;
+        }
+
+
+        if(params.perfil == '0'){
+            perfil = ''
+        }else{
+            perfil = "and usroprfl ilike '${params.perfil}' "
+        }
+
+
         def cn = dbConnectionService.getConnection()
-        def usuarios = cn.rows("select * from usuarios() limit 10".toString())
+        def sql = "select * from usuarios() where ${tipo} ilike '%${params.texto}%' ${estado} ${perfil} limit 30"
+        def usuarios = cn.rows(sql.toString())
+
+        println("sql " + sql)
 
         return[usuarios: usuarios]
 

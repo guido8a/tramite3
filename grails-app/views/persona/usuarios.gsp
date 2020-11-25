@@ -38,12 +38,12 @@
     </div>
     <div class="col-md-3">
         <label>Perfil</label>
-        <g:select name="perfil" from="${seguridad.Prfl.list([sort: 'nombre'])}" optionKey="id" optionValue="nombre"
+        <g:select name="perfil" from="${seguridad.Prfl.list([sort: 'nombre'])}" optionKey="descripcion" optionValue="descripcion"
                   class="form-control input-sm" noSelection="[0: 'Todos']" />
     </div>
     <div class="col-md-2">
         <label>Estado</label>
-        <g:select name="estado" from="${[0: 'Todos', 1: 'Activo', 2 : 'Inactivo', 3 : 'Administrador']}" optionKey="key" optionValue="value" class="form-control input-sm"/>
+        <g:select name="estado" from="${[0: 'Todos', 1: 'Activo', 2 : 'Inactivo']}" optionKey="key" optionValue="value" class="form-control input-sm"/>
     </div>
 
     <div class="col-md-2" style="margin-top: 20px">

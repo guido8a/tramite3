@@ -10,12 +10,12 @@
     <table class="table table-condensed table-bordered">
         <tbody>
         <g:each in="${usuarios}" var="usuario">
-            <tr style="width: 100%" data-id="${''}">
-                <td style="width: 10%">${''}</td>
-                <td style="width: 25%">${''}</td>
-                <td style="width: 25%">${''}</td>
-                <td style="width: 25%">${''}</td>
-                <td style="width: 10%">${''}</td>
+            <tr style="width: 100%" data-id="${usuario.usro__id}">
+                <td style="width: 10%">${usuario.usrologn}</td>
+                <td style="width: 25%">${usuario.usronmbr}</td>
+                <td style="width: 25%">${usuario.usroapll}</td>
+                <td style="width: 25%">${usuario.dptodscr}</td>
+                <td style="width: 15%">${usuario.usroprfl}</td>
             </tr>
         </g:each>
         </tbody>
