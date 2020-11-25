@@ -1568,7 +1568,7 @@ class PersonaController {
     def tablaUsuarios_ajax(){
 
 
-
+        return[usuarios: '']
 
     }
 
