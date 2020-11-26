@@ -108,9 +108,9 @@ html[xmlns] .clearfix {
             <g:if test="${copiasExternas.estado.codigo.contains('E003')}">
                 <g:set var="externo" value="${externo} externoCC"/>
             </g:if>
-            <g:if test="${(params.dgsg == 'DGSG') || tramite?.deId == session.usuario.id || (tramite?.departamento?.id == session.departamento.id && session.usuario.esTriangulo)}">
-                <g:set var="clase" value="${clase + ' mio'}"/>
-            </g:if>
+%{--            <g:if test="${(params.dgsg == 'DGSG') || tramite?.deId == session.usuario.id || (tramite?.departamento?.id == session.departamento.id && session.usuario.esTriangulo)}">--}%
+%{--                <g:set var="clase" value="${clase + ' mio'}"/>--}%
+%{--            </g:if>--}%
 
             <g:set var="para" value="${tramite.para?.persona ? tramite.para?.persona?.departamentoId : tramite.para?.departamentoId}"/>
             <g:each in="${tramite.copias}" var="copia">
