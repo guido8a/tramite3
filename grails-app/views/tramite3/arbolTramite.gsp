@@ -1,17 +1,14 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: luz
-  Date: 4/30/14
-  Time: 1:20 PM
---%>
 
-<%@ page import="happy.tramites.RolPersonaTramite" contentType="text/html;charset=UTF-8" %>
+
 <html>
 <head>
     <meta name="layout" content="main">
     <title>Árbol de trámite</title>
-    <script src="${resource(dir: 'js/plugins/jstree-e22db21/dist', file: 'jstree.min.js')}"></script>
-    <link href="${resource(dir: 'js/plugins/jstree-e22db21/dist/themes/default', file: 'style.min.css')}" rel="stylesheet">
+    %{--    <script src="${resource(dir: 'js/plugins/jstree-e22db21/dist', file: 'jstree.min.js')}"></script>--}%
+    %{--    <link href="${resource(dir: 'js/plugins/jstree-e22db21/dist/themes/default', file: 'style.min.css')}" rel="stylesheet">--}%
+
+    <asset:javascript src="/jstree-3.0.8/dist/jstree.min.js"/>
+    <asset:stylesheet src="/jstree-3.0.8/dist/themes/default/style.min.css"/>
 
     <style type="text/css">
     #jstree {
@@ -103,7 +100,6 @@
         });
 
         return recibio
-
     }
 
 
@@ -115,8 +111,6 @@
         var tramiteId = $node.data("jstree").tramite;
         var prtrId =  $node.data("prtr").prtrId;
         var estaArchivado = $node.hasClass("archivado");
-
-//        console.log("data " + $node.data("prtr").prtrId);
 
         var items = {
 //                    header : {
@@ -142,7 +136,6 @@
                     $("#dialog").modal("show")
                 }
             };
-
 
             var plazo = {
                 label  : "Ampliar plazo",
@@ -194,12 +187,8 @@
                 }
             };
 
-
-
             <g:if test="${session.usuario.getPuedeVer()}">
-//                    items.header.label = "Acciones";
             items.detalles = detalles;
-
 
             <g:if test="${session.usuario.puedePlazo}">
             if(!comprobar(nodeId)){

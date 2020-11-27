@@ -32,7 +32,7 @@
             <div class="row">
                 <div class="col-xs-1 negrilla">De:</div>
 
-                <div class="col-xs-5">
+                <div class="col-xs-5 alert alert-info" style="min-height: 60px">
                     <g:if test="${tp.tipoDocumento.codigo == 'DEX'}">
                         ${tp.paraExterno} (EXT)
                     </g:if>
@@ -41,7 +41,7 @@
                     </g:else>
                 </div>
 
-                <div class="col-xs-6 claseMin">
+                <div class="col-xs-5 claseMin alert alert-success"  style="min-height: 60px">
                     <g:each in="${tramites.PersonaDocumentoTramite.findAllByTramiteAndRolPersonaTramiteNotInList(tp, rolesNo, [sort: 'rolPersonaTramite'])}" var="pdt" status="j">
                         <g:set var="fecha" value=""/>
                         <g:set var="estado" value=""/>
@@ -78,26 +78,29 @@
                             ${(pdt.departamento) ? pdt?.departamento?.codigo : "" + pdt.persona?.departamento?.codigo + ":" + pdt.persona?.login}
                         </g:else>
 
-                        <b><span style="${pdt?.estado?.codigo == 'E006' || pdt?.estado?.codigo == 'E005' ? 'color:red' : ''}">${estado}</span>
-                        </b> el ${fecha} <br>
+                        <div>
+                            <b><span style="${pdt?.estado?.codigo == 'E006' || pdt?.estado?.codigo == 'E005' ? 'color:red' : ''}">${estado}</span>
+                            </b> el ${fecha} <br>
+                        </div>
+
                     </g:each>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-xs-1 negrilla text-info">Asunto:</div>
-                <div class="col-xs-11 text-info">${tp.asunto.decodeHTML()}</div>
+                <div class="col-xs-10 text-info">${tp.asunto.decodeHTML()}</div>
             </div>
 
-%{--            <g:if test="${tp.personaPuedeLeer(session.usuario) && tp.texto?.size() > 2}">--}%
-%{--                <div class="row" style="margin-bottom: 10px">--}%
-%{--                    <div class="col-xs-1 negrilla">Texto:</div>--}%
+            <g:if test="${tp.personaPuedeLeer(session.usuario) && tp.texto?.size() > 2}">
+                <div class="row" style="margin-bottom: 10px">
+                    <div class="col-xs-1 negrilla">Texto:</div>
 
-%{--                    <div class="col-xs-10" style="background: #dedede; max-height: 300px; overflow: auto;">--}%
-%{--                        <util:renderHTML html="${tp.texto}"/>--}%
-%{--                    </div>--}%
-%{--                </div>--}%
-%{--            </g:if>--}%
+                    <div class="col-xs-10" style="background: #dedede; max-height: 300px; overflow: auto;">
+                        <util:renderHTML html="${tp.texto}"/>
+                    </div>
+                </div>
+            </g:if>
             <g:if test="${tp.observaciones}">
                 <div class="row" style="margin-bottom: 10px">
                     <div class="col-xs-1 negrilla">Obser:</div>
@@ -107,19 +110,19 @@
             </g:if>
 
             <g:if test="${tp.anexo == 1}">
-%{--                <g:if test="${tp.personaPuedeLeerAnexo(session.usuario)}">--}%
-%{--                    <div class="row" style="margin-bottom: 10px;margin-left: 2px">--}%
-%{--                        <g:each in="${DocumentoTramite.findAllByTramite(tp)}" var="anexo" status="k">--}%
-%{--                            <span style='color: #327BBA'>Archivo:</span>--}%
-%{--                            ${anexo.path}--}%
-%{--                            <a href='#' class='btn btn-success bajar' style='margin-right: 15px' title="Descargar Archivo" iden="${anexo.id}">--}%
-%{--                                <i class="fa fa-download"></i>--}%
-%{--                            </a>--}%
-%{--                            ${anexo.descripcion}--}%
-%{--                            <br>--}%
-%{--                        </g:each>--}%
-%{--                    </div>--}%
-%{--                </g:if>--}%
+                <g:if test="${tp.personaPuedeLeerAnexo(session.usuario)}">
+                    <div class="row" style="margin-bottom: 10px;margin-left: 2px">
+                        <g:each in="${DocumentoTramite.findAllByTramite(tp)}" var="anexo" status="k">
+                            <span style='color: #327BBA'>Archivo:</span>
+                            ${anexo.path}
+                            <a href='#' class='btn btn-success bajar' style='margin-right: 15px' title="Descargar Archivo" iden="${anexo.id}">
+                                <i class="fa fa-download"></i>
+                            </a>
+                            ${anexo.descripcion}
+                            <br>
+                        </g:each>
+                    </div>
+                </g:if>
             </g:if>
         </div>
     </g:if>
@@ -144,7 +147,7 @@
                 <div class="row">
                     <div class="col-xs-1 negrilla">De:</div>
 
-                    <div class="col-xs-5">
+                    <div class="col-xs-5 alert alert-info"  style="min-height: 60px">
                         <g:if test="${t.tipoDocumento.codigo == 'DEX'}">
                             ${t.paraExterno} (EXT)
                         </g:if>
@@ -153,7 +156,8 @@
                         </g:else>
                     </div>
 
-                    <div class="col-xs-6 claseMin" style="background-color: #d0d0d0; overflow-y: auto">
+                    %{--                    <div class="col-xs-6 claseMin alert-success" style="background-color: #d0d0d0; overflow-y: auto">--}%
+                    <div class="col-xs-5 claseMin alert-success" style="overflow-y: auto; min-height: 60px">
                         <g:each in="${tramites.PersonaDocumentoTramite.findAllByTramiteAndRolPersonaTramiteNotInList(t, rolesNo, [sort: 'rolPersonaTramite'])}" var="pdt" status="j">
                             <g:set var="fecha" value=""/>
                             <g:set var="estado" value=""/>
@@ -194,8 +198,10 @@
                                 </g:else>
                             </g:else>
 
-                            <b><span style="${pdt?.estado?.codigo == 'E006' || pdt?.estado?.codigo == 'E005' ? 'color:red' : ''}">${estado}</span>
-                            </b> el ${fecha} <br>
+                            <div>
+                                <b><span style="${pdt?.estado?.codigo == 'E006' || pdt?.estado?.codigo == 'E005' ? 'color:red' : ''}">${estado}</span>
+                                </b> el ${fecha} <br>
+                            </div>
 
                             <g:set var="recibidoVar2" value="${tramites.PersonaDocumentoTramite.findByTramiteAndRolPersonaTramiteAndDepartamentoPersona(pdt?.tramite, recibe, pdt.departamento)?.personaNombre}"/>
 
@@ -231,7 +237,7 @@
 
                 <div class="row">
                     <div class="col-xs-1 negrilla text-info">Asunto:</div>
-                    <div class="col-xs-8 text-info">${t.asunto.decodeHTML()}</div>
+                    <div class="col-xs-10 text-info">${t.asunto.decodeHTML()}</div>
                 </div>
 
                 <g:if test="${t.personaPuedeLeer(session.usuario) && t.texto?.size() > 2}">
@@ -251,19 +257,19 @@
                     </div>
                 </g:if>
                 <g:if test="${t.anexo == 1}">
-%{--                    <g:if test="${t.personaPuedeLeerAnexo(session.usuario)}">--}%
-%{--                        <div class="row" style="margin-bottom: 10px;margin-left: 2px">--}%
-%{--                            <g:each in="${DocumentoTramite.findAllByTramite(t)}" var="anexo" status="k">--}%
-%{--                                <span style='color: #327BBA'>Archivo:</span>--}%
-%{--                                ${anexo.path}--}%
-%{--                                <a href='#' class='btn btn-success bajar' style='margin-right: 15px' title="Descargar Archivo" iden="${anexo.id}">--}%
-%{--                                    <i class="fa fa-download"></i>--}%
-%{--                                </a>--}%
-%{--                                ${anexo.descripcion}--}%
-%{--                                <br>--}%
-%{--                            </g:each>--}%
-%{--                        </div>--}%
-%{--                    </g:if>--}%
+                    <g:if test="${t.personaPuedeLeerAnexo(session.usuario)}">
+                        <div class="row" style="margin-bottom: 10px;margin-left: 2px">
+                            <g:each in="${DocumentoTramite.findAllByTramite(t)}" var="anexo" status="k">
+                                <span style='color: #327BBA'>Archivo:</span>
+                                ${anexo.path}
+                                <a href='#' class='btn btn-success bajar' style='margin-right: 15px' title="Descargar Archivo" iden="${anexo.id}">
+                                    <i class="fa fa-download"></i>
+                                </a>
+                                ${anexo.descripcion}
+                                <br>
+                            </g:each>
+                        </div>
+                    </g:if>
                 </g:if>
             </div>
         </g:if>
@@ -287,7 +293,7 @@
                 <div class="row">
                     <div class="col-xs-1 negrilla">De:</div>
 
-                    <div class="col-xs-5">
+                    <div class="col-xs-5 alert alert-info" style="min-height: 60px">
                         <g:if test="${t.tipoDocumento.codigo == 'DEX'}">
                             ${t.paraExterno} (EXT)
                         </g:if>
@@ -296,7 +302,8 @@
                         </g:else>
                     </div>
 
-                    <div class="col-xs-6 claseMin"  style="background-color: #d0d0d0; overflow-y: auto">
+                    %{--                    <div class="col-xs-6 claseMin"  style="background-color: #d0d0d0; overflow-y: auto">--}%
+                    <div class="col-xs-5 claseMin alert alert-success"  style="overflow-y: auto; min-height: 60px">
                         <g:each in="${tramites.PersonaDocumentoTramite.findAllByTramiteAndRolPersonaTramiteNotInList(t, rolesNo, [sort: 'rolPersonaTramite'])}" var="pdt" status="j">
                             <g:set var="fecha" value=""/>
                             <g:set var="estado" value=""/>
@@ -311,12 +318,10 @@
                                 </g:if>
                                 <g:else>
                                     <g:if test="${pdt?.estado?.codigo == 'E004' && pdt.fechaRecepcion}">
-
                                         <g:set var="estado" value="RECIBIDO"/>
                                         <g:set var="fecha" value="${pdt.fechaRecepcion?.format('dd-MM-yyyy HH:mm')}"/>
                                     </g:if>
                                     <g:else>
-
                                         <g:set var="estado" value="CREADO"/>
                                         <g:set var="fecha" value="${pdt.tramite.fechaCreacion?.format('dd-MM-yyyy HH:mm')}"/>
                                     </g:else>
@@ -339,9 +344,13 @@
                                     ${pdt?.departamentoNombre}
                                 </g:else>
                             </g:else>
-                            <b>
-                                <span style="${pdt?.estado?.codigo == 'E006' || pdt?.estado?.codigo == 'E005' ? 'color:red' : ''}">${estado}</span>
-                            </b> el ${fecha} <br>
+
+                            <div>
+                                <b>
+                                    <span style="${pdt?.estado?.codigo == 'E006' || pdt?.estado?.codigo == 'E005' ? 'color:red' : ''}">${estado}</span>
+                                </b> el ${fecha} <br>
+                            </div>
+
 
                             <g:set var="recibidoVar" value="${tramites.PersonaDocumentoTramite.findByTramiteAndRolPersonaTramiteAndDepartamentoPersona(pdt?.tramite,
                                     recibe, pdt?.departamento)?.personaNombre}"/>
@@ -377,18 +386,18 @@
 
                 <div class="row">
                     <div class="col-xs-1 negrilla text-info">Asunto:</div>
-                    <div class="col-xs-11 text-info">${t.asunto}</div>
+                    <div class="col-xs-10 text-info">${t.asunto}</div>
                 </div>
 
-%{--                <g:if test="${t.personaPuedeLeer(session.usuario) && t.texto?.size() > 2}">--}%
-%{--                    <div class="row" style="margin-bottom: 10px">--}%
-%{--                        <div class="col-xs-1 negrilla">Texto:</div>--}%
+                <g:if test="${t.personaPuedeLeer(session.usuario) && t.texto?.size() > 2}">
+                    <div class="row" style="margin-bottom: 10px">
+                        <div class="col-xs-1 negrilla">Texto:</div>
 
-%{--                        <div class="col-xs-10" style="background: #dedede; max-height: 300px; overflow: auto;">--}%
-%{--                            <util:renderHTML html="${t.texto}"/>--}%
-%{--                        </div>--}%
-%{--                    </div>--}%
-%{--                </g:if>--}%
+                        <div class="col-xs-10" style="background: #dedede; max-height: 300px; overflow: auto;">
+                            <util:renderHTML html="${t.texto}"/>
+                        </div>
+                    </div>
+                </g:if>
 
                 <g:if test="${t.observaciones}">
                     <div class="row" style="margin-bottom: 10px">
@@ -397,19 +406,19 @@
                     </div>
                 </g:if>
                 <g:if test="${t.anexo == 1}">
-%{--                    <g:if test="${t.personaPuedeLeerAnexo(session.usuario)}">--}%
-%{--                        <div class="row" style="margin-bottom: 10px;margin-left: 2px">--}%
-%{--                            <g:each in="${tramites.DocumentoTramite.findAllByTramite(t)}" var="anexo" status="k">--}%
-%{--                                <span style='color: #327BBA'>Archivo:</span>--}%
-%{--                                ${anexo.path}--}%
-%{--                                <a href='#' class='btn btn-success bajar' style='margin-right: 15px' title="Descargar Archivo" iden="${anexo.id}">--}%
-%{--                                    <i class="fa fa-download"></i>--}%
-%{--                                </a>--}%
-%{--                                ${anexo.descripcion}--}%
-%{--                                <br>--}%
-%{--                            </g:each>--}%
-%{--                        </div>--}%
-%{--                    </g:if>--}%
+                    <g:if test="${t.personaPuedeLeerAnexo(session.usuario)}">
+                        <div class="row" style="margin-bottom: 10px;margin-left: 2px">
+                            <g:each in="${tramites.DocumentoTramite.findAllByTramite(t)}" var="anexo" status="k">
+                                <span style='color: #327BBA'>Archivo:</span>
+                                ${anexo.path}
+                                <a href='#' class='btn btn-success bajar' style='margin-right: 15px' title="Descargar Archivo" iden="${anexo.id}">
+                                    <i class="fa fa-download"></i>
+                                </a>
+                                ${anexo.descripcion}
+                                <br>
+                            </g:each>
+                        </div>
+                    </g:if>
                 </g:if>
             </div>
         </g:else>
