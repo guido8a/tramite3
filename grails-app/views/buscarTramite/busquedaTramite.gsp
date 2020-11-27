@@ -19,6 +19,7 @@
 </head>
 
 <body>
+
 <div style="min-height: 85px; margin-top: -15px;" class="vertical-container contenedor">
     <p class="css-vertical-text" style="margin-top: -10px;">Buscar</p>
 
@@ -100,18 +101,15 @@
 
 </div>
 
-<div style="margin-top: 30px; min-height: 500px" class="vertical-container" id="divBandeja">
-
+<div style="margin-top: 5px; min-height: 525px" class="vertical-container" id="divBandeja">
     <p class="css-vertical-text">Resultado - Buscar trámites</p>
-
     <div class="linea"></div>
 
     <div id="bandeja">
     </div>
-
 </div>
 
-<div><span class="text-info">Se ordena por tipo de documento y fecha</span>
+<div><span class="text-info" style="margin-left: 30px"><strong> * Se ordena por tipo de documento y fecha</strong></span>
 </div>
 
 <div class="modal fade " id="dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -175,15 +173,14 @@
             $(".contenedor").removeClass('largo');
             $(".divExternos").addClass('esconder')
         }
-
     });
 
     function loading(div) {
         y = 0;
-        $("#" + div).html("<div class='tituloChevere' id='loading'>Cargando, Espere por favor</div>")
+        $("#" + div).html("<div class='tituloChevere' id='loading'>Cargando, Espere por favor</div>");
         var interval = setInterval(function () {
             if (y == 30) {
-                $("#detalle").html("<div class='tituloChevere' id='loading'>Cargando, Espere por favor</div>")
+                $("#detalle").html("<div class='tituloChevere' id='loading'>Cargando, Espere por favor</div>");
                 y = 0
             }
             $("#loading").append(".");

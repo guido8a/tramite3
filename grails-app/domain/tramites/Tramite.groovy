@@ -415,15 +415,6 @@ class Tramite implements Auditable{
             return true
         } else {
             return false
-//            if (this.para?.persona == persona || this.copias.contains(persona)) {
-//                return true
-//            }
-//            if (this.para?.departamento) {
-//                if(persona.departamento==this.para?.departamento && persona.esTriangulo())
-//                    return true
-//                else
-//                    return false
-//            }
         }
         return false
     }
@@ -454,15 +445,6 @@ class Tramite implements Auditable{
             return true
         } else {
             return false
-//            if (this.para?.persona == persona || this.copias.contains(persona)) {
-//                return true
-//            }
-//            if (this.para?.departamento) {
-//                if(persona.departamento==this.para?.departamento && persona.esTriangulo())
-//                    return true
-//                else
-//                    return false
-//            }
         }
         return false
     }
