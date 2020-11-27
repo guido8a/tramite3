@@ -234,15 +234,15 @@
                     <div class="col-xs-8 text-info">${t.asunto.decodeHTML()}</div>
                 </div>
 
-%{--                <g:if test="${t.personaPuedeLeer(session.usuario) && t.texto?.size() > 2}">--}%
-%{--                    <div class="row" style="margin-bottom: 10px">--}%
-%{--                        <div class="col-xs-1 negrilla">Texto:</div>--}%
+                <g:if test="${t.personaPuedeLeer(session.usuario) && t.texto?.size() > 2}">
+                    <div class="row" style="margin-bottom: 10px">
+                        <div class="col-xs-1 negrilla">Texto:</div>
 
-%{--                        <div class="col-xs-10" style="background: #dedede; max-height: 300px; overflow: auto;">--}%
-%{--                            <util:renderHTML html="${t.texto}"/>--}%
-%{--                        </div>--}%
-%{--                    </div>--}%
-%{--                </g:if>--}%
+                        <div class="col-xs-10" style="background: #dedede; max-height: 300px; overflow: auto;">
+                            <util:renderHTML html="${t.texto}"/>
+                        </div>
+                    </div>
+                </g:if>
                 <g:if test="${t.observaciones}">
                     <div class="row" style="margin-bottom: 10px">
                         <div class="col-xs-1 negrilla">Obser:</div>

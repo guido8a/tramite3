@@ -1,6 +1,13 @@
 package seguridad
 
-import static seguridad.PermisoUsuario.*
+
+import alertas.Alerta
+import seguridad.PermisoUsuario
+import tramites.Tramite
+import utilitarios.Parametros
+import org.apache.directory.groovyldap.LDAP
+import org.apache.directory.groovyldap.SearchScope
+
 
 class LoginController {
 
@@ -8,12 +15,8 @@ class LoginController {
 
     def dbConnectionService
 
-    def index() {
-        redirect(controller: 'login', action: 'login')
-    }
-
     private int borrarAlertas() {
-//        def esTriangulo = session.usuario.esTriangulo()
+        def esTriangulo = session.usuario.esTriangulo()
         def fecha = new Date() - 3
 
         def fechaStr = fecha.format("yyyy-MM-dd")
@@ -21,42 +24,56 @@ class LoginController {
         def sqlDeleteRecibidos = ""
         def sqlDeleteAntiguos = ""
 
+        if (esTriangulo) {
+            sqlDeleteRecibidos = "DELETE FROM alrt WHERE dpto__id = ${session.departamento.id} AND altrfcrc IS NOT NULL"
+            sqlDeleteAntiguos = "DELETE FROM alrt WHERE dpto__id = ${session.departamento.id} AND altrfcrc IS NULL AND altrfccr < '${fechaStr}'"
+        } else {
+            sqlDeleteRecibidos = "DELETE FROM alrt WHERE prsn__id = ${session.usuario.id} AND altrfcrc IS NOT NULL"
+            sqlDeleteAntiguos = "DELETE FROM alrt WHERE prsn__id = ${session.usuario.id} AND altrfcrc IS NULL AND altrfccr < '${fechaStr}'"
+        }
+
         def cn = dbConnectionService.getConnection()
         cn.execute(sqlDeleteRecibidos.toString())
         cn.execute(sqlDeleteAntiguos.toString())
         cn.close()
 
-//        return Alerta.withCriteria {
-//            if (esTriangulo) {
-//                eq("departamento", session.departamento)
-//            } else {
-//                eq("persona", session.usuario)
-//            }
-//            isNull("fechaRecibido")
-//        }.size()
-
-        0  //retorna zona de alertas
-
+        return Alerta.withCriteria {
+            if (esTriangulo) {
+                eq("departamento", session.departamento)
+            } else {
+                eq("persona", session.usuario)
+            }
+            isNull("fechaRecibido")
+        }.size()
     }
 
     def conecta(user, pass) {
 
         def prmt = Parametros.findAll()[0]
-
+//        println "conecta " + user + " pass  " + pass
         def connect = true
         try {
-
-//            LDAP ldap = LDAP.newInstance('ldap://' + prmt.ipLDAP, "${user.getConnectionString()}", "${pass}")
+//            println "connect    "+user.getConnectionString()
+//            LDAP ldap = LDAP.newInstance('ldap://192.168.0.60:389',"${user.getConnectionString()}","${pass}")
+            LDAP ldap = LDAP.newInstance('ldap://' + prmt.ipLDAP, "${user.getConnectionString()}", "${pass}")
+//            println "connect    " + user.getConnectionString() + "\n ldap://" + prmt.ipLDAP
+            // println " " + prmt.textoCn
 
             /*valida usuario en el LDAP */
-//            ldap.exists("${prmt.textoCn}")
-            println "ingresa..${user.login}"
+            ldap.exists("${prmt.textoCn}")
+            println "ingresa..${user.login} ${new Date().format('dd HH:mm')}"
 
+//            assert ! ldap.exists("${prmt.textoCn}")
+//            def results = ldap.search('(objectClass=*)', 'dc=pichincha,dc=local', SearchScope.ONE)
         } catch (e) {
             println "no conecta ${user.login} error: " + e
             connect = false
         }
         return connect
+    }
+
+    def index() {
+        redirect( controller: 'login', action: 'login')
     }
 
     def cambiarPass() {
@@ -79,8 +96,7 @@ class LoginController {
             flash.tipo = "error"
             redirect(action: 'cambiarPass')
         } else {
-//            redirect(controller: "inicio", action: "index")
-            redirect(controller: "provincia", action: "mapa", id: 1)
+            redirect(controller: "inicio", action: "index")
         }
     }
 
@@ -130,26 +146,24 @@ class LoginController {
 
     def login() {
 //        println "login " + params
-//        def cn = dbConnectionService.getConnection()
-//        def sql = "", sql1, sql2
-        def usro = session.usuario
+        def usu = session.usuario
         def cn = "inicio"
         def an = "index"
-        if (usro) {
+        if (usu) {
+//            if (session.cn && session.an) {
+//                cn = session.cn
+//                an = session.an
+//            }
             redirect(controller: cn, action: an)
         }
-//        sql1 = "select max(prdo__id) prdo from smfr"
-//        def ultimo = cn.rows(sql1.toString())[0]?.prdo
-//        [ultimo: ultimo]
     }
 
     def validar() {
-        println "valida " + params
+//        println "valida " + params
         def user = Persona.withCriteria {
             eq("login", params.login, [ignoreCase: true])
             eq("activo", 1)
         }
-//        println "usuario: ${user.nombre} pass: ${user.password}"
 
         if (user.size() == 0) {
             flash.message = "No se ha encontrado el usuario"
@@ -159,9 +173,7 @@ class LoginController {
             flash.tipo = "error"
         } else {
             user = user[0]
-
-//            println "está activo " + user.estaActivo
-
+//            println "sta activo " + user.estaActivo
             if (!user.estaActivo) {
                 flash.message = "El usuario ingresado no esta activo."
                 flash.tipo = "error"
@@ -169,30 +181,58 @@ class LoginController {
                 return
             } else {
                 session.usuario = user
-//                session.usuarioKerberos = user.login
+                session.usuarioKerberos = user.login
                 session.time = new Date()
-//                session.unidad = user.unidadEjecutora
-
+                session.departamento = user.departamento
+                session.triangulo = user.esTriangulo()
 //                println "pone valores " + session.usuario
 
                 def perf = Sesn.findAllByUsuario(user)
                 def perfiles = []
                 perf.each { p ->
-//                    println "añade a perfiles $p activo:${p.estaActivo}"
+//                    println "verf perfil "+p+" "+p.estaActivo
                     if (p.estaActivo) {
                         perfiles.add(p)
                     }
                 }
-
                 if (perfiles.size() == 0) {
                     flash.message = "No puede ingresar porque no tiene ningun perfil asignado a su usuario. Comuníquese con el administrador."
                     flash.tipo = "error"
                     flash.icon = "icon-warning"
                     session.usuario = null
                 } else {
+                    def admin = false
+/*
+                    perfiles.each {
+                        if (it.perfil.codigo == "ADM") {
+                            admin = true
+                        }
+                    }
+*/
+                    admin = user.login == 'admin'
+                    println "es admin: ${admin}"
+                    if (!admin) {
+                        def par = Parametros.list([sort: "id", order: "desc"])
+                        if (par.size() > 0) {
+                            par = par.pop()
+                            if (par.validaLDAP == 0) {
+                                admin = true
+                            }
+                        }
+                    }
 
-//                    println "el md5 del pass: ${params.pass} es ${params.pass.encodeAsMD5()} contraseña: ${user.password}"
-                    if (params.pass.encodeAsMD5() != user.password) {
+                    if (!admin) {
+                        if (!conecta(user, params.pass)) {
+                            flash.message = "No se pudo validar la información ingresada con el sistema LDAP, contraseña incorrecta o usuario no registrado en el LDAP"
+                            flash.tipo = "error"
+                            flash.icon = "icon-warning"
+                            session.usuario = null
+                            session.departamento = null
+                            redirect(controller: 'login', action: "login")
+                            return
+                        }
+                    } else {
+                        if (params.pass.encodeAsMD5() != user.password) {
                             flash.message = "Contraseña incorrecta"
                             flash.tipo = "error"
                             flash.icon = "icon-warning"
@@ -200,36 +240,16 @@ class LoginController {
                             session.departamento = null
                             redirect(controller: 'login', action: "login")
                             return
-                    }
-
-                    // registra sesion activa ------------------------------
-                    //                println  "sesion ingreso: $session.id  desde ip: ${request.getRemoteAddr()}"  //activo
-                    def activo = new SesionActiva()
-                    activo.idSesion = session.id
-                    activo.fechaInicio = new Date()
-                    activo.activo = 'S'
-                    activo.dirIP = request.getRemoteAddr()
-                    activo.login = user.login
-                    activo.save()
-                    // pone X en las no .... cerradas del mismo login e ip
-                    def abiertas = SesionActiva.findAllByLoginAndDirIPAndFechaFinIsNullAndIdSesionNotEqual(session.usuario.login,
-                            request.getRemoteAddr(), session.id)
-                    if (abiertas.size() > 0) {
-                        abiertas.each { sa ->
-                            sa.fechaFin = new Date()
-                            sa.activo = 'X'
-                            sa.save()
                         }
+                        println "ingresa..${user.login} ${new Date().format('dd HH:mm')}"
                     }
-                    // ------------------fin de sesion activa --------------
-
-
-
                     if (perfiles.size() == 1) {
                         session.usuario.vaciarPermisos()
                         session.perfil = perfiles.first().perfil
                         cargarPermisos()
-
+                        def cn = "inicio"
+                        def an = "index"
+//                        def count = 0
                         def permisos = Prpf.findAllByPerfil(session.perfil)
                         permisos.each {
                             def perm = PermisoUsuario.findAllByPersonaAndPermisoTramite(session.usuario, it.permiso)
@@ -239,23 +259,69 @@ class LoginController {
                                 }
                             }
                         }
+//                        if (session.usuario.esTriangulo()) {
+//                            count = Alerta.countByDepartamentoAndFechaRecibidoIsNull(session.departamento)
+//                        } else {
+//                            count = Alerta.countByPersonaAndFechaRecibidoIsNull(session.usuario)
+//                        }
 
                         def count = borrarAlertas()
+
                         if (count > 0) {
                             redirect(controller: 'alertas', action: 'list')
                         } else {// llama a reporte
-                            redirect(controller: 'inicio', action: 'index', id: 1)
+                            redirect(controller: 'inicio', action: 'index')
+
+/*
+                            if (session.usuario.getPuedeDirector()) {
+                                redirect(controller: "retrasadosWeb", action: "reporteRetrasadosConsolidadoDir", params: [dpto: Persona.get(session.usuario.id).departamento.id, inicio: "1", dir: "1"])
+                            } else {
+                                if (session.usuario.getPuedeJefe()) {
+                                    redirect(controller: "retrasadosWeb", action: "reporteRetrasadosConsolidado", params: [dpto: Persona.get(session.usuario.id).departamento.id], inicio: "1")
+                                } else {
+                                    redirect(controller: "inicio", action: "index")
+                                }
+
+                            }
+*/
+
                         }
+//                    redirect(controller: cn, action: an)
+
+                        /*
+                        // registra sesion
+                        //                println  "sesion ingreso: $session.id  desde ip: ${request.getRemoteAddr()}"  //activo
+                        def activo = new SesionActiva()
+                        activo.idSesion = session.id
+                        activo.fechaInicio = new Date()
+                        activo.activo = 'S'
+                        activo.dirIP = request.getRemoteAddr()
+                        activo.login = user.login
+                        activo.save()
+                        // pone X en las no .... cerradas del mismo login e ip
+                        def abiertas = SesionActiva.findAllByLoginAndDirIPAndFechaFinIsNullAndIdSesionNotEqual(session.usuario.login,
+                                request.getRemoteAddr(), session.id)
+                        if (abiertas.size() > 0) {
+                            abiertas.each { sa ->
+                                sa.fechaFin = new Date()
+                                sa.activo = 'X'
+                                sa.save()
+                            }
+                        }
+                        // -------------------
+                        */
 
                         return
-
                     } else {
                         session.usuario.vaciarPermisos()
                         redirect(action: "perfiles")
                         return
                     }
+
+
                 }
             }
+
         }
         redirect(controller: 'login', action: "login")
     }
@@ -269,12 +335,10 @@ class LoginController {
                 perfiles.add(p)
             }
         }
-        println "---- perfiles ----"
-        return [perfilesUsr: perfiles.sort{it.perfil.descripcion}]
+        return [perfilesUsr: perfiles]
     }
 
     def savePer() {
-        println("entro save" + params)
         def sesn = Sesn.get(params.prfl)
         def perf = sesn.perfil
 
@@ -322,10 +386,8 @@ class LoginController {
 
             def count = borrarAlertas()
             if (count > 0) {
-                println("entro 1")
                 redirect(controller: 'alertas', action: 'list')
-            } else {
-                println("entro 2")
+            } else {//
 //                if (session.usuario.getPuedeDirector() || session.usuario.getPuedeJefe()) {
 //
 //                    redirect(controller: "retrasadosWeb", action: "reporteRetrasadosConsolidadoDir", params: [dpto: Persona.get(session.usuario.id).departamento.id, inicio: "1", dir: "1"])
@@ -333,7 +395,7 @@ class LoginController {
 //                    if (session.usuario.getPuedeJefe()) {
 //                        redirect(controller: "retrasadosWeb", action: "reporteRetrasadosConsolidado", params: [dpto: Persona.get(session.usuario.id).departamento.id, inicio: "1"])
 //                    } else {
-                        redirect(controller: "inicio", action: "index")
+                redirect(controller: "inicio", action: "index")
 //                    }
 
 //                }
@@ -345,17 +407,15 @@ class LoginController {
     }
 
     def logout() {
-
-        // registra fin de sesion activa --------------
+//        println "sesion out: $session.id"  //activo
+        /*
         def activo = SesionActiva.findByIdSesion(session.id)
-//        println "sesion out: $session.id, activo: $activo"  //activo
         if (activo) {
             activo.fechaFin = new Date()
             activo.activo = 'N'
-            activo.save(flush: true)
-//            println "grabando... ${activo.fechaFin}"
+            activo.save()
         }
-        // -------------- fin -------------------------
+        */
 
         session.usuario = null
         session.perfil = null
@@ -366,8 +426,6 @@ class LoginController {
         session.invalidate()
 
         redirect(controller: 'login', action: 'login')
-//        redirect uri: '/'
-
     }
 
     def finDeSesion() {
