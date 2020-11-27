@@ -46,31 +46,36 @@
                 <elm:datepicker name="fechaHsta" class="datepicker form-control" value=""/>
             </div>
 
-            <div class="col-xs-1">
-                <g:checkBox name="externo" class="combo" />
-                <label class="text-info">Buscar externos</label>
-            </div>
+%{--            <div class="col-xs-1">--}%
+%{--                <g:checkBox name="externo" class="combo" />--}%
+%{--                <label class="text-info">Buscar externos</label>--}%
+%{--            </div>--}%
 
-            <div class="col-xs-3" style="padding-top: 25px; width: 230px; height: 63px;">
+%{--            <div class="col-xs-3" style="padding-top: 25px; width: 230px; height: 63px;">--}%
+            <div class="col-xs-2" style="padding-top: 5px; height: 63px;">
+            <g:checkBox name="externo" class="combo" /><label class="text-info">Buscar externos</label>
                 <a href="#" name="busqueda" class="btn btn-success btn-ajax" id="btnBusqueda"><i
                         class="fa fa-search"></i> Buscar</a>
-                <a href="#" name="borrar" class="btn btn-primary btnBorrar btn-sm" title="Borrar criterios">
+                <a href="#" name="borrar" class="btn btn-warning btnBorrar btn-sm" title="Borrar criterios">
                     <i class="fa fa-eraser"></i></a>
                 <a href="#" name="excel_name" class="btn btn-primary btnExcel btn-sm" title="Exportar resultado a excel"><i
                         class="fa fa-file-excel"></i></a>
             </div>
         </div>
     </div>
-    <div style="margin-left: 15px; display: inline-block; vertical-align: top; margin-top: -5px; float:left" class="text-info; row">
-        <g:radioGroup name="registros" labels="['Hasta 20 registros', 'Hasta 100 registros']" values="['20', '100']" value="20">
-            <g:message code="${it.label}"/>: ${it.radio} <span style="margin-left: 20px"></span>
-        </g:radioGroup>
+    <div class="col-md-2">
+        <div style="margin-left: 5px; display: inline-block; vertical-align: top; margin-top: -5px; float:left; color: #67a153" class="row">
+            <g:radioGroup name="registros" labels="['Hasta 20 registros', 'Hasta 100 registros']" values="['20', '100']" value="20">
+                <g:message code="${it.label}"/>: ${it.radio} <span style="margin-left: 20px"></span>
+            </g:radioGroup>
+        </div>
+        <div style="float: left; margin-left: 5px; margin-top: -5px; color: #ff8f5b">
+            <g:radioGroup name="fechas" labels="['Fecha de creación', 'Fecha de envío']" values="['fccr', 'fcen']" value="fccr">
+                <g:message code="${it.label}"/>: ${it.radio} <span style="margin-left: 20px"></span>
+            </g:radioGroup>
+        </div>
     </div>
-    <div style="float: left; margin-left: 110px; margin-top: -5px;">
-        <g:radioGroup name="fechas" labels="['Fecha de creación', 'Fecha de envío']" values="['fccr', 'fcen']" value="fccr">
-            <g:message code="${it.label}"/>: ${it.radio} <span style="margin-left: 20px"></span>
-        </g:radioGroup>
-    </div>
+
 
     <div class="divExternos esconder text-info" style="width: 96%; margin-top: 10px; float: left" >
         <div class="col-xs-1">
@@ -95,7 +100,7 @@
 
 </div>
 
-<div style="margin-top: 30px; min-height: 560px" class="vertical-container" id="divBandeja">
+<div style="margin-top: 30px; min-height: 500px" class="vertical-container" id="divBandeja">
 
     <p class="css-vertical-text">Resultado - Buscar trámites</p>
 
@@ -190,7 +195,8 @@
     var boton;
 
     $("#btnBusqueda").click(function () {
-        $("#btnBusqueda").hide(1500);
+        // $("#btnBusqueda").hide(1500);
+        $("#btnBusqueda").addClass('disabled');
         $("#bandeja").html("").append($("<div style='width:100%; float:left; text-align: center; margin-top:120px;'/>").append(spinnerSquare64));
         var memorando = $("#memorando").val();
         var asunto = $("#asunto").val();
@@ -223,11 +229,13 @@
             success : function (msg) {
 //                clearInterval(interval)
                 $("#bandeja").html(msg);
-                $("#btnBusqueda").show(500);
+                // $("#btnBusqueda").show(500);
+                $("#btnBusqueda").removeClass('disabled');
             },
             error   : function (msg) {
                 $("#bandeja").html("Ha ocurrido un error");
-                $("#btnBusqueda").show(500);
+                // $("#btnBusqueda").show(500);
+                $("#btnBusqueda").removeClass('disabled');
             }
         });
 

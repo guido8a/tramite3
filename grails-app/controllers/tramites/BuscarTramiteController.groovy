@@ -267,12 +267,12 @@ class BuscarTramiteController {
         def msg = ""
         if (res.size() > maximo) {
             res.pop()
-            msg = "<div class='alert alert-danger clearfix' style='margin-left:0px; margin-top:-32px; height: 45px'> " +
-                    "<i class='fa fa-warning fa-2x pull-left'></i> " +
-                    "Su búsqueda ha generado más de ${maximo} resultados. Por favor utilice más criterios de búsqueda como por " +
-                    "ejemplo un rango de fechas de creación de los trámites.</div>"
+            msg = "<div class='alert alert-warning clearfix' style='margin-left:0px; margin-top:-42px; height: 50px'> " +
+                    "<i class='fa fa-exclamation-circle fa-2x pull-left'></i> " +
+                    "<strong><ul><li>Su búsqueda ha generado más de ${maximo} resultados.</li><li> Por favor utilice más criterios de búsqueda como por " +
+                    "ejemplo un rango de fechas de creación de los trámites.</li></ul></strong>" +
+                    "</div>"
         }
-
 
         params.dgsg = Persona.get(session.usuario.id).puedeAgregarDocumento? "DGSG" : ""
 
