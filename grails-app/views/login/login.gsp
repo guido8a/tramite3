@@ -41,11 +41,11 @@
 
             <div class="dialog ui-corner-all" style="height: 295px;padding: 10px;width: 910px;margin: auto;margin-top: 5px">
                 <div style="text-align: center; margin-top: 10px; color: #810;">
-                    <asset:image src="apli/portada.png" style="padding: 10px;"/>
+                    <asset:image src="apli/portada.png" style="padding: 10px; width: 500px"/>
                 </div>
 
                 <div style="width: 100%;height: 20px;float: left;margin-top: 20px;text-align: center">
-                    <a href="#" id="ingresar" class="btn btn-primary" style="width: 400px; margin: auto">
+                    <a href="#" id="ingresar" class="btn btn-primary" style="width: 360px; margin: auto">
                         <i class="icon-off"></i>Ingresar</a>
                 </div>
 
