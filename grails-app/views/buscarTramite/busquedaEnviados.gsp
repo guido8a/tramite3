@@ -1,23 +1,9 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: gato
-  Date: 14/04/14
-  Time: 03:40 PM
---%>
-
-<%--
-  Created by IntelliJ IDEA.
-  User: gato
-  Date: 14/03/14
-  Time: 11:18 AM
---%>
 
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
     <head>
         <meta name="layout" content="main">
         <title>Búsqueda de Trámites Enviados</title>
-
 
         <style type="text/css">
 
@@ -29,17 +15,15 @@
         }
 
         .alinear {
-
             text-align : center !important;
         }
 
         </style>
-
     </head>
 
     <body>
 
-        <div style="margin-top: 0px;" class="vertical-container">
+        <div style="margin-top: 5px;" class="vertical-container">
 
             <p class="css-vertical-text" style="margin-top: -10px;">Buscar</p>
 
@@ -58,31 +42,27 @@
 
                 <div class="col-md-2" style="margin-left: 150px">
                     <label>Enviados Desde</label>
-                    <elm:datepicker name="fechaRecepcion" class="datepicker form-control" value=""/>
+                    <input name="fechaRecepcion" id='datetimepicker1' type='text' class="form-control"/>
                 </div>
 
                 <div class="col-md-2" style="margin-left: 15px">
                     <label>Enviados Hasta</label>
-                    <elm:datepicker name="fechaBusqueda" class="datepicker form-control" value=""/>
+                    <input name="fechaBusqueda" id='datetimepicker2' type='text' class="form-control"/>
                 </div>
 
                 <div style="padding-top: 25px">
                     <a href="#" name="busqueda" class="btn btn-success btnBusqueda btn-ajax"><i
-                            class="fa fa-check-square-o"></i> Buscar</a>
+                            class="fa fa-search"></i> Buscar</a>
 
                     <a href="#" name="borrar" class="btn btn-primary btnBorrar"><i
                             class="fa fa-eraser"></i> Limpiar</a>
-
                 </div>
-
             </div>
-
         </div>
 
         %{--//bandeja--}%
 
         <div style="margin-top: 30px; min-height: 460px" class="vertical-container" id="divBandeja">
-
             <p class="css-vertical-text">Resultado - Buscar Trámites Enviados</p>
 
             <div class="linea"></div>
@@ -90,12 +70,10 @@
             <div id="bandeja">
 
             </div>
-
         </div>
 
         <div><strong>Nota</strong>: Si existen muchos registros que coinciden con el criterio de búsqueda, se retorna como máximo 20
         </div>
-
 
         <div class="modal fade " id="dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -123,7 +101,6 @@
                 var celHegth = 25;
                 var select = null;
                 var headerTop = $(".header-columnas");
-//        var headerLeft=$(".header-filas");
 
                 $(".h-A").resizable({
                     handles    : "e",
@@ -131,7 +108,6 @@
                     alsoResize : ".A"
                 });
                 $(".container-celdas").scroll(function () {
-//            $("#container-filas").scrollTop($(".container-celdas").scrollTop());
                     $("#container-cols").scrollLeft($(".container-celdas").scrollLeft());
                 });
 
@@ -140,13 +116,26 @@
 
         <script type="text/javascript">
 
+            $(function () {
+                $('#datetimepicker1, #datetimepicker2').datetimepicker({
+                    locale: 'es',
+                    format: 'DD-MM-YYYY',
+                    // daysOfWeekDisabled: [0, 6],
+                    // inline: true,
+                    // sideBySide: true,
+                    showClose: true,
+                    icons: {
+                        close: 'closeText'
+                    }
+                });
+            });
 
             function loading(div) {
                 y = 0;
-                $("#" + div).html("<div class='tituloChevere' id='loading'>Cargando, Espere por favor</div>")
+                $("#" + div).html("<div class='tituloChevere' id='loading'>Cargando, Espere por favor</div>");
                 var interval = setInterval(function () {
                     if (y == 30) {
-                        $("#detalle").html("<div class='tituloChevere' id='loading'>Cargando, Espere por favor</div>")
+                        $("#detalle").html("<div class='tituloChevere' id='loading'>Cargando, Espere por favor</div>");
                         y = 0
                     }
                     $("#loading").append(".");
@@ -159,8 +148,8 @@
                 $("#bandeja").html("").append($("<div style='width:100%; text-align: center;'/>").append(spinnerSquare64));
                 var memorando = $("#memorando").val();
                 var asunto = $("#asunto").val();
-                var fecha = $("#fechaBusqueda_input").val();
-                var fechaRecepcion = $("#fechaRecepcion_input").val();
+                var fecha = $("#datetimepicker1").val();
+                var fechaRecepcion = $("#datetimepicker2").val();
 
                 var datos = "memorando=" + memorando + "&asunto=" + asunto + "&fechaDesde=" + fechaRecepcion + "&fechaHasta=" + fecha
 
@@ -172,7 +161,6 @@
                         $("#bandeja").html(msg);
                     }
                 });
-
             });
 
             $("input").keyup(function (ev) {
@@ -180,8 +168,8 @@
                     $("#bandeja").html("").append($("<div style='width:100%; text-align: center;'/>").append(spinnerSquare64));
                     var memorando = $("#memorando").val();
                     var asunto = $("#asunto").val();
-                    var fecha = $("#fechaBusqueda_input").val();
-                    var fechaRecepcion = $("#fechaRecepcion_input").val();
+                    var fecha = $("#datetimepicker1").val();
+                    var fechaRecepcion = $("#fdatetimepicker2").val();
 
                     var datos = "memorando=" + memorando + "&asunto=" + asunto + "&fechaDesde=" + fechaRecepcion + "&fechaHasta=" + fecha
                     $.ajax({
@@ -224,7 +212,6 @@
                 var conPadre = $tr.hasClass("padre");
 
                 var enviado = $tr.hasClass("estado");
-
                 var esMio = $tr.hasClass("mio");
 
                 var tienePrincipal = $tr.attr("principal").toString() != '0' && $tr.attr("principal").toString() != $tr.attr("id");
@@ -254,20 +241,6 @@
                         $("#dialog").modal("show")
                     }
                 };
-
-                %{--var crearHermano = {--}%
-                %{--label  : "Agregar documento al trámite",--}%
-                %{--icon   : "fa fa-paste",--}%
-                %{--action : function () {--}%
-                %{--<g:if test="${session.usuario.esTriangulo}">--}%
-                %{--location.href = '${createLink(controller: "tramite2", action: "crearTramiteDep")}?padre=' + padre + '&hermano=' + id + "&buscar=1&esRespuestaNueva=N";--}%
-                %{--</g:if>--}%
-                %{--<g:else>--}%
-                %{--location.href = '${createLink(controller: "tramite", action: "crearTramite")}?padre=' + padre + '&hermano=' + id + "&buscar=1&esRespuestaNueva=N";--}%
-                %{--</g:else>--}%
-                %{--}--}%
-                %{--};--}%
-
                 var crearHermano = {
                     label  : "Agregar documento al trámite",
                     icon   : "fa fa-paste",
@@ -400,9 +373,6 @@
                 items.administrar = administrar;
                 </g:if>
 
-//                if (padre || tienePrincipal) {
-//                    items.hermano = crearHermano;
-//                }
                 if (esMio) {
                     if (padre) {
                         items.crearHermano = crearHermano;
@@ -414,22 +384,17 @@
                 <g:if test="${session.usuario.getPuedeCopiar()}">
                 items.copia = copia;
                 </g:if>
-//        }
 
                 return items
             }
 
             $(".btnBorrar").click(function () {
-
                 $("#memorando").val("");
                 $("#asunto").val("");
-                $("#fechaRecepcion_input").val('');
-                $("#fechaBusqueda_input").val('')
-
+                $("#datetimepicker1").val('');
+                $("#datetimepicker2").val('')
             });
 
-
         </script>
-
     </body>
 </html>

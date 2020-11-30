@@ -9,16 +9,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <asset:link rel="icon" href="favicon.ico" type="image/x-ico"/>
 
-%{--    prueba--}%
+    %{--    prueba--}%
     <asset:stylesheet src="/bootstrap-3.3.2/dist/css/bootstrap.css"/>
-%{--    <asset:stylesheet src="/bootstrap-3.3.2/dist/css/bootstrap.min.css"/>--}%
+    %{--    <asset:stylesheet src="/bootstrap-3.3.2/dist/css/bootstrap.min.css"/>--}%
     <asset:stylesheet src="/bootstrap-3.3.2/dist/css/bootstrap-theme.css"/>
-%{--  fin  prueba--}%
+    %{--  fin  prueba--}%
 
 
-%{--    <asset:stylesheet src="/apli/bootstrap.min.css"/>--}%
-%{--    <asset:stylesheet src="/bootstrap-grid.css"/>--}%
-%{--    <asset:stylesheet src="/bootstrap-reboot.css"/>--}%
+    %{--    <asset:stylesheet src="/apli/bootstrap.min.css"/>--}%
+    %{--    <asset:stylesheet src="/bootstrap-grid.css"/>--}%
+    %{--    <asset:stylesheet src="/bootstrap-reboot.css"/>--}%
 
 
     <asset:stylesheet src="/jquery/jquery-ui-1.10.3.custom.min.css"/>
@@ -45,7 +45,7 @@
     <asset:javascript src="/apli/moment.js"/>
     <asset:javascript src="/apli/moment-with-locales.js"/>
 
-%{--    <asset:javascript src="/apli/bootstrap.min.js"/>--}%
+    %{--    <asset:javascript src="/apli/bootstrap.min.js"/>--}%
 
     <asset:javascript src="/apli/funciones.js"/>
     <asset:javascript src="/apli/functions.js"/>
@@ -79,11 +79,7 @@
 <body style="padding-top: 60px">
 
 
-%{--<div id="modalTableGray"></div>--}%
-
-%{--<g:if test="${session?.usuario}">--}%
-   <mn:menu title="${g.layoutTitle(default: 'Monitor')}"/>
-%{--</g:if>--}%
+%{--<mn:menu title="${g.layoutTitle(default: 'Monitor')}"/>--}%
 
 <div class="container" style="min-width: 1000px !important; margin-top: 0px; overflow-y: hidden">
     <g:layoutBody/>
@@ -94,20 +90,20 @@
 <script type="text/javascript">
 
 
-    var affixElement = '#navbar-main';
-
-    $(affixElement).affix({
-        offset: {
-            // Distance of between element and top page
-            top: function () {
-                return (this.top = $(affixElement).offset().top)
-            },
-            // when start #footer
-            bottom: function () {
-                return (this.bottom = $('#footer').outerHeight(true))
-            }
-        }
-    });
+    // var affixElement = '#navbar-main';
+    //
+    // $(affixElement).affix({
+    //     offset: {
+    //         // Distance of between element and top page
+    //         top: function () {
+    //             return (this.top = $(affixElement).offset().top)
+    //         },
+    //         // when start #footer
+    //         bottom: function () {
+    //             return (this.bottom = $('#footer').outerHeight(true))
+    //         }
+    //     }
+    // });
 
 
 </script>

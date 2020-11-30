@@ -1,11 +1,10 @@
-<%@ page import="happy.tramites.DocumentoTramite" %>
 
-<script type="text/javascript" src="${resource(dir: 'js', file: 'ui.js')}"></script>
-<script type="text/javascript" src="${resource(dir: 'js/plugins/lzm.context/js', file: 'lzm.context-0.5.js')}"></script>
-<link href="${resource(dir: 'js/plugins/lzm.context/css', file: 'lzm.context-0.5.css')}" rel="stylesheet">
+%{--<script type="text/javascript" src="${resource(dir: 'js', file: 'ui.js')}"></script>--}%
+%{--<script type="text/javascript" src="${resource(dir: 'js/plugins/lzm.context/js', file: 'lzm.context-0.5.js')}"></script>--}%
+%{--<link href="${resource(dir: 'js/plugins/lzm.context/css', file: 'lzm.context-0.5.css')}" rel="stylesheet">--}%
 
-<script type="text/javascript" src="${resource(dir: 'js/plugins/fixed-header-table-1.3', file: 'jquery.fixedheadertable.min.js')}"></script>
-<link href="${resource(dir: 'js/plugins/fixed-header-table-1.3/css', file: 'defaultTheme.css')}" rel="stylesheet">
+%{--<script type="text/javascript" src="${resource(dir: 'js/plugins/fixed-header-table-1.3', file: 'jquery.fixedheadertable.min.js')}"></script>--}%
+%{--<link href="${resource(dir: 'js/plugins/fixed-header-table-1.3/css', file: 'defaultTheme.css')}" rel="stylesheet">--}%
 
 <style type="text/css">
 table {
@@ -50,7 +49,6 @@ table {
                         principal="${tramite?.tramite?.tramitePrincipal}"
                         class="${clase}"
                         estado="${tramite?.tramite?.estadoTramite?.codigo}">
-                        %{--<td style="width: 110px">${tramite?.tramite?.codigo}</td>--}%
                         <td style="width: 145px">
                             <g:if test="${tramite?.tramite?.tipoTramite?.codigo == 'C'}">
                                 <i class="fa fa-eye-slash"></i>
@@ -69,12 +67,6 @@ table {
                             </g:else>
                         </td>
                         <td style="width: 180px">
-                            %{--<g:if test="${tramite?.tramite?.para?.persona}">--}%
-                            %{--${tramite?.tramite?.para?.persona?.nombre + " " + tramite?.tramite?.para?.persona?.apellido}--}%
-                            %{--</g:if>--}%
-                            %{--<g:else>--}%
-                            %{--${tramite?.tramite?.para?.departamento?.descripcion}--}%
-                            %{--</g:else>--}%
                             <g:if test="${tramite.persona}">
                                 ${tramite.persona}
                             </g:if>
@@ -85,7 +77,6 @@ table {
                         <td style="width: 70px">${tramite?.rolPersonaTramite?.descripcion}</td>
                         <td style="width: 190px">${tramite?.tramite?.asunto}</td>
                         <td style="width: 67px">${tramite?.tramite?.prioridad?.descripcion}</td>
-
                         <td style="width: 110px">${tramite?.tramite?.fechaCreacion?.format('dd-MM-yyyy HH:mm')}</td>
                         <g:if test="${tramite?.tramite?.fechaEnvio}">
                             <td style="width: 110px">${tramite?.tramite?.fechaEnvio?.format('dd-MM-yyyy HH:mm')}</td>
@@ -96,12 +87,9 @@ table {
                         <td style="width: 67px">${tramite?.tramite?.estadoTramite?.descripcion}</td>
                     </tr>
                 </g:each>
-
             </tbody>
         </table>
-
     </span>
-
 </div>
 
 <script type="text/javascript">
@@ -116,9 +104,9 @@ table {
             }
         });
 
-        $('.table').fixedHeaderTable({
-            height : 450
-        });
+        // $('.table').fixedHeaderTable({
+        //     height : 450
+        // });
     });
 </script>
 

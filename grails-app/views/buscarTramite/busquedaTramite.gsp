@@ -39,20 +39,15 @@
 
             <div class="col-xs-2" style="margin-left: 10px">
                 <label>Fecha Desde</label>
-                <elm:datepicker name="fechaDsde" class="datepicker form-control" value=""/>
+%{--                <elm:datepicker name="fechaDsde" class="datepicker form-control" value=""/>--}%
+                <input name="fechaDsde" id='datetimepicker1' type='text' class="form-control"/>
             </div>
 
             <div class="col-xs-2" style="margin-left: -25px">
                 <label>Fecha Hasta</label>
-                <elm:datepicker name="fechaHsta" class="datepicker form-control" value=""/>
+                <input name="fechaHsta" id='datetimepicker2' type='text' class="form-control"/>
+%{--                <elm:datepicker name="fechaHsta" class="datepicker form-control" value=""/>--}%
             </div>
-
-%{--            <div class="col-xs-1">--}%
-%{--                <g:checkBox name="externo" class="combo" />--}%
-%{--                <label class="text-info">Buscar externos</label>--}%
-%{--            </div>--}%
-
-%{--            <div class="col-xs-3" style="padding-top: 25px; width: 230px; height: 63px;">--}%
             <div class="col-xs-2" style="padding-top: 5px; height: 63px;">
             <g:checkBox name="externo" class="combo" /><label class="text-info">Buscar externos</label>
                 <a href="#" name="busqueda" class="btn btn-success btn-ajax" id="btnBusqueda"><i
@@ -134,12 +129,26 @@
 
 <script type="text/javascript">
 
+    $(function () {
+        $('#datetimepicker1, #datetimepicker2').datetimepicker({
+            locale: 'es',
+            format: 'DD-MM-YYYY',
+            // daysOfWeekDisabled: [0, 6],
+            // inline: true,
+            // sideBySide: true,
+            showClose: true,
+            icons: {
+                close: 'closeText'
+            }
+        });
+    });
+
     $(".btnExcel").click(function () {
 
         var memorando = $("#memorando").val();
         var asunto = $("#asunto").val();
-        var fecha = $("#fechaDsde_input").val();
-        var fechaHs = $("#fechaHsta_input").val();
+        var fecha = $("#datetimepicker1").val();
+        var fechaHs = $("#datetimepicker2").val();
         var institucion;
         var doc;
         var contacto;
@@ -197,8 +206,8 @@
         $("#bandeja").html("").append($("<div style='width:100%; float:left; text-align: center; margin-top:120px;'/>").append(spinnerSquare64));
         var memorando = $("#memorando").val();
         var asunto = $("#asunto").val();
-        var fecha = $("#fechaDsde_input").val();
-        var fechaHs = $("#fechaHsta_input").val();
+        var fecha = $("#datetimepicker1").val();
+        var fechaHs = $("#datetimepicker2").val();
         var institucion;
         var doc;
         var contacto;
@@ -240,12 +249,13 @@
 
     $("input").keyup(function (ev) {
         if (ev.keyCode == 13) {
-            $("#btnBusqueda").click()
+            $("#btnBusqueda").click();
             $(":focus").blur()
         }
     });
 
     function createContextMenu(node) {
+
         var $tr = $(node);
 
         var items = {

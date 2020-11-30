@@ -206,7 +206,7 @@ class BuscarTramiteController {
 
 
     def tablaBusquedaTramite() {
-//        println "tablaBusquedaTramite: $params"
+        println "tablaBusquedaTramite: $params"
         def cn = dbConnectionService.getConnection()
 
         def persona = session.usuario.id
