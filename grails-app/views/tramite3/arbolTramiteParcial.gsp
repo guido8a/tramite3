@@ -1,23 +1,11 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: gato
-  Date: 28/03/17
-  Time: 11:07
---%>
-<%--
-  Created by IntelliJ IDEA.
-  User: luz
-  Date: 4/30/14
-  Time: 1:20 PM
---%>
 
-<%@ page import="happy.tramites.RolPersonaTramite" contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
     <meta name="layout" content="main">
     <title>Árbol de trámite</title>
-    <script src="${resource(dir: 'js/plugins/jstree-e22db21/dist', file: 'jstree.min.js')}"></script>
-    <link href="${resource(dir: 'js/plugins/jstree-e22db21/dist/themes/default', file: 'style.min.css')}" rel="stylesheet">
+
+    <asset:javascript src="/jstree-3.0.8/dist/jstree.min.js"/>
+    <asset:stylesheet src="/jstree-3.0.8/dist/themes/default/style.min.css"/>
 
     <style type="text/css">
     #jstree {
@@ -121,9 +109,6 @@
         var tramiteId = $node.data("jstree").tramite;
         var prtrId =  $node.data("prtr").prtrId;
 
-
-//        console.log("data " + $node.data("prtr").prtrId);
-
         var items = {
 //                    header : {
 //                        label  : "Sin Acciones",
@@ -148,15 +133,6 @@
                     $("#dialog").modal("show")
                 }
             };
-//            var plazo = {
-//                label  : 'Ampliar Plazo',
-//                icon   : "fa fa-check",
-//                action : function (e) {
-//
-//                  }
-//            };
-
-
 
             var plazo = {
                 label  : "Ampliar plazo",
@@ -209,11 +185,8 @@
             };
 
 
-
             <g:if test="${session.usuario.getPuedeVer()}">
-//                    items.header.label = "Acciones";
             items.detalles = detalles;
-
 
             <g:if test="${session.usuario.puedePlazo}">
             if(!comprobar(nodeId)){
@@ -252,25 +225,25 @@
             },
             types       : {
                 tramitePrincipal : {
-                    icon : "fa fa-file text-success"
+                    icon : "fa fa-file-powerpoint text-success"
                 },
                 tramite          : {
                     icon : "fa fa-file text-info"
                 },
                 principal        : {
-                    icon : "fa fa-edit text-info"
+                    icon : "fa fa-file-powerpoint text-info"
                 },
                 para             : {
-                    icon : "fa fa-file-o text-success"
+                    icon : "fa fa-file text-success"
                 },
                 copia            : {
-                    icon : "fa fa-files-o text-info"
+                    icon : "fa fa-paste text-info"
                 },
                 anulado          : {
-                    icon : "fa fa-ban text-muted"
+                    icon : "fa fa-ban text-danger"
                 },
                 archivado    : {
-                    icon : "fa fa-archive text-warning"
+                    icon : "fa fa-file-archive text-warning"
                 }
             }
         });

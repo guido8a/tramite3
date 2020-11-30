@@ -1145,9 +1145,13 @@ class TramiteAdminController{
 
         if (pdt.tramite.esRespuestaNueva == "N") {
             if (rel == "para") {
-                data += ',"icon":"fa fa-clipboard text-success"'
+//                data += ',"icon":"fa fa-clipboard text-success"'
+                data += ',"icon":"fa fa-external-link-square-alt text-success"'
+
             } else if (rel == "copia") {
-                data += ',"icon":"fa fa-clipboard text-success"'
+//                data += ',"icon":"fa fa-clipboard text-success"'
+                data += ',"icon":"fa fa-external-link-square-alt text-success"'
+
             }
         }
 
@@ -1280,7 +1284,7 @@ class TramiteAdminController{
         def rol = tramiteParaInfo.rolPersonaTramite
         def strInfo = ""
         if (tramiteParaInfo.fechaAnulacion) {
-            strInfo += "<span class='text-muted'>"
+            strInfo += "<span class='text-danger'>"
         }
         if (rol.codigo == "R002") {
             strInfo += "[CC] "

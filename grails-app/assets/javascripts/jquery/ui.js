@@ -43,11 +43,11 @@ function validaAutorizacion($textField) {
 // });
 
 //para los dialogs, setea los defaults
-bootbox.setDefaults({
-    locale      : "es",
-    closeButton : false,
-    show        : true
-});
+// bootbox.setDefaults({
+//     locale      : "es",
+//     closeButton : false,
+//     show        : true
+// });
 
 //para el context menu deshabilita el click derecho en las paginas
 //$("html").contextMenu({

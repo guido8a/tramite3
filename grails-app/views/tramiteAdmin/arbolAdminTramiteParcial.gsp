@@ -1,23 +1,12 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: gato
-  Date: 28/03/17
-  Time: 11:15
---%>
-<%--
-  Created by IntelliJ IDEA.
-  User: luz
-  Date: 4/30/14
-  Time: 1:20 PM
---%>
 
-<%@ page import="happy.seguridad.Persona; happy.tramites.Departamento" contentType="text/html;charset=UTF-8" %>
+
 <html>
 <head>
     <meta name="layout" content="main">
     <title>Administración de trámite</title>
-    <script src="${resource(dir: 'js/plugins/jstree-e22db21/dist', file: 'jstree.min.js')}"></script>
-    <link href="${resource(dir: 'js/plugins/jstree-e22db21/dist/themes/default', file: 'style.min.css')}" rel="stylesheet">
+
+    <asset:javascript src="/jstree-3.0.8/dist/jstree.min.js"/>
+    <asset:stylesheet src="/jstree-3.0.8/dist/themes/default/style.min.css"/>
 
     <style type="text/css">
     #jstree {
@@ -134,15 +123,6 @@
                 puedeDesanular = false;
             }
         }
-
-        %{--console.log("tramite " + "${tramite?.de?.departamento}");--}%
-        %{--console.log("tramite " + '${Persona.findAllByDepartamento(Departamento.get(tramite?.de?.departamento?.id))}')--}%
-        %{--console.log("departamento " + ${Departamento.get(tramite?.deDepartamentoId)});--}%
-        %{--console.log("personas " + ${Persona.findAllByDepartamento(Departamento.get(tramite?.deDepartamentoId))});--}%
-
-//                console.log("-->" + tramiteDe)
-
-//        console.log(padreEstaAnulado);
 
         var items = {};
         if (!nodeTipo.contains("tramite")) {
@@ -1153,41 +1133,42 @@
             },
             types       : {
                 tramitePrincipal : {
-                    icon : "fa fa-file text-success"
+                    icon : "fa fa-file-powerpoint text-success"
                 },
                 tramite          : {
                     icon : "fa fa-file text-info"
                 },
                 para             : {
-                    icon : "fa fa-file-o"
+                    icon : "fa fa-file text-info"
                 },
                 paraEnviado      : {
-                    icon : "fa fa-file-o text-info"
+                    icon : "fa fa-file text-info"
                 },
                 paraArchivado    : {
-                    icon : "fa fa-archive text-warning"
+                    icon : "fa fa-file-archive text-warning"
                 },
                 paraAnulado      : {
-                    icon : "fa fa-ban text-muted"
+                    icon : "fa fa-ban text-danger"
                 },
                 paraRecibido     : {
-                    icon : "fa fa-file-o text-success"
+                    // icon : "fa fa-sign-in-alt text-success"
+                    icon : "fa fa-file text-success"
                 },
 
                 copia          : {
-                    icon : "fa fa-files-o"
+                    icon : "fa fa-paste"
                 },
                 copiaEnviado   : {
-                    icon : "fa fa-files-o text-info"
+                    icon : "fa fa-paste text-info"
                 },
                 copiaArchivado : {
-                    icon : "fa fa-files-o text-warning"
+                    icon : "fa fa-paste text-warning"
                 },
                 copiaAnulado   : {
-                    icon : "fa fa-ban text-muted"
+                    icon : "fa fa-ban text-danger"
                 },
                 copiaRecibido  : {
-                    icon : "fa fa-files-o text-success"
+                    icon : "fa fa-paste text-success"
                 }
             }
         });

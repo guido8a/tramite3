@@ -40,6 +40,7 @@
 
     <asset:javascript src="/jquery/jquery-2.2.4.js"/>
     <asset:javascript src="/jquery/jquery-ui.js"/>
+    <asset:javascript src="/jquery/ui.js"/>
 
     <asset:javascript src="/apli/moment.js"/>
     <asset:javascript src="/apli/moment-with-locales.js"/>

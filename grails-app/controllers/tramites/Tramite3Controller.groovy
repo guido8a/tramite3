@@ -1362,14 +1362,16 @@ class Tramite3Controller{
             data += ',"tramite":"' + pdt.tramiteId + '"'
             if (pdt.tramite.esRespuestaNueva == "N") {
                 if (rel == "para") {
-                    data += ',"icon":"fa fa-clipboard text-success"'
+//                    data += ',"icon":"fa fa-clipboard text-success"'
+                    data += ',"icon":"fa fa-external-link-square-alt text-success"'
                 } else if (rel == "copia") {
-                    data += ',"icon":"fa fa-clipboard text-success"'
+//                    data += ',"icon":"fa fa-clipboard text-success"'
+                    data += ',"icon":"fa fa-external-link-square-alt text-success"'
                 }
             }
             html += "<li id='${pdt.id}' class='${clase}' data-jstree='{\"type\":\"${rel}\"${data}}' data-prtr='{\"prtrId\":\"${pdt.id}\"}' >"
             if (pdt.fechaAnulacion) {
-                html += "<span class='text-muted'>"
+                html += "<span class='text-danger'>"
             }
             html += strInfo
             if (pdt.fechaAnulacion) {

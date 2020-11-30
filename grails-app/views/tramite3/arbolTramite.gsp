@@ -1,11 +1,7 @@
-
-
 <html>
 <head>
     <meta name="layout" content="main">
     <title>Árbol de trámite</title>
-    %{--    <script src="${resource(dir: 'js/plugins/jstree-e22db21/dist', file: 'jstree.min.js')}"></script>--}%
-    %{--    <link href="${resource(dir: 'js/plugins/jstree-e22db21/dist/themes/default', file: 'style.min.css')}" rel="stylesheet">--}%
 
     <asset:javascript src="/jstree-3.0.8/dist/jstree.min.js"/>
     <asset:stylesheet src="/jstree-3.0.8/dist/themes/default/style.min.css"/>
@@ -227,25 +223,25 @@
             },
             types       : {
                 tramitePrincipal : {
-                    icon : "fa fa-file text-success"
+                    icon : "fa fa-file-powerpoint text-success"
                 },
                 tramite          : {
                     icon : "fa fa-file text-info"
                 },
                 principal        : {
-                    icon : "fa fa-edit text-info"
+                    icon : "fa fa-file-powerpoint text-info"
                 },
                 para             : {
-                    icon : "fa fa-file-o text-success"
+                    icon : "fa fa-file text-success"
                 },
                 copia            : {
-                    icon : "fa fa-files-o text-info"
+                    icon : "fa fa-paste text-info"
                 },
                 anulado          : {
-                    icon : "fa fa-ban text-muted"
+                    icon : "fa fa-ban text-danger"
                 },
                 archivado    : {
-                    icon : "fa fa-archive text-warning"
+                    icon : "fa fa-file-archive text-warning"
                 }
             }
         });

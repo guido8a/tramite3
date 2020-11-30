@@ -1,17 +1,10 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: luz
-  Date: 4/30/14
-  Time: 1:20 PM
---%>
-
-<%@ page import="happy.seguridad.Persona; happy.tramites.Departamento" contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
     <meta name="layout" content="main">
     <title>Administración de trámite</title>
-    <script src="${resource(dir: 'js/plugins/jstree-e22db21/dist', file: 'jstree.min.js')}"></script>
-    <link href="${resource(dir: 'js/plugins/jstree-e22db21/dist/themes/default', file: 'style.min.css')}" rel="stylesheet">
+
+    <asset:javascript src="/jstree-3.0.8/dist/jstree.min.js"/>
+    <asset:stylesheet src="/jstree-3.0.8/dist/themes/default/style.min.css"/>
 
     <style type="text/css">
     #jstree {
@@ -31,7 +24,6 @@
 
 <div class="btn-toolbar toolbar" style="margin-top: 10px !important">
     <div class="btn-group">
-
         <a href="javascript: history.go(-1)" class="btn btn-primary regresar">
             <i class="fa fa-arrow-left"></i> Regresar
         </a>
@@ -39,7 +31,6 @@
         <g:link controller="tramiteExport" action="arbolPdf" id="${tramite?.id}" class="btn btn-default">
             <i class="fa fa-print"></i> Imprimir
         </g:link>
-
     </div>
 </div>
 
@@ -97,7 +88,7 @@
 
         var padreId = $node.data("jstree").padre;
 
-        var tramiteInfo = tramiteCodigo + " (" + tramiteDe + ", " + tramitePara + ")";
+        var tramiteInfo = tramiteCodigo + " (" + tramiteDe + "), (" + tramitePara + ")";
 
         var esCircular = $node.hasClass("CIR");
         var esCopia = nodeTipo.indexOf("copia") > -1;
@@ -128,16 +119,6 @@
                 puedeDesanular = false;
             }
         }
-
-        %{--console.log("tramite " + "${tramite?.de?.departamento}");--}%
-        %{--console.log("tramite " + '${Persona.findAllByDepartamento(Departamento.get(tramite?.de?.departamento?.id))}')--}%
-        %{--console.log("departamento " + ${Departamento.get(tramite?.deDepartamentoId)});--}%
-        %{--console.log("personas " + ${Persona.findAllByDepartamento(Departamento.get(tramite?.deDepartamentoId))});--}%
-
-//                console.log("-->" + tramiteDe)
-
-//        console.log(padreEstaAnulado);
-
         var items = {};
         if (!nodeTipo.contains("tramite")) {
             items.detalles = {
@@ -469,7 +450,7 @@
 
                     items.anular = {
                         label  : "Anular",
-                        icon   : "fa fa-ban",
+                        icon   : "fa fa-ban text-danger",
                         action : function () {
 
                             var $parent = $node.parent().parent();
@@ -562,7 +543,7 @@
                 if (esExterno) {
                     items.externo = {
                         label  : "Cambiar estado",
-                        icon   : "fa fa-exchange",
+                        icon   : "fa fa-exchange text-success",
                         action : function () {
                             $.ajax({
                                 type    : "POST",
@@ -624,18 +605,14 @@
                     };
                 }
             }
-//                    console.log("anulado", estaAnulado, "tiene padre", tienePadre, "padre archivado", padreEstaArchivado, "padre recibido", padreEstaRecibido, "padre anulado", padreEstaAnulado);
-//                    console.log("anulado", estaAnulado, "!tiene padre", !tienePadre, "padre archivado or padre recibido", padreEstaArchivado || padreEstaRecibido, "!padre anulado", !padreEstaAnulado);
-//                    console.log("anulado", estaAnulado, "!tiene padre or (padre archivado or padre recibido)", !tienePadre || (padreEstaArchivado || padreEstaRecibido), "!padre anulado", !padreEstaAnulado);
-//                    console.log("anulado", estaAnulado, "!tiene padre or ((padre archivado or padre recibido) and !padre anulado)", !tienePadre || ((padreEstaArchivado || padreEstaRecibido) && !padreEstaAnulado));
-//                    console.log("anulado and (!tiene padre or ((padre archivado or padre recibido) and !padre anulado))", estaAnulado && (!tienePadre || ((padreEstaArchivado || padreEstaRecibido) && !padreEstaAnulado)));
+
             if (estaAnulado && ((!tienePadre || ((padreEstaArchivado || padreEstaRecibido) && !padreEstaAnulado)) || esAgregado)) {
                 if (puedeDesanular) {
                     if(!padreEstaAnulado){
                         items.desAnular = {
                             separator_before : true,
                             label            : "Quitar anulado",
-                            icon             : "fa fa-magic",
+                            icon             : "fa fa-magic text-danger",
                             action           : function () {
                                 $.ajax({
                                     type    : "POST",
@@ -703,66 +680,6 @@
                                     }
                                 });
                             }
-                            %{--action           : function () {--}%
-                            %{--var msg = "<i class='fa fa-magic fa-3x pull-left text-danger text-shadow'></i>" +--}%
-                            %{--"<p class='lead'>Está por quitar el anulado del trámite<br/><strong>" + tramiteInfo + "</strong>.</p>" +--}%
-                            %{--'<div class="row">' +--}%
-                            %{--'<div class="col-md-3"><strong>Solicitado por</strong></div>' +--}%
-                            %{--'<div class="col-md-9">' +--}%
-                            %{--'<input type="text" class="form-control" id="autDesanular"/>' +--}%
-                            %{--'</div>' +--}%
-                            %{--'</div>' +--}%
-                            %{--"<label for='observacionDesanular'>Observaciones:</label>" +--}%
-                            %{--'<textarea id="observacionDesanular" style="resize: none; height: 150px;" ' +--}%
-                            %{--'class="form-control" maxlength="255" name="observacionDesanular"></textarea>';--}%
-                            %{--bootbox.dialog({--}%
-                            %{--id      : "dlgAnular",--}%
-                            %{--title   : '<i class="fa fa-magic"></i> Quitar anulado del Trámite',--}%
-                            %{--message : msg,--}%
-                            %{--buttons : {--}%
-                            %{--cancelar  : {--}%
-                            %{--label     : '<i class="fa fa-times"></i> Cancelar',--}%
-                            %{--className : 'btn-danger',--}%
-                            %{--callback  : function () {--}%
-                            %{--}--}%
-                            %{--},--}%
-                            %{--desanular : {--}%
-                            %{--id        : 'btnDesanular',--}%
-                            %{--label     : '<i class="fa fa-check"></i> Quitar anulado',--}%
-                            %{--className : "btn-success",--}%
-                            %{--callback  : function () {--}%
-                            %{--var $txt = $("#autDesanular");--}%
-                            %{--if (validaAutorizacion($txt)) {--}%
-                            %{--openLoader("Procesando");--}%
-                            %{--$.ajax({--}%
-                            %{--type    : 'POST',--}%
-                            %{--url     : '${createLink(controller: "tramiteAdmin", action: "desanular")}',--}%
-                            %{--data    : {--}%
-                            %{--id    : nodeId,--}%
-                            %{--texto : $("#observacionDesanular").val(),--}%
-                            %{--aut   : $txt.val()--}%
-                            %{--},--}%
-                            %{--success : function (msg) {--}%
-                            %{--var parts = msg.split("*");--}%
-                            %{--if (parts[0] == 'OK') {--}%
-                            %{--log("Quitado el anulado del trámite correctamente", 'success');--}%
-                            %{--setTimeout(function () {--}%
-                            %{--location.reload(true);--}%
-                            %{--}, 500);--}%
-                            %{--} else if (parts[0] == 'NO') {--}%
-                            %{--closeLoader();--}%
-                            %{--log("Error al quitar el anulado del trámite el trámite", 'error')--}%
-                            %{--}--}%
-                            %{--}--}%
-                            %{--});--}%
-                            %{--} else {--}%
-                            %{--return false;--}%
-                            %{--}--}%
-                            %{--}--}%
-                            %{--}--}%
-                            %{--}--}%
-                            %{--});--}%
-                            %{--}--}%
                         };
                     }
 
@@ -770,12 +687,12 @@
             }
             if (estaArchivado && !estaAnulado) {
 
-                var cop = esCopia
+                var cop = esCopia;
 
                 items.desArchivar = {
                     separator_before : true,
                     label            : "Quitar archivado",
-                    icon             : "fa fa-magic",
+                    icon             : "fa fa-magic text-warning",
                     action           : function () {
                         $.ajax({
                             type    : "POST",
@@ -849,11 +766,10 @@
                 items.desRecibir = {
                     separator_before : true,
                     label            : "Quitar recibido",
-                    icon             : "fa fa-magic",
+                    icon             : "fa fa-magic text-info",
                     action           : function () {
                         $.ajax({
                             type    : "POST",
-                            %{--url     : "${createLink(controller: 'tramiteAdmin', action: 'dialogAdmin')}",--}%
                             url     : "${createLink(controller: 'tramiteAdmin', action: 'dialogAnulados')}",
                             data    : {
                                 id   : tramiteId,
@@ -922,11 +838,10 @@
                 items.archivar = {
                     separator_before : true,
                     label            : "Archivar",
-                    icon             : "fa fa-folder",
+                    icon             : "fa fa-folder text-warning",
                     action           : function () {
                         $.ajax({
                             type    : "POST",
-                            %{--url     : "${createLink(controller: 'tramiteAdmin', action: 'dialogAdmin')}",--}%
                             url     : "${createLink(controller: 'tramiteAdmin', action: 'dialogAnulados')}",
                             data    : {
                                 id   : tramiteId,
@@ -973,7 +888,6 @@
                                                                 setTimeout(function () {
                                                                     location.reload(true);
                                                                 }, 500);
-
                                                             }
                                                         }
                                                     });
@@ -1024,7 +938,7 @@
                                             }
                                         };
                                         buttons.desenviar = {
-                                            label     : "<i class='fa fa-magic'></i> Quitar enviado",
+                                            label     : "<i class='fa fa-magic text-warning'></i> Quitar enviado",
                                             className : "btn-danger",
                                             callback  : function () {
                                                 var ids = "";
@@ -1093,7 +1007,6 @@
                                                                                 });
                                                                                 return false;
                                                                             }
-
                                                                         }
                                                                     }
                                                                 }
@@ -1110,14 +1023,12 @@
                                             }
                                         };
                                     }
-
                                     bootbox.dialog({
                                         title   : "Alerta",
                                         message : msg,
                                         buttons : buttons
                                     });
                                 }
-
                             }
                         });
                     }
@@ -1152,42 +1063,42 @@
             },
             types       : {
                 tramitePrincipal : {
-                    icon : "fa fa-file text-success"
+                    icon : "fa fa-file-powerpoint text-success"
                 },
                 tramite          : {
                     icon : "fa fa-file text-info"
                 },
                 para             : {
-                    icon : "fa fa-file-o text-info"
+                    icon : "fa fa-file text-info"
                 },
                 paraEnviado      : {
-                    icon : "fa fa-file-o text-info"
+                    icon : "fa fa-file text-info"
                 },
                 paraArchivado    : {
-//                    icon : "fa fa-file-o text-warning"
-                    icon : "fa fa-archive text-warning"
+                    icon : "fa fa-file-archive text-warning"
                 },
                 paraAnulado      : {
-                    icon : "fa fa-ban text-muted"
+                    icon : "fa fa-ban text-danger"
                 },
                 paraRecibido     : {
-                    icon : "fa fa-file-o text-success"
+                    // icon : "fa fa-sign-in-alt text-success"
+                    icon : "fa fa-file text-success"
                 },
 
                 copia          : {
-                    icon : "fa fa-files-o"
+                    icon : "fa fa-paste"
                 },
                 copiaEnviado   : {
-                    icon : "fa fa-files-o text-info"
+                    icon : "fa fa-paste text-info"
                 },
                 copiaArchivado : {
-                    icon : "fa fa-files-o text-warning"
+                    icon : "fa fa-paste text-warning"
                 },
                 copiaAnulado   : {
-                    icon : "fa fa-ban text-muted"
+                    icon : "fa fa-ban text-danger"
                 },
                 copiaRecibido  : {
-                    icon : "fa fa-files-o text-success"
+                    icon : "fa fa-paste text-success"
                 }
             }
         });
