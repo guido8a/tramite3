@@ -1,10 +1,11 @@
-//import org.codehaus.groovy.grails.commons.DomainClassArtefactHandler
-
-
+import org.grails.core.artefact.DomainClassArtefactHandler
 import org.springframework.beans.SimpleTypeConverter
 import org.springframework.context.MessageSourceResolvable
 import org.springframework.web.servlet.support.RequestContextUtils
 import seguridad.Persona
+import tramites.PersonaDocumentoTramite
+import tramites.RolPersonaTramite
+import tramites.TipoDocumento
 
 import java.text.DecimalFormatSymbols
 
@@ -74,7 +75,6 @@ class ElementosTagLib {
         out << html
     }
 
-
     def bootstrapCss = { attrs ->
         def html = "<link href=\"${resource(dir: 'bootstrap-3.1.1/css', file: 'bootstrap.css')}\" rel=\"stylesheet\">"
         html += "<link href=\"${resource(dir: 'bootstrap-3.1.1/css', file: 'bootstrap-theme.min.css')}\" rel=\"stylesheet\">"
@@ -135,22 +135,15 @@ class ElementosTagLib {
     def comboTipoDoc = { attrs ->
         def persona = Persona.get(session.usuario.id)
         def depar = persona.departamento
-
-//        def tipos = TipoDocumentoDepartamento.findAllByDepartamentoAndEstado(depar, 1).tipo
-//        tipos.sort { it.descripcion }
         def tipos = session.usuario.tiposDocumento
 
         if (!attrs.id) {
             attrs.id = attrs.name
         }
 
-//        if (!attrs.tramite || !attrs.tramite.padre) {
-//            tipos.remove(TipoDocumento.findByCodigo("SUM"))
-//        } else {
         if (attrs.esRespuesta?.toInteger() == 1) {
             tipos.remove(TipoDocumento.findByCodigo("DEX"))
         }
-//        }
 
         if (attrs.tipo && (attrs.tipo.toLowerCase() == "pers" || attrs.tipo.toLowerCase() == "personal")) {
             tipos.remove(TipoDocumento.findByCodigo("DEX"))
@@ -159,7 +152,6 @@ class ElementosTagLib {
         if (!session.usuario.puedeTramitar) {
             tipos.remove(TipoDocumento.findByCodigo("OFI"))
         }
-
 
         def params = [id         : attrs.id,
                       name       : attrs.name,
@@ -187,15 +179,9 @@ class ElementosTagLib {
         def html
         def persona = Persona.get(session.usuario.id)
         def esTriangulo = session.usuario.esTriangulo
-
-//        println "persona " + persona
-//        println "persona.id " + persona.id
-//        println "esTriangulo " + esTriangulo
-
         def disp, disponibles = []
         def depar = ["depar", "departamento", "dpto", "ofi", "oficina"]
         def esDepartamento = (attrs.tipo && (depar.contains(attrs.tipo.toLowerCase())))
-//        println "esDepartamento: " + esDepartamento
         def disp2 = []
         def todos = []
         def users = []
@@ -205,53 +191,34 @@ class ElementosTagLib {
         def arreglo = []
         def arreglo2 = []
 
-//        println "AQUI"
-
         if (attrs.tipoDoc.codigo == "DEX") {
             if (esDepartamento) {
                 todos = [[id: persona.departamento.id * -1, label: persona.departamento.descripcion, obj: persona.departamento]]
             }
         } else {
             if (session.usuario.puedeTramitar) {
-//                println "1"
                 disp = Departamento.list([sort: 'descripcion'])
             } else {
-//                println "2"
                 disp = [persona.departamento]
             }
-//            println "DISP::: " + disp
             disp.each { dep ->
 //                println "dep.id: " + dep.id + "    persona.dep: " + persona.departamento.id + "     " + (dep.id == persona.departamento.id)
                 if (dep.id == persona.departamento.id) {
                     def usuarios = Persona.findAllByDepartamento(dep, [sort: 'nombre'])
                     usuarios.each { usu ->
                         if ((((!esTriangulo && usu.id != persona.id) || (esTriangulo && usu.id != persona.id) || (esTriangulo && usu.id == persona.id))) && usu.estaActivo && usu.puedeRecibirOff) {
-//                            users += it
                             disponibles.add([id     : usu.id,
                                              label  : usu.toString(),
                                              obj    : usu,
                                              externo: "interno"])
                         }
                     }
-//                    for (int i = users.size() - 1; i > -1; i--) {
-//                        if (users[i].estaActivo && users[i].puedeRecibir) {
-//                            disponibles.add([id: users[i].id, label: users[i].toString(), obj: users[i]])
-//                        } else {
-//                            users.remove(i)
-//                        }
-//                    }
-//                    disponibles = disponibles.reverse(
                 }
             }
 
             disp.each { dep ->
-//                println "DEP:: " + dep
-//                println "dep.triangulos: " + dep.triangulos
-//                println "dep.triangulos: " + dep.triangulos.size()
                 if (dep.triangulos.size() > 0) {
-//                    println "dep.id " + dep.id + "    " + persona.departamento.id
-//                    println "esDep " + esDepartamento
-//                    println "IF " + (dep.id.toLong() != persona.departamento.id.toLong() || (dep.id.toLong() == persona.departamento.id.toLong() && !esDepartamento))
+
                     if (dep.id.toLong() != persona.departamento.id.toLong() || (dep.id.toLong() == persona.departamento.id.toLong() && !esDepartamento)) {
                         disp2.add([id     : dep.id * -1,
                                    label  : dep.descripcion,
@@ -282,7 +249,6 @@ class ElementosTagLib {
         def para = PersonaDocumentoTramite.findAllByTramiteAndRolPersonaTramite(tramite, rolPara)
         def cc = PersonaDocumentoTramite.findAllByTramiteAndRolPersonaTramite(tramite, rolCC)
 
-//
 //        println("tramite " + tramite?.id)
 //        println "copiasf " + cc
 
@@ -338,9 +304,6 @@ class ElementosTagLib {
             html += "                <div class=\"col-xs-10  col-buen-height\">"
             html += "                    ${tramite.codigo}"
             html += "                </div>"
-//            html += "                <div class=\"col-xs-4 negrilla\" style=\"padding-left: 0px;margin-top: 2px\">"
-//            html += "                    No. <span style=\"font-weight: 500; margin-left: 40px\">${tramite.codigo}</span>"
-//            html += "                </div>"
             html += "            </div>"
             //para
             if (para || tramite.paraExterno) {
@@ -366,18 +329,6 @@ class ElementosTagLib {
                 html += "                </div>"
             }
 //            //copias
-//            if(cc){
-//                html += "                <div class=\"row row-low-margin-top\">"
-//                html += "                    <div class=\"col-xs-1  negrilla negrilla-puntos\">"
-//                html += "                        CC:"
-//                html += "                    </div>"
-//                html += ""
-//                html += "                    <div class=\"col-xs-10  col-buen-height\">"
-//                html += strCopia
-//                html += "                    </div>"
-//                html += "                </div>"
-//            }
-            //de
             html += "            <div class=\"row row-low-margin-top\">"
             html += "                <div class=\"col-xs-1  negrilla negrilla-puntos\">"
             html += "                    De:"
@@ -393,8 +344,6 @@ class ElementosTagLib {
                         html += "                    ${tramite.deDepartamento.descripcion}"
                     }
                 } else {
-                    //cambiado el 21-07-2015
-//                    html += "                    ${tramite.de.departamento.descripcion} - (${tramite.de.nombre} ${tramite.de.apellido})"
                     if (tramite.de) {
                         html += "                    ${tramite?.de?.departamento.descripcion}"
                     } else {

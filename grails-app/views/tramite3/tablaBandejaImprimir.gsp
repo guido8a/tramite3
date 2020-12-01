@@ -1,8 +1,7 @@
-<%@ page import="happy.tramites.DocumentoTramite; happy.tramites.RolPersonaTramite; happy.tramites.PersonaDocumentoTramite" %>
-<script type="text/javascript" src="${resource(dir: 'js', file: 'ui.js')}"></script>
+<%@ page import="tramites.DocumentoTramite" %>
 
-<script type="text/javascript" src="${resource(dir: 'js/plugins/lzm.context/js', file: 'lzm.context-0.5.js')}"></script>
-<link href="${resource(dir: 'js/plugins/lzm.context/css', file: 'lzm.context-0.5.css')}" rel="stylesheet">
+%{--<script type="text/javascript" src="${resource(dir: 'js/plugins/lzm.context/js', file: 'lzm.context-0.5.js')}"></script>--}%
+%{--<link href="${resource(dir: 'js/plugins/lzm.context/css', file: 'lzm.context-0.5.css')}" rel="stylesheet">--}%
 
 <table class="table table-bordered  table-condensed table-hover">
     <thead>
@@ -29,13 +28,13 @@
             <g:set var="copias" value="${tramite.getCopias()}"/>
 
             <g:set var="esImprimir" value="${false}"/>
-            <g:if test="${(happy.tramites.PersonaDocumentoTramite.findAllByPersonaAndTramite(session.usuario, tramite).findAll {
+            <g:if test="${(tramites.PersonaDocumentoTramite.findAllByPersonaAndTramite(session.usuario, tramite).findAll {
                 it.rolPersonaTramite.codigo == 'I005'
             }).size() > 0}">
                 <g:set var="esImprimir" value="${true}"/>
             </g:if>
 
-            <g:if test="${tramite?.anexo == 1 && DocumentoTramite.countByTramite(tramite) > 0}">
+            <g:if test="${tramite?.anexo == 1 && tramites.DocumentoTramite.countByTramite(tramite) > 0}">
                 <g:set var="anexo" value="${'conAnexo'}"/>
             </g:if>
             <g:else>
@@ -60,19 +59,6 @@
                 ${tramite.fechaEnvio /*&& tramite.noRecibido*/ ? 'desenviar' + ' ' + clase : ''}  ${tramite.estadoTramiteExterno ? 'estado' : ''} ${tramite?.tipoDocumento?.codigo} ${tramite.externo == '1' ? ((tramite.tipoDocumento.codigo == 'DEX') ? 'DEX' : 'externo') : ''}  "
                 estado="${tramite.estadoTramite.codigo}" de="${tramite.de.id}" codigo="${tramite.codigo}"
                 departamento="${tramite.de?.departamento?.codigo}" anio="${tramite.fechaCreacion.format('yyyy')}" padre="${padre}">
-                %{--<g:if test="${tramite?.anexo == 1}">--}%
-                %{--<td title="${tramite.asunto}">--}%
-                %{--${tramite?.codigo}--}%
-                %{--<g:if test="${DocumentoTramite.countByTramite(tramite) > 0}">--}%
-                %{--<i class="fa fa-paperclip"></i>--}%
-                %{--</g:if>--}%
-                %{--</td>--}%
-                %{--</g:if>--}%
-                %{--<g:else>--}%
-                %{--<td title="${tramite.asunto}">--}%
-                %{--${tramite?.codigo}--}%
-                %{--</td>--}%
-                %{--</g:else>--}%
                 <td>
                     <g:if test="${tramite?.tipoTramite?.codigo == 'C'}">
                         <i class="fa fa-eye-slash"></i>
@@ -98,7 +84,6 @@
                     </g:else>
                 </td>
                 <g:set var="infoExtra" value=""/>
-                %{--<g:each in="${PersonaDocumentoTramite.findAllByTramiteAndRolPersonaTramiteInList(tramite, [RolPersonaTramite.findByCodigo('R001'), RolPersonaTramite.findByCodigo('R002')])}" var="pdt">--}%
 
                 <g:each in="${[para] + copias}" var="pdt">
                     <g:if test="${pdt}">
@@ -144,24 +129,18 @@
                                         </g:each>
                                     </span>
                                 </g:if>
-                            %{--${para?.departamento?.triangulos && para?.departamento?.triangulos.size() > 0 ? para?.departamento?.triangulos.first() : ''}--}%
-                            %{--<g:set var="dest" value="${1}"/>--}%
                             </g:else>
                         </g:if>
-                    %{--<g:else>--}%
                         <span class="small">
                             <g:each in="${copias}" var="copia" status="i">
                                 <g:set var="dest" value="${dest + 1}"/>
-                            %{--/${dest}/--}%
                                 [CC] ${copia.persona ? copia.persona.login : copia.departamento?.codigo}
                                 <g:if test="${i < copias.size() - 1}">
                                     ,
                                 </g:if>
                             </g:each>
                         </span>
-                    %{--</g:else>--}%
                     </g:else>
-                %{--*${dest}*--}%
                     <g:if test="${dest == 0}">
                         <span class="label label-danger" style="margin-top: 3px;">
                             <i class="fa fa-warning"></i> Sin destinatario ni copias

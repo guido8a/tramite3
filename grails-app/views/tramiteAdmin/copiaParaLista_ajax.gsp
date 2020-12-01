@@ -34,7 +34,7 @@ li {
 }
 
 .fieldLista {
-    width   : 450px;
+    width   : 390px;
     height  : 250px;
     border  : 1px solid #0088CC;
     margin  : 10px 10px 20px 10px;
@@ -94,7 +94,7 @@ li {
             <g:each in="${disponibles}" var="disp">
                 <g:if test="${disp.id.toInteger() < 0}">
                     <li data-id="${disp.id}" class="clickable">
-                        <i class="fa fa-li fa-building-o"></i> ${disp.label}
+                        <i class="fa fa-li fa-building"></i> ${disp.label}
                     </li>
                 </g:if>
                 <g:else>
@@ -138,7 +138,7 @@ li {
                     </g:if>
                     <g:else>
                         <li class="disabled text-muted" data-id="-${disp.departamento.id}">
-                            <i class="fa fa-li fa-building-o"></i> ${disp.departamento.descripcion}
+                            <i class="fa fa-li fa-building"></i> ${disp.departamento.descripcion}
                         </li>
                     </g:else>
                 </g:each>

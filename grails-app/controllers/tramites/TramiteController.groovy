@@ -6,7 +6,7 @@ import utilitarios.DiaLaborable
 
 class TramiteController {
 
-    def diasLaborablesService
+    def diasLaborablesServiceOld
     def enviarService
     def tramitesService
     def dbConnectionService
@@ -121,7 +121,7 @@ class TramiteController {
             }
             if (pdtPara.size() > 0) {
                 def limite = ahora
-                limite = diasLaborablesService.fechaMasTiempo(limite, tramite.prioridad.tiempo)
+                limite = diasLaborablesServiceOld.fechaMasTiempo(limite, tramite.prioridad.tiempo)
                 if (!limite) {
                     flash.message = "Ha ocurrido un error al calcular la fecha límite: " + limite
                     redirect(controller: 'tramite', action: 'errores')
@@ -238,7 +238,7 @@ class TramiteController {
         def fecha = new Date().parse("dd-MM-yyyy HH:mm", params.fecha)
         def prioridad = TipoPrioridad.get(params.prioridad)
         def horas = prioridad.tiempo
-        def fechaEsperada = diasLaborablesService.fechaMasTiempo(fecha, horas)
+        def fechaEsperada = diasLaborablesServiceOld.fechaMasTiempo(fecha, horas)
 
         if (fechaEsperada) {
             render "OK_" + fechaEsperada.format("dd-MM-yyyy HH:mm")
@@ -1115,7 +1115,7 @@ class TramiteController {
         def hoy = new Date()
         def limite = hoy
 
-        limite = diasLaborablesService.fechaMasTiempo(limite, tramite.prioridad.tiempo)
+        limite = diasLaborablesServiceOld.fechaMasTiempo(limite, tramite.prioridad.tiempo)
         if (!limite) {
             flash.message = "Ha ocurrido un error al calcular la fecha límite: " + limite
             redirect(controller: 'tramite', action: 'errores')

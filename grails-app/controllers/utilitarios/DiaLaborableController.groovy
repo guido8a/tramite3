@@ -3,20 +3,19 @@ package utilitarios
 import groovy.json.JsonBuilder
 import tramites.Anio
 import tramites.Numero
-import tramites.Tramite
 import org.springframework.dao.DataIntegrityViolationException
 
 class DiaLaborableController {
 
 
-    def diasLaborablesService
+    def diasLaborablesServiceOld
     def dbConnectionService
 
     def pruebas() {
 
         def fecha1 = new Date().parse("dd-MM-yyyy HH:mm", "02-07-2014 09:05")
         def fecha2 = new Date().parse("dd-MM-yyyy HH:mm", "02-07-2014 00:00")
-        println diasLaborablesService.tiempoLaborableEntre(fecha1, fecha2)
+        println diasLaborablesServiceOld.tiempoLaborableEntre(fecha1, fecha2)
     }
 
     def calculador() {
@@ -27,7 +26,7 @@ class DiaLaborableController {
         def fecha1 = new Date().parse("dd-MM-yyyy", params.fecha1)
         def fecha2 = new Date().parse("dd-MM-yyyy", params.fecha2)
 
-        def ret = diasLaborablesService.diasLaborablesEntre(fecha1, fecha2)
+        def ret = diasLaborablesServiceOld.diasLaborablesEntre(fecha1, fecha2)
         def json = new JsonBuilder(ret)
         render json
     }
@@ -36,7 +35,7 @@ class DiaLaborableController {
         def fecha = new Date().parse("dd-MM-yyyy", params.fecha)
         def dias = params.dias.toInteger()
 
-        def ret = diasLaborablesService.diasLaborablesDesde(fecha, dias)
+        def ret = diasLaborablesServiceOld.diasLaborablesDesde(fecha, dias)
         def json = new JsonBuilder(ret)
         render json
     }

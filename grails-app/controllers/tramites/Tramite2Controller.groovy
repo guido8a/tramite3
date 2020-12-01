@@ -1,23 +1,16 @@
 package tramites
 
-import groovy.time.TimeCategory
+
 import alertas.Alerta
 import seguridad.Accn
 import seguridad.Persona
-import seguridad.Prfl
 import seguridad.Sesn
 import utilitarios.DiaLaborable
 import utilitarios.Parametros
-import org.w3c.dom.Document
-import org.xhtmlrenderer.extend.FontResolver
-import org.xhtmlrenderer.pdf.ITextRenderer
-
-import javax.xml.parsers.DocumentBuilder
-import javax.xml.parsers.DocumentBuilderFactory
 
 class Tramite2Controller {
 
-    def diasLaborablesService
+    def diasLaborablesServiceOld
     def enviarService
     def tramitesService
     def dbConnectionService
@@ -1815,7 +1808,7 @@ class Tramite2Controller {
                 }
                 if (pdtPara.size() > 0) {
                     def limite = ahora
-                    limite = diasLaborablesService.fechaMasTiempo(limite, tramite.prioridad.tiempo)
+                    limite = diasLaborablesServiceOld.fechaMasTiempo(limite, tramite.prioridad.tiempo)
                     if (!limite) {
                         flash.message = "Ha ocurrido un error al calcular la fecha límite: " + limite
                         redirect(controller: 'tramite', action: 'errores')

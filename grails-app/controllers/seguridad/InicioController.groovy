@@ -3,7 +3,7 @@ package seguridad
 class InicioController {
 
     def dbConnectionService
-    def diasLaborablesService
+    def diasLaborablesServiceOld
 
     def index() {
 /*

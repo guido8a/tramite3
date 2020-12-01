@@ -1,7 +1,6 @@
 package tramites
 
 import audita.Auditable
-import groovy.time.TimeCategory
 import seguridad.Persona
 import utilitarios.Parametros
 
@@ -68,7 +67,7 @@ class Tramite implements Auditable{
     String aip           //S: si es de acceso a la información pública, N: normal
     String vivo = '1'         //0: ya procesado 1: en bandeja de entrada si se reactiva debe volver a 1
 
-    def diasLaborablesService
+    def diasLaborablesServiceOld
 
     static mapping = {
         table 'trmt'
@@ -333,7 +332,7 @@ class Tramite implements Auditable{
                 return null
             }
 */
-            def fechaLimite = diasLaborablesService.fechaMasTiempo(fechaRecepcion, this.prioridad.tiempo)
+            def fechaLimite = diasLaborablesServiceOld.fechaMasTiempo(fechaRecepcion, this.prioridad.tiempo)
             return fechaLimite
         }
         return null
@@ -374,7 +373,7 @@ class Tramite implements Auditable{
             }
 
 //            println "tiempo Bloqueo " + tiempoBloqueo
-            def fechaLimite = diasLaborablesService?.fechaMasTiempo(limite, tiempoBloqueo)
+            def fechaLimite = diasLaborablesServiceOld?.fechaMasTiempo(limite, tiempoBloqueo)
 //            println "fecha limite "+fechaLimite
 
             if (fechaLimite) {

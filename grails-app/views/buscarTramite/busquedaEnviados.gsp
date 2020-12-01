@@ -304,7 +304,7 @@
                 var copia = {
                     separator_before : true,
                     label            : "Crear Copia",
-                    icon             : "fa fa-files-o",
+                    icon             : "fa fa-paste",
                     action           : function () {
                         $.ajax({
                             type    : "POST",
@@ -315,8 +315,9 @@
                             success : function (msg) {
                                 bootbox.dialog({
                                     id      : "dlgCopiaPara",
-                                    title   : '<i class="fa fa-files-o"></i> Copia para',
-                                    class   : "long",
+                                    title   : '<i class="fa fa-paste"></i> Copia para',
+                                    // class   : "long",
+                                    class   : "modal-lg",
                                     message : msg,
                                     buttons : {
                                         cancelar : {

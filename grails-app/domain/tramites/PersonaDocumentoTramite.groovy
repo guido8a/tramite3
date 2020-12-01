@@ -1,6 +1,6 @@
 package tramites
 
-import apli.DbConnectionService
+
 import audita.Auditable
 import seguridad.Persona
 import utilitarios.Parametros
@@ -34,7 +34,7 @@ class PersonaDocumentoTramite implements Auditable {
     // fecha en la q se anulo el doc fisico, no corre ningun timer, no necesita respuesta el tramite
 
     EstadoTramite estado
-    def diasLaborablesService
+    def diasLaborablesServiceOld
     def DbConnectionService
 
     String personaNombre
@@ -240,7 +240,7 @@ class PersonaDocumentoTramite implements Auditable {
 //                if(this.tramite.id.toInteger() in [1293633, 1293333]) {
 //                    println "else ---> $fechaFin, ${fechaFin < new Date()}"
 //                }
-                return diasLaborablesService.fechaBloqueo(this.fechaEnvio)
+                return diasLaborablesServiceOld.fechaBloqueo(this.fechaEnvio)
             }
         }
     }

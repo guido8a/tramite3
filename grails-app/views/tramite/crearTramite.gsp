@@ -1,4 +1,4 @@
-<%@ page import="happy.tramites.Tramite; happy.tramites.TipoPrioridad; happy.tramites.TipoDocumento" contentType="text/html;charset=UTF-8" %>
+<%@ page import="tramites.TipoPrioridad; tramites.Tramite" contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -85,45 +85,18 @@
                 <g:link action="redactar" class="btn btn-azul btnSave">
                     <i class="fa fa-save"></i> Guardar %{--y empezar a redactar--}%
                 </g:link>
-            %{--<a href="#" class="btn btn-azul" id="guardar">--}%
-            %{--<i class="fa fa-save"></i> ${(tramite) ? "Guardar " : "Guardar y empezar a redactar"}--}%
-            %{--</a>--}%
-            %{--<g:link action="bandejaEntrada" class="btn btn-azul btnRegresar">--}%
-            %{--<i class="fa fa-list-ul"></i> Bandeja de Entrada--}%
-            %{--</g:link>--}%
                 <g:if test="${tramite.padre || tramite.id}">
                     <a href="#" class="btn btn-azul" id="btnDetalles">
                         <i class="fa fa-search"></i> Detalles
                     </a>
                 </g:if>
-            %{--<g:if test="${padre}">--}%
                 <g:link action="bandejaEntrada" class="btn btn-default btnRegresar">
                     <i class="fa fa-times"></i> Cancelar
                 </g:link>
-            %{--</g:if>--}%
-            %{--<g:link controller="tramite3" action="bandejaEntradaDpto" class="btn btn-azul btnRegresar">--}%
-            %{--<i class="f a fa-list-ul"></i> Bandeja de Entrada--}%
-            %{--</g:link>--}%
             </div>
-
         </div>
 
         <g:form class="frmTramite" controller="tramite3" action="save">
-        %{--<g:form class="frmTramite" action="saveDep">--}%
-        %{--Padre.id--}%
-        %{--<g:textField name="tramite.padre.id" value="${padre?.id}"/>--}%
-        %{--<br/>Tramite.id--}%
-        %{--<g:textField name="tramite.id" value="${tramite?.id}"/>--}%
-        %{--<br/>hiddenCC--}%
-        %{--<g:textField name="tramite.hiddenCC" id="hiddenCC" value="${cc}"/>--}%
-        %{--<br/>a quien contesta.id--}%
-        %{--<g:textField name="tramite.aQuienContesta.id" value="${pxt}"/>--}%
-        %{--<br/>esRespuesta--}%
-        %{--<g:textField name="tramite.esRespuesta" value="${params.esRespuesta}"/>--}%
-        %{--<br/>es respuesta nueva--}%
-        %{--<g:textField name="tramite.esRespuestaNueva" value="${params.esRespuestaNueva}"/>--}%
-        %{--<br/>Tramite principal--}%
-        %{--<g:textField name="tramite.tramitePrincipal" value="${tramite.tramitePrincipal}"/>--}%
             <g:hiddenField name="tramite.padre.id" value="${padre?.id}"/>
             <g:hiddenField name="tramite.id" value="${tramite?.id}"/>
             <g:hiddenField name="tramite.hiddenCC" id="hiddenCC" value="${cc}"/>
@@ -134,10 +107,9 @@
             <g:hiddenField name="tramite.agregadoA.id" value="${tramite.agregadoA?.id}"/>
 
             <g:if test="${tramite.tramitePrincipal > 0}">
-                <g:set var="principal" value="${Tramite.get(tramite.tramitePrincipal)}"/>
+                <g:set var="principal" value="${tramites.Tramite.get(tramite.tramitePrincipal)}"/>
             </g:if>
 
-        %{--<g:hiddenField name="dpto" id="hiddenCC" value="${dpto}"/>--}%
             <g:if test="${padre || principal}">
                 <g:if test="${principal?.id != tramite.id}">
                     <div style="margin-top: 30px; min-height: 100px;font-size: 11px" class="vertical-container">
@@ -148,15 +120,10 @@
 
                         <div class="row">
                             <div class="col-xs-1 negrilla">Documento:</div>
-
                             <div class="col-xs-2">${principal.codigo}</div>
-
                             <div class="col-xs-1 negrilla" style="width: 55px">Fecha:</div>
-
                             <div class="col-xs-2">${principal.fechaCreacion.format("dd-MM-yyyy")}</div>
-
                             <div class="col-xs-1 negrilla" style="width: 32px">De:</div>
-
                             <div class="col-xs-3">
                                 <g:if test="${principal.tipoDocumento.codigo == 'DEX'}">
                                     <td>${principal.paraExterno}</td>
@@ -169,7 +136,7 @@
 
                         <div class="row claseMin">
                             <div class="col-xs-12">
-                                <g:each in="${happy.tramites.PersonaDocumentoTramite.findAllByTramiteAndRolPersonaTramiteNotInList(principal, rolesNo, [sort: 'rolPersonaTramite'])}" var="pdt" status="j">
+                                <g:each in="${tramites.PersonaDocumentoTramite.findAllByTramiteAndRolPersonaTramiteNotInList(principal, rolesNo, [sort: 'rolPersonaTramite'])}" var="pdt" status="j">
                                     <span style="font-weight: bold">${pdt.rolPersonaTramite.descripcion}:</span>
                                     <span style="margin-right: 10px">
                                         ${(pdt.departamento) ? pdt.departamento : "" + pdt.persona.departamento.codigo + ":" + pdt.persona}
@@ -181,13 +148,11 @@
 
                         <div class="row">
                             <div class="col-md-1 negrilla">Asunto:</div>
-
                             <div class="col-md-11">${principal.asunto}</div>
                         </div>
                         <g:if test="${principal.personaPuedeLeer(session.usuario) && principal.texto?.trim()?.size() > 0}">
                             <div class="row">
                                 <div class="col-md-1 negrilla">Texto:</div>
-
                                 <div class="col-md-11 texto">
                                     <util:renderHTML html="${principal.texto}"/>
                                 </div>
@@ -197,7 +162,6 @@
                         <g:if test="${principal.observaciones && principal.observaciones?.trim()?.size() > 0}">
                             <div class="row claseMin">
                                 <div class="col-md-1 negrilla">Obs:</div>
-
                                 <div class="col-md-11">${principal.observaciones}</div>
                             </div>
                         </g:if>
@@ -212,13 +176,9 @@
 
                         <div class="row">
                             <div class="col-xs-1 negrilla">Documento:</div>
-
                             <div class="col-xs-2">${padre.codigo}</div>
-
                             <div class="col-xs-1 negrilla" style="width: 55px">Fecha:</div>
-
                             <div class="col-xs-2">${padre.fechaCreacion.format("dd-MM-yyyy")}</div>
-
                             <div class="col-xs-1 negrilla" style="width: 32px">De:</div>
 
                             <div class="col-xs-3">
@@ -233,7 +193,7 @@
 
                         <div class="row ">
                             <div class="col-xs-10">
-                                <g:each in="${happy.tramites.PersonaDocumentoTramite.findAllByTramiteAndRolPersonaTramiteNotInList(padre, rolesNo, [sort: 'rolPersonaTramite'])}" var="pdt" status="j">
+                                <g:each in="${tramites.PersonaDocumentoTramite.findAllByTramiteAndRolPersonaTramiteNotInList(padre, rolesNo, [sort: 'rolPersonaTramite'])}" var="pdt" status="j">
                                     <span style="font-weight: bold">${pdt.rolPersonaTramite.descripcion}:</span>
                                     <span style="margin-right: 10px">
                                         ${(pdt.departamento) ? pdt.departamento : "" + pdt.persona.departamento.codigo + ":" + pdt.persona}
@@ -276,18 +236,6 @@
 
                 <div class="linea"></div>
 
-                %{--<g:if test="${padre}">--}%
-                %{--<div class="alert alert-info">--}%
-                %{--<p>--}%
-                %{--<b>Trámite principal:</b>--}%
-                %{--${padre.codigo} - ${padre.asunto}--}%
-                %{--<g:link controller="tramite3" action="seguimientoTramite" id="${padre.id}" params="[prev: 'crearTramite']" class="alert-link pull-right">--}%
-                %{--Seguimiento del trámite--}%
-                %{--</g:link>--}%
-                %{--</p>--}%
-                %{--</div>--}%
-                %{--</g:if>--}%
-
                 <div class="row">
                     <div class="col-xs-4">
                         <b>De:</b>
@@ -299,74 +247,33 @@
                         <g:set var="nombre" value="${de.nombre + " " + de.apellido}"/>
 
                         <g:if test="${nombre.size() <= 36}">
-                            <div class="uneditable-input label-shared" id="de"
-                                 title="${de.departamento?.descripcion}">
-                                ${de.nombre} ${de.apellido}
-                            </div>
+%{--                            <div class="uneditable-input label-shared" id="de"--}%
+%{--                                 title="${de?.departamento?.descripcion}">--}%
+%{--                                ${de.nombre} ${de.apellido}--}%
+%{--                            </div>--}%
                         </g:if>
                         <g:else>
-                            <div class="uneditable-input label-shared" id="de"
-                                 title="${de.departamento?.descripcion}">
-                                ${nombre.substring(0, 33) + "..."}
-                            </div>
+%{--                            <div class="uneditable-input label-shared" id="de"--}%
+%{--                                 title="${de?.departamento?.descripcion}">--}%
+%{--                                ${nombre.substring(0, 33) + "..."}--}%
+%{--                            </div>--}%
                         </g:else>
 
                     </div>
 
-                    %{--<g:if test="${padre}">--}%
-                    %{--<div class="col-xs-3 negrilla">--}%
-                    %{--Padre:--}%
-                    %{--<input type="text" name="padre" class="form-control label-shared" id="padre" value="${padre?.codigo}" disabled/>--}%
-                    %{--</div>--}%
-                    %{--</g:if>--}%
-
                     <div class="col-xs-3" style="margin-top: -25px">
                         <b>Tipo de documento:</b>
-                        %{--<g:if test="${tramite.id}">--}%
-                        %{--<div class="uneditable-input">--}%
-                        %{--${tramite.tipoDocumento.descripcion}--}%
-                        %{--<g:hiddenField name="tramite.tipoDocumento.id" id="tipoDocumento" value="${tramite.tipoDocumento}"/>--}%
-                        %{--</div>--}%
-                        %{--</g:if>--}%
-                        %{--<g:else>--}%
-                        %{--${tramite.tipoDocumentoId}--}%
+
                         <elm:comboTipoDoc id="tipoDocumento" name="tramite.tipoDocumento.id" class="many-to-one form-control required"
-                                          value="${tramite.tipoDocumentoId ?: happy.tramites.TipoDocumento.findByCodigo('MEM').id}"
+                                          value="${tramite.tipoDocumentoId ?: tramites.TipoDocumento.findByCodigo('MEM').id}"
                                           tramite="${tramite}" tipo="pers"/>
-                        %{--</g:else>--}%
                     </div>
-
-
-                    %{--<g:if test="${session.usuario.puedeTramitar}">--}%
-                    %{--<div class="col-xs-2 negrilla" id="divExterno" style="width: 100px; margin-left: -15px">--}%
-                    %{--<label for="externo"><input type="checkbox" name="externo" id="externo">--}%
-                    %{--Externo--}%
-                    %{--</label>--}%
-                    %{--</div>--}%
-                    %{--</g:if>--}%
 
 
                     <div class="col-xs-4 negrilla hide" id="divPara" style="margin-top: -10px">
-                        %{--<elm:comboPara name="tramite.para" id="para" style="width:310px;" value="${persona?.departamento?.id * -1}"--}%
-                        %{--class="form-control label-shared required"/>--}%
-                        %{--<g:select name="tramite.para" id="para" from="${disponibles}" optionKey="id" optionValue="label"--}%
-                        %{--style="width:310px;" class="form-control label-shared required" value="${persona?.departamento?.id * -1}"/>--}%
-                        %{--<g:select name="tramite.origenTramite.id" id="paraExt" from="${OrigenTramite.list([sort: 'nombre'])}" optionKey="id"--}%
-                        %{--optionValue="nombre" style="width:310px;" class="form-control label-shared required"/>--}%
+
                     </div>
 
-                    %{--<div class="col-xs-1 negrilla hide" id="divBotonInfo">--}%
-                    %{--<a href="#" id="btnInfoPara" class="btn btn-sm btn-info">--}%
-                    %{--<i class="fa fa-search"></i>--}%
-                    %{--</a>--}%
-                    %{--</div>--}%
-                    %{--<div class="col-xs-2 negrilla hide" id="divConfidencial">--}%
-                    %{--<label for="confi"><input type="checkbox" name="confi" id="confi"/> Confidencial</label>--}%
-                    %{--</div>--}%
-
-                    %{--<div class="col-xs-2 negrilla hide" id="divAnexos">--}%
-                    %{--<label for="anexo"><input type="checkbox" name="anexo" id="anexo"/> Con anexos</label>--}%
-                    %{--</div>--}%
                 </div>
 
                 <div class="row">
@@ -380,28 +287,12 @@
                 </div>
 
                 <div class="row">
-                    %{--<div class="col-xs-3">--}%
-                    %{--<b>Tipo de documento:</b>--}%
-                    %{--<elm:select id="tipoDocumento" name="tramite.tipoDocumento.id" class="many-to-one form-control required"--}%
-                    %{--from="${session.usuario.tiposDocumento}"--}%
-                    %{--value="${tramite.tipoDocumentoId}" optionKey="id" optionValue="descripcion"--}%
-                    %{--optionClass="codigo" noSelection="['': 'Seleccione el tipo de documento']"/>--}%
-                    %{--</div>--}%
 
                     <div class="col-xs-2 ">
                         <b>Prioridad:</b>
-                        %{--<g:select name="tramite.prioridad.id" class="many-to-one form-control required" from="${happy.tramites.TipoPrioridad.list(['sort': 'tiempo', order: 'desc'])}" value="" optionKey="id" optionValue="descripcion"></g:select>--}%
-                        <elm:select name="tramite.prioridad.id" id="prioridad" class="many-to-one form-control required" from="${TipoPrioridad.list()}"
+                        <elm:select name="tramite.prioridad.id" id="prioridad" class="many-to-one form-control required" from="${tramites.TipoPrioridad.list()}"
                                     value="${tramite.prioridadId ?: 3}" optionKey="id" optionValue="descripcion" optionClass="tiempo"/>
                     </div>
-
-                    %{--<div class="col-xs-3 negrilla">--}%
-                    %{--<span class="grupo">--}%
-                    %{--Fecha límite de respuesta:--}%
-                    %{--<elm:datetimepicker name="fechaLimiteRespuesta" title="Fecha límite de respuesta " class="datepicker form-control required"--}%
-                    %{--value="${tramite.fechaLimiteRespuesta?.format('dd-MM-yyyy')}"/>--}%
-                    %{--</span>--}%
-                    %{--</div>--}%
 
                     <div class="col-xs-2 ">
                         <b>Creado el:</b>
@@ -432,25 +323,7 @@
                         </label>
                     </div>
 
-                    %{--<g:if test="${persona.puedeTramitar}">--}%
-                    %{--<div class="col-xs-2 negrilla" id="divExterno" style="margin-top: 20px; width: 110px;">--}%
-                    %{--<label for="externo"><input type="checkbox" name="externo" id="externo">--}%
-                    %{--Externo--}%
-                    %{--</label>--}%
-                    %{--</div>--}%
-                    %{--</g:if>--}%
-
                 </div>
-
-                %{--<div class="row hide" id="divParaExt">--}%
-                %{--<div class="col-xs-12 ">--}%
-                %{--<span class="grupo">--}%
-                %{--<b>Para externo:</b>--}%
-                %{--<input type="text" name="paraExt2" class="form-control required" maxlength="63"--}%
-                %{--style="width:460px; display: inline" value="${tramite.paraExterno}"/>--}%
-                %{--</span>--}%
-                %{--</div>--}%
-                %{--</div>--}%
 
                 <div class="row">
                     <div class="col-xs-12 ">
@@ -468,8 +341,6 @@
 
                 <div class="linea"></div>
 
-                %{--<g:set var="origen" value="${tramite.origenTramite}"/>--}%
-
                 <div class="row">
 
                     <div class="col-xs-3 ">
@@ -477,8 +348,6 @@
                             <b>Institución/Remitente:</b>
                             <g:textField name="paraExt3" id="paraExt3" class="form-control required" maxlength="127"
                                          value="${tramite.paraExterno}"/>
-                            %{--<g:textField name="origen.nombre" id="nombreOrigen" class="origenTram form-control required" maxlength="127"--}%
-                            %{--value="${origen?.nombre}"/>--}%
                         </span>
                     </div>
 
@@ -487,8 +356,6 @@
                             <b>Núm. doc. ext.:</b>
                             <g:textField id="numeroDocExterno" name="tramite.numeroDocExterno" class="form-control " maxlength="35"
                                          value="${tramite.numeroDocExterno}"/>
-                            %{--<g:textField id="nombreContactoOrigen" name="origen.nombreContacto" class="origenTram form-control " maxlength="31"--}%
-                            %{--value="${origen?.nombreContacto}"/>--}%
                         </span>
                     </div>
 
@@ -499,80 +366,19 @@
                             <div class="input-group">
                                 <g:textField id="telefonoExt" name="tramite.telefono" class="form-control telefono required" maxlength="15"
                                              value="${tramite?.telefono}"/>
-                                %{--<g:textField id="telefonoOrigen" name="origen.telefono" class="origenTram form-control " maxlength="63"--}%
-                                %{--value="${origen?.telefono}"/>--}%
                                 <span class="input-group-addon"><i class="fa fa-phone"></i></span>
                             </div>
                         </span>
                     </div>
-                    %{--<div class="col-xs-3 ">--}%
-                    %{--<span class="grupo">--}%
-                    %{--<b>Tipo de Persona:</b>--}%
-                    %{--<g:select id="tipoPersonaOrigen" name="origen.tipoPersona.id" optionKey="id" optionValue="descripcion" class="origenTram form-control origen required"--}%
-                    %{--from="${happy.tramites.TipoPersona.list([sort: 'descripcion'])}" value="${origen?.tipoPersonaId}"/>--}%
-                    %{--</span>--}%
-                    %{--</div>--}%
-
-                    %{--<div class="col-xs-3 ">--}%
-                    %{--<span class="grupo">--}%
-                    %{--<b>Cédula/R.U.C.:</b>--}%
-                    %{--<g:textField name="origen.cedula" id="cedulaOrigen" class="origenTram form-control required" maxlength="13"--}%
-                    %{--value="${origen?.cedula}"/>--}%
-                    %{--</span>--}%
-                    %{--</div>--}%
 
                     <div class="col-xs-3 ">
                         <span class="grupo">
                             <b>Contacto:</b>
                             <g:textField id="contacto" name="tramite.contacto" class="form-control required" maxlength="31"
                                          value="${tramite.contacto}"/>
-                            %{--<g:textField id="nombreContactoOrigen" name="origen.nombreContacto" class="origenTram form-control " maxlength="31"--}%
-                            %{--value="${origen?.nombreContacto}"/>--}%
                         </span>
                     </div>
                 </div>
-
-                %{--<div class="row">--}%
-                %{--<div class="col-xs-3 ">--}%
-                %{--<span class="grupo">--}%
-                %{--<b>Apellido contacto:</b>--}%
-                %{--<g:textField id="apellidoContactoOrigen" name="origen.apellidoContacto" class="origenTram form-control " maxlength="31"--}%
-                %{--value="${origen?.apellidoContacto}"/>--}%
-                %{--</span>--}%
-                %{--</div>--}%
-
-                %{--<div class="col-xs-3 ">--}%
-                %{--<span class="grupo">--}%
-                %{--<b>Título:</b>--}%
-                %{--<g:textField id="tituloOrigen" name="origen.titulo" class="origenTram form-control " maxlength="4"--}%
-                %{--value="${origen?.titulo}"/>--}%
-                %{--</span>--}%
-                %{--</div>--}%
-
-                %{--<div class="col-xs-3 ">--}%
-                %{--<span class="grupo">--}%
-                %{--<b>Cargo:</b>--}%
-                %{--<g:textField id="cargoOrigen" name="origen.cargo" class="origenTram form-control" maxlength="127"--}%
-                %{--value="${origen?.cargo}"/>--}%
-                %{--</span>--}%
-                %{--</div>--}%
-
-                %{--<div class="col-xs-3 ">--}%
-                %{--<span class="grupo">--}%
-                %{--<b>E-mail:</b>--}%
-
-                %{--<div class="input-group">--}%
-                %{--<g:textField id="mailOrigen" name="origen.mail" class="origenTram form-control" maxlength="63"--}%
-                %{--value="${origen?.mail}"/>--}%
-                %{--<span class="input-group-addon"><i class="fa fa-envelope"></i></span>--}%
-                %{--</div>--}%
-                %{--</span>--}%
-                %{--</div>--}%
-                %{--</div>--}%
-
-                %{--<div class="row">--}%
-                %{--</div>--}%
-
             </div>
         </g:form>
 
@@ -634,9 +440,6 @@
                                     </li>
                                 </g:if>
                                 <g:else>
-                                %{--<li data-id="-${disp.departamento.id}" class="${disp.departamento.externo == 1 ? 'externo' : 'interno'}">--}%
-                                %{--<i class="fa fa-li fa-building-o"></i> ${disp.departamento.descripcion}--}%
-                                %{--</li>--}%
                                     <li data-id="-${disp.departamento.id}" class="clickable ${disp.departamento.externo == 1 ? 'externo' : 'interno'}">
                                         <i class="fa fa-li ${disp.departamento.externo ? 'fa-paper-plane' : 'fa-building-o'}"></i> ${disp.departamento.descripcion}
                                     </li>
@@ -695,7 +498,6 @@
                 var $chkExterno = $("#externo");
 
                 var cod = $tipoDoc.find("option:selected").attr("class");
-//                $("#ulSeleccionados li").removeClass("selected").appendTo($("#ulDisponibles"));
                 $tituloCopia.text("Con copia");
                 $divOrigen.addClass("hide");
 
@@ -739,80 +541,40 @@
 
                 switch (cod) {
                     case "CIR":
-                        /***** gdo ****/
-//                        $divPara.html("");
-//                        $divPara.addClass("hide");
-//                        $divBotonInfo.addClass("hide");
                         $divCopia.removeClass("hide");
                         $divCc.addClass("hide");
-                        //addAllDisponibles
-//                        $("#ulDisponibles li").removeClass("selected").appendTo($("#ulSeleccionados"));
-//                        var $ul = $("#ulDisponibles");
-//                        $ul.find("li").addClass("selected");
-//                        moveSelected($ul, $("#ulSeleccionados"), false);
-
                         $tituloCopia.text("Circular");
-//                        $divConfidencial.addClass("hide");
                         $divConfidencial.removeClass("hide");
                         $divAnexos.addClass("hide");
                         $divExterno.removeClass("hide");
                         break;
-                    /*
-                     case "CIR2":
-                     $divCopia.removeClass("hide");
-                     $divCc.addClass("hide");
-                     $tituloCopia.text("Circular");
-                     $divConfidencial.removeClass("hide");
-                     $divAnexos.addClass("hide");
-                     $divExterno.removeClass("hide");
-                     break;
-                     */
+
                     case "OFI":
-//                        $divPara.html($selParaExt).prepend("Para:");
-//                        $divPara.removeClass("hide");
-//                        $divBotonInfo.removeClass("hide");
-                        //CAMBIADO EL 23-07-2015
-//                        $divCopia.addClass("hide");
-//                        $divCc.addClass("hide");
                         $divCopia.addClass("hide");
                         $divCc.removeClass("hide");
-
-//                        $divConfidencial.addClass("hide");
                         $divConfidencial.removeClass("hide");
                         $divAnexos.removeClass("hide");
                         $divExterno.removeClass("hide");
                         $chkExterno.prop("checked", true);
                         break;
                     case "DEX":
-//                        $divPara.html($selPara).prepend("Para: ");
-//                        $divPara.removeClass("hide");
-//                        $divBotonInfo.removeClass("hide");
                         $divCopia.addClass("hide");
                         $divCc.addClass("hide");
                         $divOrigen.removeClass("hide");
-//                        $divConfidencial.addClass("hide");
                         $divConfidencial.removeClass("hide");
                         $divAnexos.removeClass("hide");
-//                        $chkAnexos.prop("checked", true);
                         $divExterno.removeClass("hide");
                         $chkExterno.prop("checked", true);
                         break;
                     case "SUM":
-//                        $divPara.html($selPara).prepend("Para: ");
-//                        $divPara.removeClass("hide");
-//                        $divBotonInfo.removeClass("hide");
                         $divCopia.addClass("hide");
                         $divCc.removeClass("hide");
-//                        $divConfidencial.addClass("hide");
                         $divConfidencial.removeClass("hide");
                         $divAnexos.addClass("hide");
                         $divExterno.addClass("hide");
                         $chkExterno.prop("checked", false);
                         break;
                     default :
-//                        $divPara.html($selPara).prepend("Para: ");
-//                        $divPara.removeClass("hide");
-//                        $divBotonInfo.removeClass("hide");
                         $divCopia.addClass("hide");
                         $divCc.removeClass("hide");
                         $divConfidencial.removeClass("hide");
@@ -821,9 +583,6 @@
                         $chkExterno.prop("checked", false);
                 }
                 if (!cod) {
-//                    $divPara.html("");
-//                    $divPara.addClass("hide");
-//                    $divBotonInfo.addClass("hide");
                     $divCopia.addClass("hide");
                     $divCc.addClass("hide");
                     $divConfidencial.addClass("hide");
@@ -913,29 +672,12 @@
                         prioridad : $("#prioridad").val()
                     },
                     success : function (msg) {
-                        var parts = msg.split("_")
+                        var parts = msg.split("_");
                         if (parts[0] == "OK") {
                             $('#respuesta').text(parts[1]);
                         }
                     }
                 });
-
-//                var tiempo = parseInt($("#prioridad").find("option:selected").attr("class"));
-//                var fecha = $("#creado").val();
-//                fecha = Date.parse(fecha);
-//                var limite = fecha.clone();
-//                var maxHoy = fecha.clone().set({ hour : 12, minute : 30 });
-//                if (tiempo > 4) {
-//                    limite.add(tiempo).hours();
-//                } else {
-//                    var comp = fecha.compareTo(maxHoy); //-1: maxHoy=future, 0: igual, 1: maxHoy=past
-//                    if (comp > -1) {
-//                        limite.add(tiempo + 15).hours().add(30).minutes();
-//                    } else {
-//                        limite.add(tiempo).hours();
-//                    }
-//                }
-//                $('#respuesta').text(limite.toString("dd-MM-yyyy HH:mm"));
             }
 
             function moveSelected($from, $to, muevePara, override) {
@@ -964,24 +706,20 @@
             }
 
             function removeAll(override) {
-//                console.log("removeAll");
                 var $ul = $("#ulSeleccionados");
                 $ul.find("li").addClass("selected");
                 moveSelected($ul, $("#ulDisponibles"), true, override);
             }
 
             function validarExterno(remove) {
-//                console.log("validarExterno(" + remove + ")");
                 if (remove) {
                     removeAll();
                 }
                 if ($("#externo").is(":checked")) {
-//                    console.log("externo");
                     $(".externo").show();
                     $(".interno").hide();
                     $("#para").val($("#para option:visible:first").val());
                 } else {
-//                    console.log("interno");
                     $(".externo").show();
                     $(".interno").show();
                 }
@@ -993,8 +731,6 @@
                 </g:if>
                 var $dir = $("#direccion");
                 var $selPrioridad = $("#prioridad");
-//                var $selPara = $("#para").clone(true);
-//                var $selParaExt = $("#paraExt").clone(true);
 
                 $selPrioridad.change(function () {
                     validarTiempos();
@@ -1016,13 +752,6 @@
                         $div.html("");
                     }
                 });
-
-//                $("#anexo").click(function () {
-//                    var tipoDoc = $("#tipoDocumento").find("option:checked").attr("class");
-//                    if (tipoDoc == "DEX") {
-//                        $(this).prop("checked", true);
-//                    }
-//                });
 
                 $("#externo").click(function () {
                     var tipoDoc = $("#tipoDocumento").find("option:checked").attr("class");
@@ -1067,10 +796,7 @@
                             id = parseInt(para) * -1;
                         }
                     }
-//                    if (paraExt) {
-                    %{--url = "${createLink(controller: 'origenTramite', action: 'show_ajax')}";--}%
-//                        id = paraExt;
-//                    }
+
                     $.ajax({
                         type    : "POST",
                         url     : url,
@@ -1157,15 +883,11 @@
                 });
 
                 $("#btnRemoveAll").click(function () {
-//                    var $ul = $("#ulSeleccionados");
-//                    $ul.find("li").addClass("selected");
-//                    moveSelected($ul, $("#ulDisponibles"), true);
                     removeAll(true);
                     return false;
                 });
                 <g:if test="${!bloqueo}">
                 $(".btnSave").click(function () {
-//                    console.log($(".frmTramite").valid())
 
                     if ($(".frmTramite").valid()) {
                         $.ajax({
@@ -1240,9 +962,7 @@
                         }
                     }
                 });
-
             });
         </script>
-
     </body>
 </html>

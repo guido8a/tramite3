@@ -4,6 +4,8 @@ import audita.Auditable
 import org.apache.commons.lang.WordUtils
 import tramites.Departamento
 import tramites.PermisoTramite
+import tramites.TipoDocumento
+import tramites.TipoDocumentoDepartamento
 
 class Persona implements Auditable{
 
