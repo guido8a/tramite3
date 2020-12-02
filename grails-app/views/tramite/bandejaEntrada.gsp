@@ -8,7 +8,7 @@
     <style type="text/css">
 
     body {
-        background-color : #DFD;
+        background-color : #F0FDF0;
     }
 
     .etiqueta {
