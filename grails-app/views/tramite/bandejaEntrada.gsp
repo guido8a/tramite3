@@ -72,7 +72,7 @@
 <div class="row" style="margin-top: 0; margin-left: 1px">
     <span class="grupo">
         <label class="well well-sm letra text-info" style="text-align: center">
-            BANDEJA DE ENTRADA PERSONAL
+            <i class="fa fa-hand-point-right fa-2x text-info"></i>  BANDEJA DE ENTRADA PERSONAL
         </label>
     </span>
 
@@ -108,25 +108,21 @@
 
     <div style="float: right">
         <div data-type="pendiente" class="alert alert-blanco alertas" clase="porRecibir">
-%{--            (<span id="numEnv"></span>)--}%
             <span id="numEnv" class="badge badge-light"></span>
         Por recibir
         </div>
 
         <div data-type="pendiente" class="alert alert-otroRojo alertas" clase="sinRecepcion">
-%{--            (<span id="numPen"></span>)--}%
             <span id="numPen" class="badge badge-light"></span>
         Sin Recepción
         </div>
 
         <div data-type="recibido" class="alert alert-info alertas" clase="recibido">
-%{--            (<span id="numRec"></span>)--}%
             <span id="numRec" class="badge badge-light"></span>
         Recibidos
         </div>
 
         <div data-type="retrasado" class="alert alert-danger alertas" clase="retrasado">
-%{--            (<span id="numRet"></span>)--}%
             <span id="numRet" class="badge badge-light"></span>
         Retrasados
         </div>
@@ -151,7 +147,6 @@
 
             <div class="col-md-2" style="margin-left: 130px">
                 <label>Fecha Envío</label>
-%{--                <elm:datepicker name="fechaBusqueda" class="datepicker form-control" value=""/>--}%
                 <input name="fechaBusqueda" id='datetimepicker1' type='text' class="form-control"/>
             </div>
 
