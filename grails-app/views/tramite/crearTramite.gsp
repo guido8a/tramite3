@@ -18,9 +18,6 @@
             color      : #999;
         }
 
-        li {
-        }
-
         .selectable li {
             cursor        : pointer;
             border-bottom : solid 1px #0088CC;
@@ -205,7 +202,6 @@
 
                         <div class="row">
                             <div class="col-md-1 negrilla">Asunto:</div>
-
                             <div class="col-md-11">${padre.asunto}</div>
                         </div>
 
@@ -247,16 +243,16 @@
                         <g:set var="nombre" value="${de.nombre + " " + de.apellido}"/>
 
                         <g:if test="${nombre.size() <= 36}">
-%{--                            <div class="uneditable-input label-shared" id="de"--}%
-%{--                                 title="${de?.departamento?.descripcion}">--}%
-%{--                                ${de.nombre} ${de.apellido}--}%
-%{--                            </div>--}%
+                            <div class="uneditable-input label-shared" id="de"
+                                 title="${de?.departamento?.descripcion}">
+                                ${de.nombre} ${de.apellido}
+                            </div>
                         </g:if>
                         <g:else>
-%{--                            <div class="uneditable-input label-shared" id="de"--}%
-%{--                                 title="${de?.departamento?.descripcion}">--}%
-%{--                                ${nombre.substring(0, 33) + "..."}--}%
-%{--                            </div>--}%
+                            <div class="uneditable-input label-shared" id="de"
+                                 title="${de?.departamento?.descripcion}">
+                                ${nombre.substring(0, 33) + "..."}
+                            </div>
                         </g:else>
 
                     </div>
@@ -270,9 +266,7 @@
                     </div>
 
 
-                    <div class="col-xs-4 negrilla hide" id="divPara" style="margin-top: -10px">
-
-                    </div>
+                    <div class="col-xs-4 negrilla hide" id="divPara" style="margin-top: -10px"></div>
 
                 </div>
 
@@ -305,22 +299,34 @@
                         <span id="respuesta" class="uneditable-input">FECHA</span>
                     </div>
 
-                    <div class="col-xs-2 negrilla" style="margin-top: 20px; width: 110px;" id="divCc">
-                        <label for="cc"><input type="checkbox" name="cc" id="cc"/>
-                            Con copia
+                    <div class="col-xs-2 negrilla" style="margin-top: 10px; width: 100px;" id="divCc">
+                        <label for="cc">
+%{--                            <input type="checkbox" name="cc" id="cc"/>--}%
+                            <i class="fa fa-paste"></i> Con copia
                         </label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="cc" name="cc" ${tramite.id && tramite.copias.size() != 0 ? 'checked' : ''}>
+                        </div>
                     </div>
 
-                    <div class="col-xs-2 negrilla hide" id="divConfidencial" style="margin-top: 20px;">
-                        <label for="confi"><input type="checkbox" name="confi" id="confi" ${tramite.tipoTramite?.codigo == 'C' ? 'checked' : ''}/>
-                            Confidencial
+                    <div class="col-xs-2 negrilla hide" id="divConfidencial" style="margin-top: 10px;width: 110px;">
+                        <label for="confi">
+%{--                            <input type="checkbox" name="confi" id="confi" ${tramite.tipoTramite?.codigo == 'C' ? 'checked' : ''}/>--}%
+                            <i class="fa fa-user-secret"></i>  Confidencial
                         </label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="confi" name="confi" ${tramite.tipoTramite?.codigo == 'C' ? 'checked' : ''}>
+                        </div>
                     </div>
 
-                    <div class="col-xs-2 negrilla hide" id="divAnexos" style="margin-top: 20px; width: 120px;">
-                        <label for="anexo"><input type="checkbox" name="anexo" id="anexo"/>
-                            Con anexos
+                    <div class="col-xs-2 negrilla hide" id="divAnexos" style="margin-top: 10px; width: 110px;">
+                        <label for="anexo">
+%{--                            <input type="checkbox" name="anexo" id="anexo"/>--}%
+                            <i class="fa fa-paperclip"></i> Con anexos
                         </label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="anexo" name="anexo" ${tramite.id && tramite.anexo == 1 ? 'checked' : ''}>
+                        </div>
                     </div>
 
                 </div>
@@ -471,6 +477,8 @@
         </div>
         <script type="text/javascript">
 
+            $.switcher('input[type=checkbox]');
+
             function destinatarioExiste(tipo, id) {
                 var total = 0;
                 $("#ulDestinatarios").children("li").each(function () {
@@ -613,9 +621,12 @@
             }
 
             function validarCheck() {
-                var checked = $("#cc").is(":checked") && $("#cc").is(":visible");
+                // var checked = $("#cc").is(":checked") && $("#cc").is(":visible");
+                var checked = $("#cc").is(":checked")
+                console.log("--- " + checked)
                 if (checked) {
                     $("#divCopia").removeClass("hide");
+                    // document.getElementById("cc").checked = true
                 } else {
                     if (!$("#tipoDocumento option:selected").hasClass("CIR")) {
                         $("#divCopia").addClass("hide");

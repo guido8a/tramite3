@@ -4,14 +4,11 @@
         <meta name="layout" content="main2">
         <title>Redactar trámite</title>
 
-        <script src="${resource(dir: 'js/plugins/ckeditor', file: 'ckeditor.js')}"></script>
-        <script src="${resource(dir: 'js/plugins/ckeditor/adapters', file: 'jquery.js')}"></script>
         <style type="text/css">
 
         .hoja {
             margin : auto;
             float  : right;
-            /*width  : 19cm;*/
             width  : 70%;
         }
 
@@ -22,7 +19,6 @@
             padding            : 10px;
             background         : #BCCCDC;
             border             : solid 1px #867722;
-            /*width              : 400px;*/
             width              : 28%;
             z-index            : 1;
 
@@ -33,8 +29,6 @@
 
         .card {
             width: 100%;
-            /*box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);*/
-            /*text-align: center;*/
             -webkit-box-shadow : 7px 7px 5px 0px rgba(50, 50, 50, 0.75);
             -moz-box-shadow    : 7px 7px 5px 0px rgba(50, 50, 50, 0.75);
             box-shadow         : 7px 7px 5px 0px rgba(50, 50, 50, 0.75);
@@ -48,7 +42,6 @@
             position : absolute;
             top      : -10px;
             left     : 40%;
-            %{--content  : url("${resource(dir:'images',file:'pin.png')}");--}%
             z-index  : 2;
             display  : block;
             width    : 16px;
@@ -109,16 +102,13 @@
             <g:if test="${tramite.padre.personaPuedeLeer(session.usuario)}">
                 <div class="nota ui-corner-all" id="divInfo" style="height: 600px; overflow: auto">
                     <div class="text-info">
-                        %{--<div>Documento:<span style="margin-left: 50px">${tramite.padre.codigo}</span></div>--}%
                         <div><div style="width: 30%; float: left">Documento:</div>
                             <div style="float: left; width: 65%; display: inline">${tramite.padre.codigo}</div>
                         </div>
                         <div><div style="width: 30%; float: left">ASUNTO:</div>
                             <div style="float: left; width: 65%; display: inline">${tramite.padre.asunto}</div>
                         </div>
-                        %{--<div>ASUNTO:<span style="margin-left: 65px">${tramite.padre.asunto}</span></div>--}%
                     </div>
-                    %{--<h4 style="height: 100%" class="text-info">${tramite.padre.codigo} - ${tramite.padre.asunto}</h4>--}%
 
                     <div id="divInfoContenido" style="margin-top: 20px; width: 95%">
                         <util:renderHTML html="${tramite.padre.texto}"/>
@@ -137,7 +127,7 @@
                 </div>
                 <div class="btn-group">
                     <a href="#" class="btn btn-sm btn-primary btnPrint">
-                        <i class="fa fa-file"></i> ver PDF
+                        <i class="fa fa-file-pdf"></i> ver PDF
                     </a>
                 </div>
 
@@ -149,7 +139,7 @@
                     </g:if>
                     <g:else>
                         <g:link controller="tramite2" action="bandejaSalida" class="btnBandeja leave btn btn-sm btn-azul btnRegresar">
-                            <i class="fa fa-list-ul"></i> Guardar texto y Salir
+                            <i class="fa fa-share-square"></i> Guardar texto y Salir
                         </g:link>
                     </g:else>
                     <g:if test="${!esEditor}">
@@ -536,53 +526,41 @@
                 });
 
                 //  Checks whether CKEDITOR is defined or not
-                if (typeof CKEDITOR != "undefined") {
-                    $('textarea.editor').ckeditor({
-                        height                  : 600,
-//                        filebrowserUploadUrl : '/notes/add/ajax/upload-inline-image/index.cfm',
-//                        filebrowserBrowseUrl : '/browser/browse.php',
-                        %{--filebrowserBrowseUrl    : '${createLink(controller: "tramiteImagenes", action: "browser")}',--}%
-                        filebrowserBrowseUrl    : '${createLink(controller: "tramiteImagenes", action: "browser")}',
-                        filebrowserUploadUrl    : '${createLink(controller: "tramiteImagenes", action: "uploader")}',
-                        %{--imageBrowser_listUrl    : '${createLink(controller: "tramiteImagenes", action: "list")}',--}%
-                        filebrowserWindowWidth  : 950,
-                        filebrowserWindowHeight : 500,
+                %{--if (typeof CKEDITOR != "undefined") {--}%
+                %{--    $('textarea.editor').ckeditor({--}%
+                %{--        height                  : 600,--}%
+                %{--        filebrowserBrowseUrl    : '${createLink(controller: "tramiteImagenes", action: "browser")}',--}%
+                %{--        filebrowserUploadUrl    : '${createLink(controller: "tramiteImagenes", action: "uploader")}',--}%
+                %{--        filebrowserWindowWidth  : 950,--}%
+                %{--        filebrowserWindowHeight : 500,--}%
 
-                        %{--serverSave              : {--}%
-                        %{--saveUrl  : '${createLink(controller:"tramite", action: "saveTramite")}',--}%
-                        %{--saveData : {--}%
-                        %{--id : "${tramite.id}"--}%
-                        %{--},--}%
-                        %{--saveDone : function (msg) {--}%
-                        %{--var parts = msg.split("_");--}%
-                        %{--log(parts[1], parts[0] == "NO" ? "error" : "success");--}%
-                        %{--}--}%
-                        %{--},--}%
-                        %{--createPdf               : {--}%
-                        %{--saveUrl   : '${createLink(controller:"tramiteExport", action: "crearPdf")}',--}%
-                        %{--saveData  : {--}%
-                        %{--id   : "${tramite.id}",--}%
-                        %{--type : "download"--}%
-                        %{--},--}%
-                        %{--pdfAction : "download"/*,--}%
-                        %{--createDone : function (msg) {--}%
-                        %{--location.href = msg;--}%
-                        %{--}*/--}%
-                        %{--},--}%
-                        toolbar                 : [
-//                            [ 'Source', 'ServerSave', *//*'NewPage', *//*'CreatePdf',*/ /*'-',*/ /*'Scayt'*/],
-//                            [ 'Source'],
+                %{--        toolbar                 : [--}%
+                %{--            ['Font', 'FontSize', 'Scayt', '-', 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'],--}%
+                %{--            ['Find', 'Replace', '-', 'SelectAll'],--}%
+                %{--            ['Table', 'HorizontalRule', 'PageBreak'],--}%
+                %{--            ['Image'/*, 'Timestamp'*/, '-', 'TextColor', 'BGColor', '-', 'About'],--}%
+                %{--            '/',--}%
+                %{--            ['Bold', 'Italic', 'Underline', /*'Strike', */'Subscript', 'Superscript'/*, '-', 'RemoveFormat'*/],--}%
+                %{--            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-']--}%
+                %{--        ]--}%
+                %{--    });--}%
+                %{--}--}%
 
-                            ['Font', 'FontSize', 'Scayt', '-', 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'],
-                            ['Find', 'Replace', '-', 'SelectAll'],
-                            ['Table', 'HorizontalRule', 'PageBreak'],
-                            ['Image'/*, 'Timestamp'*/, '-', 'TextColor', 'BGColor', '-', 'About'],
-                            '/',
-                            ['Bold', 'Italic', 'Underline', /*'Strike', */'Subscript', 'Superscript'/*, '-', 'RemoveFormat'*/],
-                            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-']
-                        ]
-                    });
-                }
+                CKEDITOR.replace( 'editorTramite', {
+                    height: "600px",
+                    // customConfig: 'config.js',
+                    %{--filebrowserBrowseUrl    : '${createLink(controller: "baseImagenes", action: "browser")}',--}%
+                    %{--filebrowserUploadUrl    : '${createLink(controller: "baseImagenes", action: "uploader")}'--}%
+                            toolbar                 : [
+                                ['Font', 'FontSize', 'Scayt', '-', 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'],
+                                ['Find', 'Replace', '-', 'SelectAll'],
+                                ['Table', 'HorizontalRule', 'PageBreak'],
+                                ['Image'/*, 'Timestamp'*/, '-', 'TextColor', 'BGColor', '-', 'About'],
+                                '/',
+                                ['Bold', 'Italic', 'Underline', /*'Strike', */'Subscript', 'Superscript'/*, '-', 'RemoveFormat'*/],
+                                ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-']
+                            ]
+                });
 
                 CKEDITOR.on('instanceReady', function (ev) {
                     // Prevent drag-and-drop.

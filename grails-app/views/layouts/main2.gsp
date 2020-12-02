@@ -24,6 +24,7 @@
     <asset:stylesheet src="/apli/CustomSvt.css"/>
     <asset:stylesheet src="/apli/tulpen/stylesheet.css"/>
     <asset:stylesheet src="/jquery/jquery.countdown.css"/>
+    <asset:stylesheet src="/apli/switcher.css"/>
 
     <asset:stylesheet src="/fonts/fontawesome-webfont.woff"/>
     <asset:stylesheet src="/apli/bootstrap-datetimepicker.min.css"/>
@@ -55,6 +56,8 @@
     <asset:javascript src="/jquery/jquery.countdown.js"/>
 
     <asset:javascript src="/jquery/date.js"/>
+    <asset:javascript src="/ckeditor/ckeditor.js"/>
+    <asset:javascript src="/apli/jquery.switcher.min.js"/>
 
 %{--    <!-- Custom styles -->--}%
 %{--    <link href="${resource(dir: 'css', file: 'custom/loader.css')}" rel="stylesheet">--}%
@@ -85,13 +88,13 @@
 <body>
 <div id="modalTabelGray"></div>
 
-<div id="modalDiv" class="ui-corner-all">
-    <div class="loading-title">Procesando</div>
-    <img src="${resource(dir: 'images/spinners', file: 'loading_new.GIF')}">
+%{--<div id="modalDiv" class="ui-corner-all">--}%
+%{--    <div class="loading-title">Procesando</div>--}%
+%{--    <asset:image src="/spinner_64.GIF" style="padding: 40px;"/>--}%
 
-    <div class="loading-footer">Espere por favor</div>
-</div>
-<mn:menu title="${g.layoutTitle(default: 'Happy')}"/>
+%{--    <div class="loading-footer">Espere por favor</div>--}%
+%{--</div>--}%
+<mn:menu title="${g.layoutTitle(default: 'tramites3')}"/>
 <g:if test="${session.departamento.estado == 'B' && session.usuario.esTriangulo()}">
     <div id="bloqueo-warning" class="bloqueo ui-corner-all alert alert-danger " style="z-index: 200001; width: 240px; height: 190px;">
         <div class="titulo-bloqueo">
@@ -141,7 +144,7 @@
         </div>
     </g:if>
     <g:if test="${session.usuario.estado == 'W'}">
-        <div id="bloqueo-warning" class="bloqueoUsu  ui-corner-all alert alert-warning " style="width: 240px; height: 150px;" style="z-index: 200001">
+        <div id="bloqueo-warning" class="bloqueoUsu  ui-corner-all alert alert-warning " style="width: 240px; height: 150px; z-index: 200001">
             <div class="titulo-bloqueo">
                 <i class="fa fa-exclamation-circle"></i>
                 Alerta de Trámites No Recibidos
@@ -151,7 +154,7 @@
             </div>
 
             <div class="texto-bloqueo">
-%{--                El usuario ${session.usuario}, tiene trámites que no le han recibido.--}%
+                El usuario ${session.usuario}, tiene trámites que no le han recibido.
             </div>
         </div>
     </g:if>
@@ -178,20 +181,17 @@
 
     /* deshabilita navegación hacia atras */
     function initControls(){
-
         window.location.hash="no-back-button";
         window.location.hash="Again-No-back-button"; //chrome
         window.onhashchange=function(){window.location.hash="no-back-button";}
-
     }
-
 
    var ot = document.title;
 
     function resetTimer() {
         var ahora = new Date();
         var fin = ahora.clone().add(5).minute();
-        fin.add(1).second()
+        fin.add(1).second();
         $("#countdown").countdown('option', {
             until : fin
         });
@@ -200,73 +200,72 @@
     }
 
     function validarSesion() {
-        %{--'${createLink(controller: "login", action: "validarSesion")}',--}%
-        %{--'${g.createLink(controller: 'login', action: 'login')}';--}%
+        '${createLink(controller: "login", action: "validarSesion")}',
+        '${g.createLink(controller: 'login', action: 'login')}'
     }
 
     function highlight(periods) {
-
     }
 
     $(function () {
         setInterval(function () {
-            $(".annoying").hide()
+            $(".annoying").hide();
             setTimeout(function () {
                 $(".annoying").show()
-            }, 500)
+            }, 500);
             setTimeout(function () {
                 $(".annoying").hide()
-            }, 1000)
+            }, 1000);
             setTimeout(function () {
                 $(".annoying").show()
-            }, 1500)
+            }, 1500);
             setTimeout(function () {
                 $(".annoying").hide()
-            }, 2000)
+            }, 2000);
             setTimeout(function () {
                 $(".annoying").show()
-            }, 2500)
+            }, 2500);
             setTimeout(function () {
                 $(".annoying").hide()
-            }, 3000)
+            }, 3000);
             setTimeout(function () {
                 $(".annoying").show()
-            }, 3500)
+            }, 3500);
             setTimeout(function () {
                 $(".annoying").hide()
-            }, 4000)
+            }, 4000);
             setTimeout(function () {
                 $(".annoying").show()
-            }, 4500)
+            }, 4500);
             setTimeout(function () {
                 $(".annoying").hide()
-            }, 5000)
+            }, 5000);
             setTimeout(function () {
                 $(".annoying").show()
-            }, 5500)
+            }, 5500);
             setTimeout(function () {
                 $(".annoying").hide()
-            }, 6000)
+            }, 6000);
             setTimeout(function () {
                 $(".annoying").show()
-            }, 6500)
+            }, 6500);
             setTimeout(function () {
                 $(".annoying").hide()
-            }, 7000)
+            }, 7000);
             setTimeout(function () {
                 $(".annoying").show()
-            }, 7500)
+            }, 7500);
             setTimeout(function () {
                 $(".annoying").hide()
-            }, 8000)
+            }, 8000);
             setTimeout(function () {
                 $(".annoying").show()
-            }, 8500)
+            }, 8500);
         }, 60000);
 
         var ahora = new Date();
         var fin = ahora.clone().add(5).minute();
-        fin.add(1).second()
+        fin.add(1).second();
 
         $('#countdown').countdown({
             until    : fin,
@@ -280,7 +279,7 @@
             resetTimer();
         });
 
-        $(".bloqueo").draggable()
+        $(".bloqueo").draggable();
         $(".cerrar-bloqueo").click(function () {
             $(this).parent().parent().hide("explode")
         })
