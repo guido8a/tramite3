@@ -348,7 +348,7 @@
         var copia = {
             separator_before : true,
             label            : "Copia para",
-            icon             : "fa fa-files-o",
+            icon             : "fa fa-copy",
             action           : function () {
                 $.ajax({
                     type    : 'POST',
@@ -424,7 +424,7 @@
 
         var recibirExterno = {
             label  : 'Confirmar recepción destinatarios externos',
-            icon   : "fa fa-check-square-o",
+            icon   : "fa fa-check-square",
             action : function (e) {
                 $.ajax({
                     type    : "POST",
@@ -506,7 +506,7 @@
 
         var permisoImprimir = {
             label  : "Permiso de Imprimir",
-            icon   : "fa fa-print",
+            icon   : "fa fa-cog",
             action : function () {
                 $.ajax({
                     type    : 'POST',
@@ -518,7 +518,7 @@
                             message : msg,
                             buttons : {
                                 cancelar : {
-                                    label     : "Cancelar",
+                                    label     : '<i class="fa fa-times"></i> Cancelar',
                                     className : 'btn-danger',
                                     callback  : function () {
                                     }
@@ -528,6 +528,7 @@
                                     label     : '<i class="fa fa-save"></i> Aceptar',
                                     className : "btn-success",
                                     callback  : function () {
+                                        var cl1 = cargarLoader("Guardando...");
                                         $.ajax({
                                             type    : 'POST',
                                             url     : '${createLink(action: 'permisoImprimir')}/' + id,
@@ -536,7 +537,18 @@
                                                 observaciones : $("#observImp").val()
                                             },
                                             success : function (msg) {
-                                                bootbox.alert(msg)
+                                                cl1.modal("hide");
+                                                var parts = msg.split("_");
+                                                if(parts[0] == 'ok'){
+                                                    log(parts[1],"success")
+                                                }else{
+                                                    if(parts[0] == 'er'){
+                                                        bootbox.alert('<span class="text-warning"><i class="fa fa-exclamation-triangle"></i>' + parts[1])
+                                                    }else{
+                                                        log(parts[1],"error")
+                                                    }
+                                                }
+
                                             }
                                         });
                                     }
@@ -550,7 +562,7 @@
 
         var ver = {
             label  : "Ver - Imprimir",
-            icon   : "fa fa-search",
+            icon   : "fa fa-print",
             action : function () {
                 $.ajax({
                     type    : 'POST',
@@ -648,7 +660,7 @@
 
         var editar = {
             label : "Editar",
-            icon  : "fa fa-pencil",
+            icon  : "fa fa-edit",
             url   : "${g.createLink(action: 'redactar',controller: 'tramite')}/" + id
         }; //editar
 
@@ -666,7 +678,7 @@
 
         var anular = {
             label  : 'Anular trámite',
-            icon   : "fa fa-close",
+            icon   : "fa fa-ban",
             action: function () {
                 $.ajax({
                     type: 'POST',
@@ -684,7 +696,7 @@
                                 data    : {
                                     id   : id,
                                     tipo: 1,
-                                    msg  : "<p class='lead'>El trámite está por ser anulado. Está seguro?</p>",
+                                    msg  : "<p class='lead'> El trámite está por ser anulado. Está seguro?</p>",
                                     icon : "fa-ban"
                                 },
                                 success : function (msg) {
@@ -704,9 +716,9 @@
                                                 label     : '<i class="fa fa-check"></i> Anular',
                                                 className : "btn-success",
                                                 callback  : function () {
+                                                    var cl2 = cargarLoader("Anulando...");
                                                     var $txt = $("#aut");
                                                     if (validaAutorizacion($txt)) {
-                                                        openLoader("Anulando");
                                                         $.ajax({
                                                             type    : 'POST',
                                                             url     : '${createLink(controller: "tramiteAdmin", action: "anularNuevo")}',
@@ -717,6 +729,7 @@
                                                                 aut   : $txt.val()
                                                             },
                                                             success : function (msg) {
+                                                                cl2.modal("hide");
                                                                 var parts = msg.split("*");
                                                                 if (parts[0] == 'OK') {
                                                                     log("Trámite anulado correctamente", 'success');
@@ -724,7 +737,6 @@
                                                                         location.href = "${createLink(controller: "tramite2", action: "bandejaSalida")}";
                                                                     }, 500);
                                                                 } else if (parts[0] == 'NO') {
-                                                                    closeLoader();
                                                                     log(parts[1], 'error');
                                                                     setTimeout(function () {
                                                                         location.href = "${createLink(controller: "tramite2", action: "bandejaSalida")}";
@@ -837,45 +849,53 @@
             label  : 'Añadir observaciones al trámite',
             icon   : "fa fa-eye",
             action : function (e) {
-
-                var b = bootbox.dialog({
-                    id      : "dlgJefe",
-                    title   : "Añadir observaciones al trámite",
-                    message : "¿Está seguro de querer añadir observaciones al trámite <b>" + codigo + "</b>?</br><br/>" +
-                        "Escriba las observaciones: " +
-                        "<textarea id='txaObsJefe' style='height: 130px;' class='form-control'></textarea>",
-                    buttons : {
-                        cancelar : {
-                            label     : '<i class="fa fa-times"></i> Cancelar',
-                            className : 'btn-danger',
-                            callback  : function () {
-                            }
-                        },
-                        recibir  : {
-                            id        : 'btnEnviar',
-                            label     : '<i class="fa fa-thumbs-o-up"></i> Guardar',
-                            className : 'btn-success',
-                            callback  : function () {
-                                var obs = $("#txaObsJefe").val();
-                                openLoader();
-                                $.ajax({
-                                    type    : 'POST',
-                                    url     : '${createLink(controller: 'tramite3', action: 'enviarTramiteJefe')}',
-                                    data    : {
-                                        id  : id,
-                                        obs : obs
-                                    },
-                                    success : function (msg) {
-                                        var parts = msg.split("_");
-                                        cargarBandeja();
-                                        closeLoader();
-                                        log(parts[1], parts[0] == "NO" ? "error" : "success");
+                $.ajax({
+                    type:'POST',
+                    url: '${createLink(controller: 'tramite2', action: 'observaciones_ajax')}',
+                    data:{
+                        id: id
+                    },
+                    success: function (msg1){
+                        var b = bootbox.dialog({
+                            id      : "dlgJefe",
+                            title   : "Añadir observaciones al trámite",
+                            message : msg1,
+                            buttons : {
+                                cancelar : {
+                                    label     : '<i class="fa fa-times"></i> Cancelar',
+                                    className : 'btn-danger',
+                                    callback  : function () {
                                     }
-                                });
+                                },
+                                recibir  : {
+                                    id        : 'btnEnviar',
+                                    label     : '<i class="fa fa-save"></i> Guardar',
+                                    className : 'btn-success',
+                                    callback  : function () {
+                                        var cl = cargarLoader("Guardando...");
+                                        var obs = $("#txaObsJefe").val();
+                                        $.ajax({
+                                            type    : 'POST',
+                                            url     : '${createLink(controller: 'tramite3', action: 'enviarTramiteJefe')}',
+                                            data    : {
+                                                id  : id,
+                                                obs : obs
+                                            },
+                                            success : function (msg) {
+                                                cl.modal("hide");
+                                                var parts = msg.split("_");
+                                                cargarBandeja();
+                                                log(parts[1], parts[0] == "NO" ? "error" : "success");
+                                            }
+                                        });
+                                    }
+                                }
                             }
-                        }
+                        })
                     }
                 })
+
+
             }
         };
 

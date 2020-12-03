@@ -144,7 +144,10 @@
             </td>
             <td>
                 <g:if test="${row.edtrcdgo == 'E001' && !esEditor}">
-                    <g:checkBox name="porEnviar" tramite="${row.trmt__id}" style="margin-left: 20px" class="form-control combo" checked="false"/>
+%{--                    <g:checkBox name="porEnviar" tramite="${row.trmt__id}" style="margin-left: 20px" class="form-control combo" checked="false"/>--}%
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="porEnviar" name="porEnviar" tramite="${row.trmt__id}">
+                    </div>
                 </g:if>
             </td>
         </tr>
@@ -153,6 +156,9 @@
 
 <script type="text/javascript">
     $(function () {
+
+        $.switcher('input[type=checkbox]');
+
         $("tr").contextMenu({
             items  : createContextMenu,
             onShow : function ($element) {
@@ -162,30 +168,5 @@
                 $(".trHighlight").removeClass("trHighlight");
             }
         });
-        // $('[title!=""]').qtip({
-        //     style    : {
-        //         classes : 'qtip-tipsy'
-        //     },
-        //     position : {
-        //         my : "bottom center",
-        //         at : "top center"
-        //     }
-        // });
-        // $('.titleEspecial').qtip({
-        //     style    : {
-        //         classes : 'qtip-tipsy'
-        //     },
-        //     position : {
-        //         my : "bottom center",
-        //         at : "top center"
-        //     },
-        //     show     : {
-        //         solo : true
-        //     },
-        //     hide     : {
-        //         fixed : true,
-        //         delay : 300
-        //     }
-        // });
     });
 </script>

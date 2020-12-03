@@ -1898,7 +1898,7 @@ class Tramite2Controller {
 
         if (tramite.para) {
             if (tramite.para?.estado == estadoAnulado || tramite.para?.estado == estadoArchivado) {
-                render "El trámite se encuentra <strong>${tramite?.para?.estado?.descripcion}</strong>, no puede asignar el permiso de imprimir"
+                render "er_El trámite se encuentra <strong>${tramite?.para?.estado?.descripcion}</strong>, no puede asignar el permiso de imprimir"
                 return
             }
         }
@@ -1941,7 +1941,7 @@ class Tramite2Controller {
         personaDoc.fechaEnvio = new Date()
 
         if (!personaDoc.save(flush: true)) {
-            render "Ocurrió un error al otorgar el permiso"
+            render "no_Ocurrió un error al otorgar el permiso"
         } else {
             //despues de otorgar el permiso de imprimir mando una alerta al usuario
             def alerta = new Alerta()
@@ -1954,7 +1954,7 @@ class Tramite2Controller {
             if (!alerta.save(flush: true)) {
                 println "Error al mandar la alerta"
             }
-            render "Permiso de impresión otorgado correctamente"
+            render "ok_Permiso de impresión otorgado correctamente"
         }
     }
 
@@ -2098,5 +2098,10 @@ class Tramite2Controller {
         }else{
             render "ok"
         }
+    }
+
+    def observaciones_ajax(){
+        def tramite = Tramite.get(params.id)
+        return[tramite:tramite]
     }
 }
