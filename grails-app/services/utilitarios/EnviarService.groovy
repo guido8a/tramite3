@@ -1,12 +1,14 @@
 package utilitarios
 
-
+import seguridad.Persona
+import tramites.Tramite
 import org.xhtmlrenderer.extend.FontResolver
 import javax.xml.parsers.DocumentBuilder
 import javax.xml.parsers.DocumentBuilderFactory
 import java.io.*;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 import org.w3c.dom.Document;
+
 
 class EnviarService {
 
@@ -19,16 +21,66 @@ class EnviarService {
      *  realPath        : mandar servletContext.getRealPath("/")
      *  mensaje         : mandar message(code: 'pathImages').toString()
      */
-    def crearPdf(String mensaje) {
-        println "crearPdf b -> ${new Date().format('dd HH:mm')}"
-        ByteArrayOutputStream baos = new ByteArrayOutputStream()
-        def text = "texto"
+    def crearPdf(Tramite tramite, Persona usuario, String enviar, String type, String realPath, String mensaje) {
+//        println "crearPdf ${usuario.login} ${tramite.codigo} ${tramite.texto?.size()}b -> ${new Date().format('dd HH:mm')}"
+
+        def conMembrete = tramite.conMembrete ?: "0"
+
+        def parametros = Parametros.list()
+        if (parametros.size() == 0) {
+            println "NO HAY PARAMETROS!!!!!!"
+            mensaje = "/happy/images/"
+        } else if (parametros.size() > 1) {
+            println "HAY ${parametros.size()} REGISTROS DE PARAMETROS!!!!"
+            mensaje = parametros.first().imagenes
+        } else {
+            mensaje = parametros.first().imagenes
+        }
+        def leyenda = "GAD de la provincia de Pichincha"
+        def aux = Parametros.list([sort: "id", order: "asc"])
+        if (aux.size() == 1) {
+            leyenda = aux.first().institucion
+        } else if (aux.size() > 1) {
+            println "Hay ${aux.size()} parametros!!!"
+            leyenda = aux.first().institucion
+        }
+
+        tramite.refresh()
+
+        def pathImages = realPath + "images/"
+        def path = pathImages
+        def membrete = pathImages + "logo_gadpp.png"
+
+        new File(path).mkdirs()
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        def text = (tramite?.texto ?: '')
+
+        text = text.replaceAll("&lt;", "*lt*")
+        text = text.replaceAll("&gt;", "*gt*")
+        text = text.replaceAll("&amp;", "*amp*")
+        text = text.replaceAll("<p>&nbsp;</p>", "<br/>")
+        text = text.replaceAll("&nbsp;", " ")
+        text = text.decodeHTML()
+
+        text = text.replaceAll("\\*lt\\*", "&lt;")
+        text = text.replaceAll("\\*gt\\*", "&gt;")
+        text = text.replaceAll("\\*amp\\*", "&amp;")
+        text = text.replaceAll("\\*nbsp\\*", " ")
+        text = text.replaceAll(/<tr>\s*<\/tr>/, / /)    //2 <tr> seguidos <tr>espacios</tr>
+
+        text = text.replaceAll(~"\\?\\_debugResources=y\\&n=[0-9]*", "")
+        text = text.replaceAll(mensaje, pathImages)
+
 
         def marginTop = "4.5cm"
+        if (conMembrete == "1") {
+            marginTop = "2.5cm"
+        }
 
         def content = "<!DOCTYPE HTML>\n<html>\n"
         content += "<head>\n"
-//        content += "<link href=\"${realPath + 'font/open/stylesheet.css'}\" rel=\"stylesheet\"/>"
         content += "<style language='text/css'>\n"
         content += "" +
                 " div.header {\n" +
@@ -57,7 +109,6 @@ class EnviarService {
                 "   }\n" +
                 "}" +
                 ".hoja {\n" +
-//                "            background  : #123456;\n" +
                 "   width       : 15.3cm; /*21-2.5-3*/\n" +
                 "   font-family : arial;\n" +
                 "   font-size   : 12pt;\n" +
@@ -69,13 +120,10 @@ class EnviarService {
                 "    width          : 105%;\n" +
                 "}\n" +
                 ".titulo-azul {\n" +
-//                "    color       : #0088CC;\n" +
-//                "    border      : 0px solid red;\n" +
                 "    white-space : nowrap;\n" +
                 "    display     : block;\n" +
                 "    width       : 98%;\n" +
                 "    height      : 30px;\n" +
-//                "    font-family : 'open sans condensed';\n" +
                 "    font-weight : bold;\n" +
                 "    font-size   : 25px;\n" +
                 "    margin-top  : 10px;\n" +
@@ -91,14 +139,9 @@ class EnviarService {
                 "}\n" +
                 "\n" +
                 ".membrete {\n" +
-//                "    height    : 2cm;\n" +
-//                "    background: red;" +
-//                "    margin-top: -2cm;" +
-//                "    line-height : 2cm;\n" +
                 "    text-align  : center;\n" +
                 "    font-size   : 14pt;\n" +
                 "    font-weight : bold;\n" +
-//                "    margin-top: 1cm;" +
                 "}\n" +
                 "th {\n" +
                 "   padding-right: 10px;\n" +
@@ -106,37 +149,37 @@ class EnviarService {
         content += "</style>\n"
         content += "</head>\n"
         content += "<body>\n"
+        if (conMembrete == "1") {
+            content += "<div class=\"header membrete\">"
+            content += "<table border='0'>"
+            content += "<tr>"
+            content += "<td width='15%'>"
+            content += "<img alt='' src='${membrete}' height='65' width='100'/>"
+            content += "</td>"
+            content += "<td width='85%' style='text-align:center'>"
+            content += leyenda
+            content += "</td>"
+            content += "</tr>"
+            content += "</table>"
+            content += "</div>"
+
+            content += "<div class='footer'>" +
+                    "Manuel Larrea N13-45 y Antonio Ante • Teléfonos troncal: (593-2) 2527077 • 2549163 • " +
+                    "<strong>www.pichincha.gob.ec</strong>" +
+                    "</div>"
+        }
         content += "<div class='hoja'>\n"
-        content += "${mensaje}\n"
+//        content += new ElementosTagLib().headerTramite(tramite: tramite, pdf: true)
+        content += text
         content += "</div>\n"
         content += "</body>\n"
         content += "</html>"
 
-
-//        def texto = renderTemplateWithModel()
-//        println "texto: $texto"
-
         ITextRenderer renderer = new ITextRenderer();
-//        renderer.setDocument(doc, null);
-//        println "------------ pasa renderer"
         renderer.setDocumentFromString(content);
-//        renderer.setDocumentFromString(texto);
-//        println "-----setDoc..."
         renderer.layout();
-//        println "crea layout pdf"
         renderer.createPDF(baos);
-//        println "creado pdf"
         byte[] b = baos.toByteArray();
-
         return baos
     }
-
-
-    def renderTemplateWithModel(model = [:]) {
-//        render(uri: 'http://192.168.0.100:8080/reportesReforma/verNuevoAjuste', model: [id: 1])
-        render(uri: '/reportesReforma/verNuevoAjuste', model: [id: 1])
-    }
-
-
-
 }

@@ -5,9 +5,6 @@ option.selected {
     color      : #999;
 }
 
-li {
-}
-
 .selectable li {
     cursor        : pointer;
     border-bottom : solid 1px #0088CC;

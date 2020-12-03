@@ -1,6 +1,5 @@
 package tramites
 
-
 import alertas.Alerta
 import seguridad.Accn
 import seguridad.Persona
@@ -10,7 +9,7 @@ import utilitarios.Parametros
 
 class Tramite2Controller {
 
-    def diasLaborablesServiceOld
+    def diasLaborablesService
     def enviarService
     def tramitesService
     def dbConnectionService
@@ -21,11 +20,7 @@ class Tramite2Controller {
     }
 
     def revision() {
-
         def tramite = Tramite.get(params.id).refresh()
-
-        /*Todo hacer la validacion para determinar si es el jefe*/
-
         return [tramite: tramite]
     }
 
@@ -1808,7 +1803,7 @@ class Tramite2Controller {
                 }
                 if (pdtPara.size() > 0) {
                     def limite = ahora
-                    limite = diasLaborablesServiceOld.fechaMasTiempo(limite, tramite.prioridad.tiempo)
+                    limite = diasLaborablesService.fechaMasTiempo(limite, tramite.prioridad.tiempo)
                     if (!limite) {
                         flash.message = "Ha ocurrido un error al calcular la fecha límite: " + limite
                         redirect(controller: 'tramite', action: 'errores')

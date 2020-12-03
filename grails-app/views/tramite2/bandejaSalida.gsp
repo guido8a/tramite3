@@ -133,17 +133,17 @@
     <div style="float: right">
         <div data-type="" class="alert borrador alertas" clase="E001">
             <span id="numBor" class="badge badge-light"></span>
-        ${WordUtils.capitalizeFully(tramites.EstadoTramite.findByCodigo('E001').descripcion)}
+            ${WordUtils.capitalizeFully(tramites.EstadoTramite.findByCodigo('E001').descripcion)}
         </div>
 
         <div data-type="enviado" class="alert enviado alertas" clase="E003">
             <span id="numEnv" class="badge badge-light"></span>
-        ${WordUtils.capitalizeFully(EstadoTramite.findByCodigo('E003').descripcion)}
+            ${WordUtils.capitalizeFully(EstadoTramite.findByCodigo('E003').descripcion)}
         </div>
 
         <div data-type="noRecibido" class="alert alert-danger alertas" clase="alerta" title="No incluye copias">
             <span id="numNoRec" class="badge badge-light"></span>
-        Sin Recepción
+            Sin Recepción
         </div>
     </div>
 </div>
@@ -278,6 +278,7 @@
     }
 
     function doEnviar(imprimir, strIds) {
+        var cl3 = cargarLoader("Enviando...")
         $.ajax({
             type    : "POST",
             url     : "${g.createLink(controller: 'tramite2',action: 'enviarVarios')}",
@@ -287,17 +288,14 @@
                 type   : 'download'
             },
             success : function (msg) {
-                closeLoader();
+                cl3.modal("hide")
                 var parts = msg.split("_");
-
                 if (parts[0] == 'ok') {
                     log('Trámites Enviados' + parts[1], 'success');
                     cargarBandeja(true);
                     if (imprimir) {
-                        openLoader();
                         location.href = "${g.createLink(controller: 'tramiteExport' ,action: 'imprimirGuia')}?ids=" +
                             strIds + "&departamento=" + '${persona?.departamento?.descripcion}';
-                        closeLoader();
                     }
                 } else {
                     log('Ocurrió un error al enviar los trámites seleccionados!<br>' + parts[1], 'error');
@@ -367,8 +365,8 @@
                                 success : function (msg) {
                                     bootbox.dialog({
                                         id      : "dlgCopiaPara",
-                                        title   : '<i class="fa fa-files-o"></i> Copia para',
-                                        class   : "long",
+                                        title   : '<i class="fa fa-copy"></i> Copia para',
+                                        class   : "modal-lg",
                                         message : msg,
                                         buttons : {
                                             cancelar : {
@@ -382,11 +380,11 @@
                                                 label     : '<i class="fa fa-check"></i> Enviar copias',
                                                 className : "btn-success",
                                                 callback  : function () {
+                                                    var cl4 = cargarLoader("Enviando...");
                                                     var cc = "";
                                                     $("#ulSeleccionados li").not(".disabled").each(function () {
                                                         cc += $(this).data("id") + "_";
                                                     });
-                                                    openLoader("Enviando copias");
                                                     $.ajax({
                                                         type    : "POST",
                                                         url     : "${createLink(controller: 'tramiteAdmin', action:'enviarCopias_ajax')}",
@@ -395,6 +393,7 @@
                                                             copias  : cc
                                                         },
                                                         success : function (msg) {
+                                                            cl4.modal("hide");
                                                             var parts = msg.split("*");
                                                             if (parts[0] == 'OK') {
                                                                 log("Copias enviadas exitosamente", 'success');
@@ -402,7 +401,6 @@
                                                                     location.reload(true);
                                                                 }, 500);
                                                             } else if (msg == 'NO') {
-                                                                closeLoader();
                                                                 log(parts[1], 'error');
                                                             }
                                                         }
@@ -1039,25 +1037,28 @@
                 }
             });
             if (strIds == '') {
-                log("No se ha seleccionado ningun trámite", 'error');
+                bootbox.alert('<i class="fa fa-exclamation-triangle fa-3x text-warning"></i> No se ha seleccionado ningun trámite')
             } else {
                 var id;
                 var b = bootbox.dialog({
                     id      : "dlgGuia",
-                    title   : 'Impresión de la guía de envío de trámites',
-                    message : 'Desea imprimir la guía de envío para los trámites seleccionados?',
+                    title   : '<i class="fa fa-print"></i> Impresión de la guía de envío de trámites',
+                    message : '<span class="warning"><i class="fa fa-print fa-2x text-info"></i> Desea imprimir la guía de envío para los trámites seleccionados?',
                     buttons : {
                         cancelar : {
-                            label : 'Cancelar'
+                            label : '<i class="fa fa-times"></i> Cerrar',
+                            className : 'btn-primary'
                         },
                         no       : {
-                            label    : 'No Imprimir',
+                            label    : '<i class="fa fa-paper-plane"></i> No Imprimir',
+                            className : 'btn-success',
                             callback : function () {
                                 doEnviar(false, strIds);
                             }
                         },
                         si       : {
-                            label    : '<i class="fa fa-print"></i> Imprimir',
+                            label    : '<i class="fa fa-print" title="Se imprime y se envía el trámite"></i> Imprimir',
+                            className : 'btn-success',
                             callback : function () {
                                 doEnviar(true, strIds);
                             }

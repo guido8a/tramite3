@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: luz
-  Date: 3/21/14
-  Time: 3:23 PM
---%>
-
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
     <head>
@@ -23,7 +16,6 @@
 
         .fileContainer {
             width         : 100%;
-            /*height: 290px;*/
             border        : 2px solid #327BBA;
             padding       : 15px;
             margin-top    : 10px;
@@ -102,28 +94,21 @@
 
         <elm:headerTramite tramite="${tramite}" extraTitulo="- Anexos"/>
 
-        %{--<div class="progress-bar-svt ui-corner-all" id="p-b"><div class="progress-svt background-image" id="p" style="width: 50%">50%</div></div>--}%
         <div id="anexos">
 
         </div>
 
-
         <script type="text/javascript">
 
-
-
-
-            var archivos = []
+            var archivos = [];
 
             function cargaDocs() {
-                $("#anexos").html("")
-//        openLoader("Cargando")
+                $("#anexos").html("");
                 $.ajax({type : "POST", url : "${g.createLink(controller: 'documentoTramite',action:'cargaDocs')}",
                     data     : "id=${tramite.id}&ver=true",
                     async    : false,
                     success  : function (msg) {
                         $("#anexos").html(msg)
-//                closeLoader()
                     }
                 });
             }

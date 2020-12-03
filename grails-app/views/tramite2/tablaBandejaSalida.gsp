@@ -146,7 +146,7 @@
                 <g:if test="${row.edtrcdgo == 'E001' && !esEditor}">
 %{--                    <g:checkBox name="porEnviar" tramite="${row.trmt__id}" style="margin-left: 20px" class="form-control combo" checked="false"/>--}%
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="porEnviar" name="porEnviar" tramite="${row.trmt__id}">
+                        <input class="form-check-input combo" type="checkbox" id="porEnviar" name="porEnviar" tramite="${row.trmt__id}">
                     </div>
                 </g:if>
             </td>

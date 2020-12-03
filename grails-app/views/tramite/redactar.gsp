@@ -10,7 +10,7 @@
         margin : auto;
         /*float  : right;*/
         width  : 70%;
-        margin-left: 100px;
+        margin-left: 200px;
     }
 
     .nota {

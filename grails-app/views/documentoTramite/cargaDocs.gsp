@@ -1,5 +1,4 @@
 <g:if test="${docs.size() > 0}">
-    <script type="text/javascript" src="${resource(dir: 'js', file: 'ui.js')}"></script>
 
     <div style="margin-top:15px;margin-bottom: 20px" class="vertical-container">
         <p class="css-vertical-text">Anexos</p>

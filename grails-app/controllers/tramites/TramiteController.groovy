@@ -7,7 +7,7 @@ import utilitarios.DiaLaborable
 class TramiteController {
 
     def diasLaborablesService
-    def enviarService
+    def enviarServiceOld
     def tramitesService
     def dbConnectionService
 

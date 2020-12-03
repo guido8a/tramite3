@@ -340,7 +340,7 @@
 
         var contestar = {
             label : 'Contestar Documento',
-            icon  : "fa fa-external-link",
+            icon  : "fa fa-envelope-open-text",
             url   : "${g.createLink(action: 'crearTramite')}/?padre=" + id + "&pdt=" + idPxt + "&esRespuesta=1&esRespuestaNueva=S"
         };
 
@@ -369,17 +369,16 @@
 
         var recibir = {
             label  : 'Recibir Documento',
-            icon   : "fa fa-check-square-o",
+            icon   : "fa fa-check",
             action : function (e) {
-
+                var cl5 = cargarLoader("Recibiendo...");
                 $.ajax({
                     type    : 'POST',
                     url     : '${createLink(controller: 'tramite3', action: 'recibirTramite')}/' + id + "?source=bep",
                     success : function (msg) {
-                        var parts = msg.split('_')
-                        openLoader();
+                        cl5.modal("hide");
+                        var parts = msg.split('_');
                         cargarBandeja();
-                        closeLoader();
                         if (parts[0] == 'NO') {
                             log(parts[1], "error");
                         } else if (parts[0] == "OK") {
@@ -484,7 +483,7 @@
 
         var archivar = {
             label  : 'Archivar Documentos',
-            icon   : "fa fa-folder-open-o",
+            icon   : "fa fa-file-archive",
             action : function (e) {
 
                 $.ajax({
@@ -504,9 +503,7 @@
                                     label     : '<i class="fa fa-times"></i> Cancelar',
                                     className : 'btn-danger',
                                     callback  : function () {
-                                        openLoader();
                                         cargarBandeja();
-                                        closeLoader();
                                     }
                                 },
                                 archivar : {
@@ -514,18 +511,17 @@
                                     label     : '<i class="fa fa-check"></i> Archivar',
                                     className : "btn-success",
                                     callback  : function () {
+                                        var cl6 = cargarLoader("Archivando...");
                                         var $txt = $("#aut");
-                                        openLoader();
                                         $.ajax({
                                             type    : 'POST',
                                             url     : '${createLink(action: 'archivar')}/' + idPxt,
                                             data    : {
-                                                texto : $("#observacionArchivar").val()/*,
-                                                         aut   : $txt.val()*/
+                                                texto : $("#observacionArchivar").val(),
                                             },
                                             success : function (msg) {
+                                                cl6.modal("hide");
                                                 cargarBandeja();
-                                                closeLoader();
                                                 if (msg == 'ok') {
                                                     log("Trámite archivado correctamente", 'success')
                                                 } else if (msg == 'no') {
