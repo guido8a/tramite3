@@ -104,7 +104,9 @@
     </div>
 </div>
 
-<div><span class="text-info" style="margin-left: 30px"><strong> * Se ordena por tipo de documento y fecha</strong></span>
+%{--<div><span class="text-info" style="margin-left: 30px"><strong> * Se ordena por tipo de documento y fecha</strong></span>--}%
+<div><span class="text-info" style="margin-left: 30px"><strong> * Se ordena por fecha de creación del documento,
+        desde el más reciente hasta el más antiguo</strong></span>
 </div>
 
 <div class="modal fade " id="dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

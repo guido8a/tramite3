@@ -259,7 +259,7 @@ class BuscarTramiteController {
                 if(params.contacto){
                     ilike('contacto', '%' + params.contacto.trim() + '%')
                 }
-                order('tipoDocumento')
+//                order('tipoDocumento')
                 order('fechaCreacion', 'desc')
              maxResults(maximo + 1)
          }
@@ -267,7 +267,7 @@ class BuscarTramiteController {
         def msg = ""
         if (res.size() > maximo) {
             res.pop()
-            msg = "<div class='alert alert-warning clearfix' style='margin-left:0px; margin-top:-42px; height: 55px; width: 650px'> " +
+            msg = "<div class='alert alert-warning clearfix' style='margin-left:0px; margin-top:-42px; height: 55px; width: 100%'> " +
                     "<a class='close' data-dismiss='alert' href='#'><i class='fa fa-times text-info'></i></a>" +
                     "<i class='fa fa-exclamation-circle fa-2x pull-left'></i> " +
                     "<strong><ul><li>Su búsqueda ha generado más de ${maximo} resultados.</li><li> Por favor utilice más criterios de búsqueda como por " +
@@ -417,7 +417,7 @@ class BuscarTramiteController {
         def msg = ""
         if (tramitesFiltrados.size() > 20) {
             tramitesFiltrados = tramitesFiltrados[0..19]
-            msg = "<div class='alert alert-danger'> <i class='fa fa-warning fa-2x pull-left'></i> Su búsqueda ha generado más de 20 resultados. Por favor utilice los filtros.</div>"
+            msg = "<div class='alert alert-danger'  style='width:100%'> <i class='fa fa-warning fa-2x pull-left'></i> Su búsqueda ha generado más de 20 resultados. Por favor utilice los filtros.</div>"
         }
 
         return [tramites: tramitesFiltrados]
@@ -486,7 +486,7 @@ class BuscarTramiteController {
         def msg = ""
         if (tramitesFiltrados.size() > 20) {
             tramitesFiltrados = tramitesFiltrados[0..19]
-            msg = "<div class='alert alert-danger'> <i class='fa fa-warning fa-2x pull-left'></i> Su búsqueda ha generado más de 20 resultados. Por favor utilice los filtros.</div>"
+            msg = "<div class='alert alert-danger' style='width:100%'> <i class='fa fa-warning fa-2x pull-left'></i> Su búsqueda ha generado más de 20 resultados. Por favor utilice los filtros.</div>"
         }
 
         return [tramites: tramitesFiltrados]

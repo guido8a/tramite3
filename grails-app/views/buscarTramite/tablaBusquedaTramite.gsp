@@ -138,7 +138,7 @@ html[xmlns] .clearfix {
                     <g:if test="${tramite?.tipoTramite?.codigo == 'C'}">
                         <i class="fa fa-eye-slash"></i>
                     </g:if>
-                    <g:if test="${tramite?.anexo == 1 && DocumentoTramite.countByTramite(tramite) > 0}">
+                    <g:if test="${tramite?.anexo == 1 && DocumentoTramite?.countByTramite(tramite) > 0}">
                         <i class="fa fa-paperclip"></i>
                     </g:if>
                     ${tramite?.codigo}
