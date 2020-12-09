@@ -1,44 +1,4 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: luz
-  Date: 11/08/15
-  Time: 11:25 AM
---%>
 
-<%--
-    * trmt__id=7175,
-    * trmtcdgo=MEM-3430-DGCP-15,
-    * trmtpdre=null,
-    * trmtasnt=Circular instruyendo para que en pedido de pago incluya valor a pagarse,
-    * tpdccdgo=MEM,
-    * edtrcdgo=E001,
-    * deprdscr=José Alcides López Rosero,
-    * depr__id=5356,
-    * deprdpto=DGCP,
-    dedpdscr=DIRECCION DE GESTION DE COMPRAS PUBLICAS,
-    * tptrcdgo=N,
-    trmtprex=null,
-    * trmtextr=0,
-    * prtrprsn=,
-    * prtrprdp=DGCU,
-    * prtrdpto=DGCU,
-    * trmttppd=MEDIA,
-    * paradpto=María Del Pilar Velasco Guerron,
-    * copiprsn=,
-    * copidpto=cc:DGA, cc:DGAP, cc:DGFZ, cc:DGRP, cc:DGV, cc:GLI,
-             cc:ACCPM, cc:DGES, cc:GTH, cc:UGCR,
-    * paratitl= PARA: DGCU COPIA: DGA COPIA: DGAP COPIA: DGFZ COPIA: DGRP
-              COPIA: DGV COPIA: GLI COPIA: ACCPM COPIA: DGES COPIA: GTH COPIA: UGCR,
-    * trmtfccr=2015-07-24 12:36:00.602,
-    * trmtfcen=null,
-    * trmtfcbq=null,
-    * trmtanxo=0,
-    * trmtdctr=0,
-    * edtxcdgo=null,
-    * trmtimpr=null,
-    * copiextr=0
-    * trmtesrn=N
---%>
 <g:set var="now" value="${new Date()}"/>
 <g:if test="${rows.size() == 0}">
     <tr>
@@ -110,7 +70,7 @@
             <g:set var="clase" value="${clase + ' conPadre'}"/>
         </g:if>
 
-        <tr id="${row.trmt__id}" data-id="${row.trmt__id}"
+        <tr style="width: 100%;" id="${row.trmt__id}" data-id="${row.trmt__id}"
             class="trTramite ${clase}"
             estado="${row.edtrcdgo}" %{--estado tramite codigo--}%
             de="${row.depr__id}" %{--id de la persona q crea el tram.--}%
@@ -119,7 +79,7 @@
             departamento="${row.deprdpto}" %{--dpto. de la pers. q crea el tramite--}%
             anio="${row.trmtfccr.format('yyyy')}" %{--fecha de creacion--}%
             padre="${row.trmtpdre}" %{--padre--}%>
-            <td title="${row.trmtasnt}" style="width: 145px;">
+            <td title="${row.trmtasnt}" style="width: 12%;">
                 <g:if test="${row.tptrcdgo == 'C'}">
                     <i class="fa fa-eye-slash" style="margin-left: 10px"></i>
                 </g:if>
@@ -127,14 +87,15 @@
                     <i class="fa fa-paperclip"></i>
                 </g:if>
                 ${row.trmtcdgo}
+                <a href="#" name="informacion" class="btn btn-info btn-xs btnInfo" data-asn="${row.trmtasnt}" data-cd="${row.trmtcdgo}" style="float: right"><i class="fa fa-exclamation"></i></a>
             </td>
-            <td>
+            <td style="width: 4%;">
                 ${row.deprdpto}
             </td>
-            <td style="width: 115px;">
+            <td style="width: 10%">
                 ${row.trmtfccr.format("dd-MM-yyyy HH:mm")}
             </td>
-            <td>
+            <td style="width: 4%;">
                 <g:if test="${row.tpdccdgo == 'OFI'}">
                     EXT
                 </g:if>
@@ -142,8 +103,7 @@
                     ${row.prtrdpto}
                 </g:else>
             </td>
-            <td class="titleEspecial"
-                title="<div style='max-height:150px; overflow-y:auto;'>${row.paratitl}</div>">%{--el title con los destinatarios y si recibieron o no--}%
+            <td style="width: 30%;" class="titleEspecial" title="<div style='max-height:150px; overflow-y:auto;'>${row.paratitl}</div>">%{--el title con los destinatarios y si recibieron o no--}%
                 <span class="para">
                     <g:if test="${row.prtrprsn}">%{--para persona (squi guarda la persona, interna o externa)--}%
                         ${row.prtrprsn}
@@ -170,21 +130,23 @@
                     </span>
                 </g:if>
             </td>
-            <td>
+            <td style="width: 7%;">
                 ${row.trmttppd}
             </td>
-            <td style="width: 115px;">
+            <td style="width: 10%;">
                 ${row.trmtfcen?.format('dd-MM-yyyy HH:mm')}
             </td>
-            <td style="width: 115px;">
+            <td style="width: 10%;">
                 ${row.trmtfcbq?.format('dd-MM-yyyy HH:mm')}
             </td>
-            <td>
+            <td style="width: 8%;">
                 ${row.edtrdscr}
             </td>
-            <td>
+            <td style="width: 5%;">
                 <g:if test="${row.edtrcdgo == 'E001' && !esEditor}">
-                    <g:checkBox name="porEnviar" tramite="${row.trmt__id}" style="margin-left: 20px" class="form-control combo" checked="false"/>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input combo" type="checkbox" id="porEnviar" name="porEnviar" tramite="${row.trmt__id}">
+                    </div>
                 </g:if>
             </td>
         </tr>
@@ -192,6 +154,16 @@
 </g:else>
 
 <script type="text/javascript">
+
+    $(".btnInfo").click(function () {
+        var asunto = $(this).data("asn");
+        var tramite = $(this).data("cd");
+        bootbox.alert('<strong>' + tramite + '</strong>' + '<br>' + '<strong>' + 'ASUNTO: ' + '</strong>' + asunto)
+    });
+
+
+    $.switcher('input[type=checkbox]');
+
     $(function () {
         $("tr").contextMenu({
             items  : createContextMenu,
@@ -200,31 +172,6 @@
             },
             onHide : function ($element) {
                 $(".trHighlight").removeClass("trHighlight");
-            }
-        });
-        $('[title!=""]').qtip({
-            style    : {
-                classes : 'qtip-tipsy'
-            },
-            position : {
-                my : "bottom center",
-                at : "top center"
-            }
-        });
-        $('.titleEspecial').qtip({
-            style    : {
-                classes : 'qtip-tipsy'
-            },
-            position : {
-                my : "bottom center",
-                at : "top center"
-            },
-            show     : {
-                solo : true
-            },
-            hide     : {
-                fixed : true,
-                delay : 300
             }
         });
     });

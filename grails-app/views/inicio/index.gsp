@@ -50,13 +50,12 @@
         font-weight: bold;
         text-shadow: -2px 2px 1px rgba(0, 0, 0, 0.25);
         color: #0070B0;
-        margin-top: 20px;
+        margin-top: 10px;
+        background: transparent;
+        pointer-events: none;
+        position: relative;
+        z-index: 100;
     }
-
-    /*.imagen:hover {filter: saturate(180%);}*/
-
-    /*.item:hover .imagen {-webkit-transform:scale(1.3);transform:scale(1.3);}*/
-    /*.item {overflow:hidden;}*/
 
     body {
         font-family: 'Poppins', sans-serif;
@@ -72,7 +71,6 @@
     }
 
     .quotes {
-        /*width: 80vw;*/
         width: 100%;
         min-height: 400px;
         display: flex;
@@ -84,7 +82,6 @@
     .quotes .box {
         position: relative;
         width: 25vw;
-        /*height: 50vh;*/
         height: 270px;
         min-height: 100px;
         background: #f2f2f2;
@@ -150,7 +147,6 @@
         transition: all 0.5s ease-in;
         pointer-events: none;
         width: 100%;
-        /*height: 200%;*/
         height: 100%;
         overflow: hidden;
     }
@@ -185,144 +181,75 @@
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4b384c', endColorstr='#da5de2',GradientType=1 );
     }
 
-
     </style>
 </head>
 
 <body>
-%{--<div class="dialog">--}%
-    <div style="text-align: center;">
-        <h2 class="titl">Trámites<br>
+<div style="text-align: center;">
+    <h2 class="titl">Trámites<br>
         SISTEMA DE ADMINISTRACIÓN DOCUMENTAL<br/>
         Tedein S.A.</h2>
-    </div>
+</div>
 
-    <g:if test="${!(session.usuario.getPuedeDirector() || session.usuario.getPuedeJefe())}">
+<g:if test="${!(session.usuario.getPuedeDirector() || session.usuario.getPuedeJefe())}">
 
-    %{--        <div class="body ui-corner-all" style="width: 575px;position: relative;margin: auto;margin-top: 40px;height: 300px; ">--}%
+    <div class="quotes" style="margin-top: 100px">
+        <div class="card">
+            <div class="box box1">
+                <g:if test="${session.usuario.esTriangulo()}">
+                    <a href= "${createLink(controller:'tramite3', action: 'bandejaEntradaDpto')}" style="text-decoration: none" onclick="cargarLoader('Cargando...')">
+                </g:if>
+                <g:else>
+                    <a href= "${createLink(controller:'tramite', action: 'bandejaEntrada')}" style="text-decoration: none" onclick="cargarLoader('Cargando...')">
+                </g:else>
 
-        <div class="quotes" style="margin-top: 100px">
-            <div class="card">
-                <div class="box box1">
-                %{--                    <p>The first step toward success is taken when you refuse to be a captive of the environment in which you first find yourself. </p>--}%
-                %{--                    <h2>Mark Caine</h2>--}%
-
-                    <g:if test="${session.usuario.esTriangulo()}">
-                        <a href= "${createLink(controller:'tramite3', action: 'bandejaEntradaDpto')}" style="text-decoration: none" onclick="cargarLoader('Cargando...')">
-                    </g:if>
-                    <g:else>
-                        <a href= "${createLink(controller:'tramite', action: 'bandejaEntrada')}" style="text-decoration: none" onclick="cargarLoader('Cargando...')">
-                    </g:else>
-                %{--                    <div class="ui-corner-all  item fuera" style="background-color: #78b665">--}%
-                %{--                        <div class="ui-corner-all ui-widget-content item">--}%
-                    <div class="imagen">
-                        <asset:image src="apli/entrada.png" style="padding: 10px; width: 100%; height:100%"/>
-                    </div>
-
-                    <div class="texto"><span class="text-success"><strong>Bandeja de entrada</strong></span>: trámites que ingresan y pendientes de contestación</div>
-                    %{--                        </div>--}%
-                    %{--                    </div>--}%
-                </a>
-
+                <div class="imagen">
+                    <asset:image src="apli/entrada.png" style="padding: 10px; width: 100%; height:100%"/>
                 </div>
-                <div class="bg"></div>
+
+                <div class="texto"><span class="text-success"><strong>Bandeja de entrada</strong></span>: trámites que ingresan y pendientes de contestación</div>
+            </a>
             </div>
-            <div class="card">
-                <div class="box box2">
-                %{--                    <p>Your smile will give you a positive countenance that will make people feel comfortable around you. </p>--}%
-                %{--                    <h2>Les Brown</h2>--}%
-                    <g:if test="${session.usuario.esTriangulo()}">
-                        <a href= "${createLink(controller:'tramite2', action: 'bandejaSalidaDep')}" style="text-decoration: none" onclick="cargarLoader('Cargando...')">
-                    </g:if>
-                    <g:else>
-                        <a href= "${createLink(controller:'tramite2', action: 'bandejaSalida')}" style="text-decoration: none" onclick="cargarLoader('Cargando...')">
-                    </g:else>
-                %{--                    <div class="ui-corner-all item fuera" style="background-color: #5183e7">--}%
-                %{--                        <div class="ui-corner-all ui-widget-content item">--}%
-                    <div class="imagen">
-                        <asset:image src="apli/salida.png" style="padding: 10px; width: 100%; height:100%"/>
-                    </div>
-
-                    <div class="texto"><span class="text-info"><strong>Bandeja de salida</strong></span>: trámites por enviar y que no han sido recibidos</div>
-                    %{--                        </div>--}%
-                    %{--                    </div>--}%
-                </a>
-
-
-
-                </div>
-                <div class="bg"></div>
-            </div>
+            <div class="bg"></div>
         </div>
+        <div class="card">
+            <div class="box box2">
+                <g:if test="${session.usuario.esTriangulo()}">
+                    <a href= "${createLink(controller:'tramite2', action: 'bandejaSalidaDep')}" style="text-decoration: none" onclick="cargarLoader('Cargando...')">
+                </g:if>
+                <g:else>
+                    <a href= "${createLink(controller:'tramite2', action: 'bandejaSalida')}" style="text-decoration: none" onclick="cargarLoader('Cargando...')">
+                </g:else>
 
-    %{--        <g:if test="${session.usuario.esTriangulo()}">--}%
-    %{--            <a href= "${createLink(controller:'tramite3', action: 'bandejaEntradaDpto')}" style="text-decoration: none" onclick="cargarLoader('Cargando...')">--}%
-    %{--        </g:if>--}%
-    %{--        <g:else>--}%
-    %{--            <a href= "${createLink(controller:'tramite', action: 'bandejaEntrada')}" style="text-decoration: none" onclick="cargarLoader('Cargando...')">--}%
-    %{--        </g:else>--}%
-    %{--        <div class="ui-corner-all  item fuera" style="background-color: #78b665">--}%
-    %{--            <div class="ui-corner-all ui-widget-content item">--}%
-    %{--                <div class="imagen">--}%
-    %{--                    <asset:image src="apli/entrada.png" style="padding: 10px; width: 100%; height:100%"/>--}%
-    %{--                </div>--}%
+                <div class="imagen">
+                    <asset:image src="apli/salida.png" style="padding: 10px; width: 100%; height:100%"/>
+                </div>
 
-    %{--                <div class="texto"><span class="text-success"><strong>Bandeja de entrada</strong></span>: trámites que ingresan y pendientes de contestación</div>--}%
-    %{--            </div>--}%
-    %{--        </div>--}%
-    %{--        </a>--}%
+                <div class="texto"><span class="text-info"><strong>Bandeja de salida</strong></span>: trámites por enviar y que no han sido recibidos</div>
+            </a>
+            </div>
+            <div class="bg"></div>
+        </div>
+    </div>
+</g:if>
 
-    %{--        <g:if test="${session.usuario.esTriangulo()}">--}%
-    %{--            <a href= "${createLink(controller:'tramite2', action: 'bandejaSalidaDep')}" style="text-decoration: none" onclick="cargarLoader('Cargando...')">--}%
-    %{--        </g:if>--}%
-    %{--        <g:else>--}%
-    %{--            <a href= "${createLink(controller:'tramite2', action: 'bandejaSalida')}" style="text-decoration: none" onclick="cargarLoader('Cargando...')">--}%
-    %{--        </g:else>--}%
-    %{--        <div class="ui-corner-all item fuera" style="background-color: #5183e7">--}%
-    %{--            <div class="ui-corner-all ui-widget-content item">--}%
-    %{--                <div class="imagen">--}%
-    %{--                    <asset:image src="apli/salida.png" style="padding: 10px; width: 100%; height:100%"/>--}%
-    %{--                </div>--}%
+<div style="text-align: center; margin-top: 100px">
 
-    %{--                <div class="texto"><span class="text-info"><strong>Bandeja de salida</strong></span>: trámites por enviar y que no han sido recibidos</div>--}%
-    %{--            </div>--}%
-    %{--        </div>--}%
-    %{--        </a>--}%
-
+    <g:if test="${session.usuario.getPuedeDirector()}">
+        <g:link controller="departamento" action="arbolReportes" class="openImagenDir" params="[dpto: Persona.get(session.usuario.id).departamento.id, inicio: '1', dir: '1']">
+            <asset:image src="ingreso_adm.png" style="width: 360px"/>
+        </g:link>
     </g:if>
 
-%{--    <div style="text-align: center; margin-top: 70px">--}%
+    <g:if test="${session.usuario.getPuedeJefe()}">
+        <g:link controller="departamento" action="arbolReportes" class="openImagen" params="[dpto: Persona.get(session.usuario.id).departamento.id, inicio: '1']">
+            <asset:image src="ingreso_adm.png" style="width: 360px"/>
+        </g:link>
+    </g:if>
 
-%{--        <g:if test="${session.usuario.getPuedeDirector()}">--}%
-%{--            <g:link controller="departamento" action="arbolReportes" class="openImagenDir" params="[dpto: Persona.get(session.usuario.id).departamento.id, inicio: '1', dir: '1']">--}%
-%{--                <asset:image src="ingreso_adm.png" style="width: 360px"/>--}%
-%{--            </g:link>--}%
-%{--        </g:if>--}%
+</div>
 
-%{--        <g:if test="${session.usuario.getPuedeJefe()}">--}%
-%{--            <g:link controller="departamento" action="arbolReportes" class="openImagen" params="[dpto: Persona.get(session.usuario.id).departamento.id, inicio: '1']">--}%
-%{--                <asset:image src="ingreso_adm.png" style="width: 360px"/>--}%
-%{--            </g:link>--}%
-%{--        </g:if>--}%
-
-%{--    </div>--}%
-
-
-
-
-
-%{--</div>--}%
 <script type="text/javascript">
-    // $(".fuera").hover(function () {
-    //     var d = $(this).find(".imagen")
-    //     d.width(d.width() + 10)
-    //     d.height(d.height() + 10)
-    // }, function () {
-    //     var d = $(this).find(".imagen")
-    //     d.width(d.width() - 10)
-    //     d.height(d.height() - 10)
-    // })
-
 
     $(function () {
         $(".openImagenDir").click(function () {

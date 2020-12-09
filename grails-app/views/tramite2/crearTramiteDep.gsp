@@ -79,15 +79,18 @@
 <!-- botones -->
 <div class="btn-toolbar toolbar">
     <div class="btn-group">
-        <g:link action="redactar" class="btn btn-azul btnSave">
-            <i class="fa fa-save"></i> Guardar %{--y empezar a redactar--}%
+        <g:link action="redactar" class="btn btn-success btnSave">
+            <i class="fa fa-save"></i> Guardar
         </g:link>
+%{--        <a href="#" class="btn btn-success btnSave">--}%
+%{--            <i class="fa fa-save"></i> Guardar--}%
+%{--        </a>--}%
         <g:if test="${tramite.padre || tramite.id}">
-            <a href="#" class="btn btn-azul" id="btnDetalles">
+            <a href="#" class="btn btn-primary" id="btnDetalles">
                 <i class="fa fa-search"></i> Detalles
             </a>
         </g:if>
-        <g:link controller="tramite3" action="bandejaEntradaDpto" class="btn btn-default btnRegresar">
+        <g:link controller="tramite3" action="bandejaEntradaDpto" class="btn btn-warning btnRegresar">
             <i class="fa fa-times"></i> Cancelar
         </g:link>
     </div>
@@ -231,7 +234,7 @@
 
         <div class="linea"></div>
 
-         <div class="row">
+        <div class="row">
             <div class="col-xs-4">
                 <b>De:</b>
             </div>
@@ -245,18 +248,16 @@
                 </div>
             </div>
 
-             <div class="col-xs-3" style="margin-top: -25px">
+            <div class="col-xs-3" style="margin-top: -25px">
                 <b>Tipo de documento:</b>
                 <elm:comboTipoDoc id="tipoDocumento" name="tramite.tipoDocumento.id" class="many-to-one form-control required"
                                   value="${tramite.tipoDocumentoId ?: tramites.TipoDocumento.findByCodigo('MEM').id}"
                                   tramite="${tramite}" esRespuesta="${params.esRespuesta}"/>
             </div>
 
-
             <div class="col-xs-4 negrilla hide" id="divPara" style="margin-top: -10px">
 
             </div>
-
         </div>
 
         <div class="row">
@@ -440,7 +441,6 @@
             </ul>
         </fieldset>
     </div>
-
 </div>
 
 <div class="modal fade " id="dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -721,7 +721,7 @@
     $(function () {
 
         <g:if test="${bloqueo}">
-        $("#modalTabelGray").css({marginTop : "-20px", zIndex : "999"}).show();
+        $("#modalTabelGray").css({marginTop : "5px", zIndex : "999"}).show();
         </g:if>
         var $dir = $("#direccion");
         var $selPrioridad = $("#prioridad");
@@ -859,7 +859,6 @@
         });
 
         validarCheck();
-//                validarTipoDoc();
 
         $(".clickable").dblclick(function () {
             $(this).addClass("selected");
@@ -938,10 +937,10 @@
                 });
             }
             return false;
-
-
         });
+
         </g:if>
+
         var validator = $(".frmTramite").validate({
             errorClass     : "help-block",
             errorPlacement : function (error, element) {

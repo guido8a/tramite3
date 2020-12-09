@@ -540,7 +540,7 @@
 
         var externo = {
             label  : "Cambiar estado",
-            icon   : "fa fa-exchange",
+            icon   : "fa fa-sync-alt",
             action : function () {
                 $.ajax({
                     type    : "POST",
@@ -552,7 +552,7 @@
                     success : function (msg) {
                         bootbox.dialog({
                             id      : "dlgExterno",
-                            title   : '<span class="text-default"><i class="fa fa-exchange"></i> Cambiar estado de trámite externo</span>',
+                            title   : '<span class="text-default"><i class="fa fa-sync-alt"></i> Cambiar estado de trámite externo</span>',
                             message : msg,
                             buttons : {
                                 cancelar : {
@@ -566,8 +566,8 @@
                                     label     : '<i class="fa fa-check"></i> Cambiar estado',
                                     className : "btn-success",
                                     callback  : function () {
+                                        var cl7 = cargarLoader("Guardando...")
                                         var nuevoEstado = $("#estadoExterno").val();
-                                        openLoader("Cambiando estado");
                                         $.ajax({
                                             type    : 'POST',
                                             url     : '${createLink(controller: "tramiteAdmin", action: "guardarEstado")}',
@@ -577,6 +577,7 @@
                                                 estado : nuevoEstado
                                             },
                                             success : function (msg) {
+                                                cl7.modal("hide")
                                                 var parts = msg.split("*");
                                                 if (parts[0] == 'OK') {
                                                     log(parts[1], 'success');
@@ -584,7 +585,6 @@
                                                         location.reload(true);
                                                     }, 500);
                                                 } else if (parts[0] == 'NO') {
-                                                    closeLoader();
                                                     log(parts[1], 'error');
                                                     setTimeout(function () {
                                                         location.reload(true);

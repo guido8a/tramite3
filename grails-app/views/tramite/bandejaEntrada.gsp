@@ -179,10 +179,14 @@
                 <th class="cabecera sortable ${params.sort == 'rltrdscr' ? (params.order + ' sorted') : ''}" data-sort="rltrdscr" data-order="${params.order}">Rol</th>
             </tr>
             </thead>
-            <tbody id="tabla_bandeja">
-
-            </tbody>
         </table>
+        <div class=""  style="width: 99.7%;height: 350px; overflow-y: auto; margin-top: -20px">
+            <table class="table-bordered table-condensed table-hover" width="100%">
+                <tbody id="tabla_bandeja">
+
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 

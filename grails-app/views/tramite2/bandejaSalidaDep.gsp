@@ -1,12 +1,4 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: gato
-  Date: 18/02/14
-  Time: 12:52 PM
---%>
-
-
-<%@ page import="happy.tramites.EstadoTramite; org.apache.commons.lang.WordUtils" contentType="text/html;charset=UTF-8" %>
+<%@ page import="tramites.EstadoTramite; org.apache.commons.lang.WordUtils" contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
     <meta name="layout" content="main2">
@@ -19,22 +11,14 @@
 
     .etiqueta {
         float       : left;
-        /*width: 100px;*/
         margin-left : 5px;
-        /*margin-top: 5px;*/
     }
 
-    /*.alert {*/
-    /*padding : 0;*/
-    /*}*/
     .alertas {
         float       : left;
-        /*width       : 100px;*/
-        /*height      : 40px;*/
         margin-left : 20px;
         padding     : 10px;
         cursor      : pointer;
-        /*margin-top: -5px;*/
     }
 
     .alert-blanco {
@@ -94,10 +78,6 @@
     }
 
     .letra {
-
-        /*font-family: "Arial Black", arial-black;*/
-        /*background-color: #7eb75e;*/
-        /*background-color:#faebc9;*/
         background-color : #8fc6f3;
     }
 
@@ -111,7 +91,6 @@
     }
 
     </style>
-    %{--<link href="${resource(dir: 'css', file: 'custom/loader.css')}" rel="stylesheet">--}%
 </head>
 
 <body>
@@ -119,44 +98,43 @@
 <div class="row" style="margin-top: 0px; margin-left: 1px">
 
     <span class="grupo">
-        <label class="well well-sm letra" style="text-align: center">
-            BANDEJA DE SALIDA DEPARTAMENTO
+        <label class="well well-sm letra text-info" style="text-align: center">
+            <i class="fa fa-hand-point-left fa-2x text-info"></i> BANDEJA DE SALIDA DEPARTAMENTO
         </label>
     </span>
 
     <span class="grupo">
-        <label class="well well-sm" style="text-align: center">
-            Departamento: ${persona?.departamento?.descripcion}
+        <label class="well well-sm" style="text-align: center;">
+            <strong class="text-success">Departamento:</strong> ${persona?.departamento?.descripcion}
         </label>
     </span>
 </div>
 
 <div class="btn-toolbar toolbar" style="margin-top: 10px !important">
     <div class="btn-group">
+        <a href="#" class="btn btn-primary btnBuscar"><i class="fa fa-search"></i> Buscar</a>
 
-        <a href="#" class="btn btn-primary btnBuscar"><i class="fa fa-book"></i> Buscar</a>
-
-        <g:link action="" class="btn btn-success btnActualizar">
-            <i class="fa fa-refresh"></i> Actualizar
+        <g:link action="" class="btn btn-info btnActualizar">
+            <i class="fa fa-sync-alt"></i> Actualizar
         </g:link>
-        <g:link action="" class="btn btn-info btnEnviar">
-            <i class="fa fa-pencil"></i> Enviar
+        <g:link action="" class="btn btn-success btnEnviar">
+            <i class="fa fa-paper-plane"></i> Enviar
         </g:link>
     </div>
 
     <div style="float: right">
         <div data-type="" class="alert borrador alertas" clase="E001">
-            (<span id="numBor"></span>)
-        ${WordUtils.capitalizeFully(EstadoTramite.findByCodigo('E001').descripcion)}
+            <span id="numBor" class="badge badge-light"></span>
+        ${WordUtils.capitalizeFully(tramites.EstadoTramite.findByCodigo('E001').descripcion)}
         </div>
 
         <div data-type="enviado" class="alert enviado alertas" clase="E003">
-            (<span id="numEnv"></span>)
+            <span id="numEnv" class="badge badge-light"></span>
         ${WordUtils.capitalizeFully(EstadoTramite.findByCodigo('E003').descripcion)}
         </div>
 
         <div data-type="noRecibido" class="alert alert-danger alertas" clase="alerta">
-            (<span id="numNoRec"></span>)
+            <span id="numNoRec" class="badge badge-light"></span>
         No recibidos
         </div>
     </div>
@@ -164,7 +142,7 @@
 
 <div class="buscar" hidden="hidden" style="margin-bottom: 20px">
     <fieldset>
-        <legend>Búsqueda</legend>
+        <legend>Búsqueda de trámites</legend>
 
         <div>
             <div class="col-md-2">
@@ -179,12 +157,12 @@
 
             <div class="col-md-2" style="margin-left: 130px">
                 <label>Fecha envío</label>
-                <elm:datepicker name="fechaBusqueda" class="datepicker form-control" value=""/>
+                <input name="fechaBusqueda" id='datetimepicker1' type='text' class="form-control"/>
             </div>
 
             <div style="padding-top: 25px">
-                <a href="#" name="busqueda" class="btn btn-success btnBusqueda"><i
-                        class="fa fa-check-square-o"></i> Buscar</a>
+                <a href="#" name="busqueda" class="btn btn-primary btnBusqueda"><i
+                        class="fa fa-search"></i> Buscar</a>
 
                 <a href="#" name="salir" class="btn btn-danger btnSalir"><i class="fa fa-times"></i> Cerrar</a>
             </div>
@@ -200,22 +178,28 @@
 
         <table class="table table-bordered  table-condensed table-hover">
             <thead>
-            <tr>
-                <th class="cabecera sortable ${params.sort == 'trmtcdgo' ? (params.order + ' sorted') : ''}" data-sort="trmtcdgo" data-order="${params.order}">Documento</th>
-                <th>De</th>
-                <th class="cabecera sortable ${params.sort == 'trmtfccr' ? (params.order + ' sorted') : ''}" data-sort="trmtfccr" data-order="${params.order}">Fec. Creación</th>
-                <th class="cabecera sortable ${params.sort == 'prtrdpto' ? (params.order + ' sorted') : ''}" data-sort="prtrdpto" data-order="${params.order}">Para</th>
-                <th>Destinatario</th>
-                <th class="cabecera sortable ${params.sort == 'trmttppd' ? (params.order + ' sorted') : ''}" data-sort="trmttppd" data-order="${params.order}">Prioridad</th>
-                <th class="cabecera sortable ${params.sort == 'trmtfcen' ? (params.order + ' sorted') : ''}" data-sort="trmtfcen" data-order="${params.order}">Fecha Envío</th>
-                <th class="cabecera sortable ${params.sort == 'trmtfcbq' ? (params.order + ' sorted') : ''}" data-sort="trmtfcbq" data-order="${params.order}">F. Límite Recepción</th>
-                <th class="cabecera sortable ${params.sort == 'edtrdscr' ? (params.order + ' sorted') : ''}" data-sort="edtrdscr" data-order="${params.order}">Estado</th>
-                <th>Enviar</th>
+            <tr style="width: 100%">
+                <th style="width: 12%" class="cabecera sortable ${params.sort == 'trmtcdgo' ? (params.order + ' sorted') : ''}" data-sort="trmtcdgo" data-order="${params.order}">Documento</th>
+                <th style="width: 4%">De</th>
+                <th style="width: 10%" class="cabecera sortable ${params.sort == 'trmtfccr' ? (params.order + ' sorted') : ''}" data-sort="trmtfccr" data-order="${params.order}">Fecha Creación</th>
+                <th style="width: 4%" class="cabecera sortable ${params.sort == 'prtrdpto' ? (params.order + ' sorted') : ''}" data-sort="prtrdpto" data-order="${params.order}">Para</th>
+                <th style="width: 29%">Destinatario</th>
+                <th style="width: 7%" class="cabecera sortable ${params.sort == 'trmttppd' ? (params.order + ' sorted') : ''}" data-sort="trmttppd" data-order="${params.order}">Prioridad</th>
+                <th style="width: 10%" class="cabecera sortable ${params.sort == 'trmtfcen' ? (params.order + ' sorted') : ''}" data-sort="trmtfcen" data-order="${params.order}">Fecha Envío</th>
+                <th style="width: 10%" class="cabecera sortable ${params.sort == 'trmtfcbq' ? (params.order + ' sorted') : ''}" data-sort="trmtfcbq" data-order="${params.order}">Fecha Límite Recepción</th>
+                <th style="width: 8%" class="cabecera sortable ${params.sort == 'edtrdscr' ? (params.order + ' sorted') : ''}" data-sort="edtrdscr" data-order="${params.order}">Estado</th>
+                <th style="width: 6%">Enviar</th>
+                <th style="width: 1%"></th>
             </tr>
             </thead>
-            <tbody id="tabla_bandeja">
-            </tbody>
         </table>
+        <div class=""  style="width: 99.7%;height: 350px; overflow-y: auto; margin-top: -20px">
+            <table class="table-bordered table-condensed table-hover" width="100%">
+                <tbody id="tabla_bandeja">
+
+                </tbody>
+            </table>
+        </div>
 
     </div>
 </div>
@@ -240,15 +224,26 @@
 </div>
 
 <script type="text/javascript">
+
+    $(function () {
+        $('#datetimepicker1').datetimepicker({
+            locale: 'es',
+            format: 'DD-MM-YYYY',
+            showClose: true,
+            icons: {
+                close: 'closeText'
+            }
+        });
+    });
+
     function cargarBandeja() {
         var memorando = $("#memorando").val();
         var asunto = $("#asunto").val();
-        var fecha = $("#fechaBusqueda_input").val();
+        var fecha = $("#fechaBusqueda").val();
         var $sorted = $(".sorted");
         var sort = $sorted.data("sort");
         var order = $sorted.data("order");
 
-        $(".qtip").hide();
         $("#tabla_bandeja").html("").append($("<div style='width:100%; text-align: center;'/>").append(spinnerSquare64));
 
         var datos = {
@@ -278,8 +273,7 @@
     }
 
     function doEnviar(imprimir, strIds) {
-//            console.log("enviar????")
-        openLoader("Enviando trámites");
+        var cl9 = cargarLoader("Enviando...")
         $.ajax({
             type    : "POST",
             url     : "${g.createLink(controller: 'tramite2',action: 'enviarVarios')}",
@@ -289,23 +283,16 @@
                 type   : 'download'
             },
             success : function (msg) {
-                closeLoader();
-//                            console.log(msg);
+                cl9.modal("hide")
                 var parts = msg.split('_');
                 if (parts[0] == 'ok') {
                     if (!imprimir)
-//                        cargarBandeja(true);
                         log('Trámites Enviados', 'success');
                     if (imprimir) {
-                        openLoader();
                         location.href = "${g.createLink(controller: 'tramiteExport' ,action: 'imprimirGuia')}?ids=" + strIds + "&departamento=" + '${persona?.departamento?.descripcion}';
-                        closeLoader();
-//                                    console.log("llego")
                     }
                 } else {
                     log('No es posible enviar el trámite!<br><strong>' +  parts[1] + '</strong>', 'error');
-//                        cargarBandeja(true);
-                    %{--location.href = "${g.createLink(action: 'errores1')}";--}%
                 }
                 cargarBandeja();
             }
@@ -345,8 +332,6 @@
         var tieneAlerta = $tr.hasClass("alerta");
         var tieneAnexo = $tr.hasClass("conAnexo");
 
-//                var tienePrincipal = $tr.attr("principal").toString() != '0' && $tr.attr("principal").toString() != $tr.attr("id");
-
         var puedeImprimir = $tr.hasClass("imprimir");
         var puedeDesenviar = $tr.hasClass("desenviar");
 
@@ -355,7 +340,7 @@
         var copia = {
             separator_before : true,
             label            : "Crear Copia",
-            icon             : "fa fa-files-o",
+            icon             : "fa fa-copy",
             action           : function () {
                 $.ajax({
                     type    : 'POST',
@@ -434,13 +419,11 @@
             action : function (e) {
                 $.ajax({
                     type    : 'POST',
-                    %{--url     : '${createLink(action: 'guardarRecibir')}/' + id,--}%
                     url     : '${createLink(controller: 'externos', action: 'recibirTramiteExterno')}/' + id,
                     success : function (msg) {
                         var parts = msg.split('_');
                         openLoader();
                         resetValues();
-//                        cargarBandeja(true);
                         closeLoader();
                         if (parts[0] == 'NO') {
                             log(parts[1], "error");
@@ -544,13 +527,11 @@
             action : function (e) {
                 $.ajax({
                     type    : 'POST',
-                    %{--url     : '${createLink(action: 'guardarRecibir')}/' + id,--}%
                     url     : '${createLink(controller: 'tramite', action: 'saveDEX')}/' + id,
                     success : function (msg) {
                         var parts = msg.split('_');
                         openLoader();
                         resetValues()
-//                        cargarBandeja(true);
                         closeLoader();
                         if (parts[0] == 'NO') {
                             log(parts[1], "error");
@@ -577,7 +558,6 @@
                     },
                     success : function (msg) {
                         if (msg == "ok"){
-                            %{--window.open("${resource(dir:'tramites')}/" + archivo + ".pdf");--}%
                             var timestamp = new Date().getTime();
                             location.href = "${createLink(controller:'tramiteExport', action:'crearPdf')}?id=" + id + "&type=download" + "&enviar=1" + "&timestamp=" + timestamp;
                         }
@@ -611,12 +591,6 @@
             icon  : "fa fa-sitemap",
             url   : '${createLink(controller: 'tramite3', action: 'arbolTramite')}/' + id + "?b=bsp"
         }; //arbol
-
-        %{--var crearHermano = {--}%
-        %{--label : "Agregar documento al trámite",--}%
-        %{--icon  : "fa fa-paste",--}%
-        %{--url   : '${createLink(controller: "tramite2", action: "crearTramiteDep")}?padre=' + padre + '&hermano=' + id + "&buscar=1&esRespuestaNueva=N"--}%
-        %{--}; //crear hermano--}%
 
         var crearHermano = {
             label  : "Agregar documento al trámite",
@@ -672,13 +646,13 @@
 
         var editar = {
             label : "Editar",
-            icon  : "fa fa-pencil",
+            icon  : "fa fa-edit",
             url   : "${g.createLink(action: 'redactar',controller: 'tramite')}/" + id
         }; //editar
 
         var editarSumilla = {
             label : "Editar",
-            icon  : "fa fa-pencil",
+            icon  : "fa fa-edit",
             url   : "${g.createLink(controller: 'tramite2', action: 'crearTramiteDep')}/" + id + "?esRespuestaNueva=" + esRespuestaNueva
         }; //editar sumilla
 
@@ -688,13 +662,12 @@
             url   : '${createLink(controller: 'documentoTramite', action: 'verAnexos')}/' + id
         }; //anexos
 
-
         var anular = {
             label  : 'Anular trámite',
-            icon   : "fa fa-close",
+            icon   : "fa fa-ban",
             action: function () {
                 $.ajax({
-                   type: 'POST',
+                    type: 'POST',
                     url: "${createLink(controller: 'tramite2', action: 'revisarHijos')}",
                     data:{
                         id: id
@@ -734,7 +707,6 @@
                                                         openLoader("Anulando");
                                                         $.ajax({
                                                             type    : 'POST',
-                                                            %{--url     : '${createLink(controller: "tramiteAdmin", action: "anularSalida")}',--}%
                                                             url     : '${createLink(controller: "tramiteAdmin", action: "anularNuevo")}',
                                                             data    : {
                                                                 id    : id,
@@ -774,7 +746,6 @@
 
             }
         };//anular
-
 
         var desenviar = {
             label  : "Quitar el enviado",
@@ -834,14 +805,12 @@
                                                     log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
                                                     if (parts[0] == "OK") {
                                                         setTimeout(function () {
-//                                                                location.reload(true);
                                                             $("#bloqueo-warning").hide();
                                                             location.href = "${createLink(controller: "tramite2", action: "bandejaSalidaDep")}";
                                                         }, 1000);
                                                         cargarBandeja();
                                                     } else {
-                                                        resetValues()
-//                                                        cargarBandeja(true)
+                                                        resetValues();
                                                         log("Envío del trámite cancelado", 'error')
                                                         closeLoader();
                                                     }
@@ -849,7 +818,6 @@
                                             });
                                         } else {
                                             log('No seleccionó ninguna persona', 'error')
-//
                                         }
                                     }
                                 };
@@ -875,8 +843,8 @@
                     id      : "dlgJefe",
                     title   : "Añadir observaciones al trámite",
                     message : "¿Está seguro de querer añadir observaciones al trámite <b>" + codigo + "</b>?</br><br/>" +
-                    "Escriba las observaciones: " +
-                    "<textarea id='txaObsJefe' style='height: 130px;' class='form-control'></textarea>",
+                        "Escriba las observaciones: " +
+                        "<textarea id='txaObsJefe' style='height: 130px;' class='form-control'></textarea>",
                     buttons : {
                         cancelar : {
                             label     : '<i class="fa fa-times"></i> Cancelar',
@@ -912,7 +880,6 @@
             }
         };
 
-        //                if (!revisado) {
         items.header.label = "Acciones";
         if (!esSumilla) {
             items.ver = ver;
@@ -941,7 +908,6 @@
         if (puedeDesenviar) {
             items.desenviar = desenviar;
         }
-        //                }
         if (esDex && porEnviar) {
             items.enviarDex = enviarDex
         }
@@ -1007,10 +973,7 @@
             $(".buscar").attr("hidden", true);
             $("#memorando").val("");
             $("#asunto").val("");
-            $("#fechaBusqueda_input").val("");
-            $("#fechaBusqueda_day").val("");
-            $("#fechaBusqueda_month").val("");
-            $("#fechaBusqueda_year").val("");
+            $("#datetimepicker1").val("");
             cargarBandeja();
         });
 
