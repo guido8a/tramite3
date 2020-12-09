@@ -24,10 +24,8 @@
     <body>
 
         <div style="text-align: center; margin-top: 10px; height: ${(flash.message) ? '700' : '630'}px;" class="well">
-            %{--<h1 class="titl" style="font-size: 38px; color: #06a; font-family:'Book Antiqua'; margin-top: -20px;">Nuevo S.A.D.</h1>--}%
             <div class="page-header" style="margin-top: 10px;">
                 <h1>Trámites</h1>
-                %{--</div>--}%
                 <h3>
                     <p class="text-info">GOBIERNO AUTÓNOMO DESCENTRALIZADO PROVINCIA DE ...</p>
 
@@ -35,7 +33,6 @@
                 </h3>
             </div>
 
-            %{--<h1 class="titl" style="font-size: 24px; color: #06a">Ingreso al Sistema</h1></div>--}%
             <elm:flashMessage tipo="${flash.tipo}" icon="${flash.icon}"
                               clase="${flash.clase}">${flash.message}</elm:flashMessage>
 
@@ -55,7 +52,6 @@
                 </div>
 
 
-                %{--<div style="text-align: center ; color:#004060; margin-top:120px; font-size: 10px;">Desarrollado por: TEDEIN S.A. Versión ${message(code: 'version', default: '1.1.0x')}</div>--}%
                 <p class="pull-left" style="font-size: 10px;">
                     <a href="#" id="aCreditos">
                         www.tedein.com.ec
@@ -74,7 +70,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">Ingreso a S.A.D. web</h4>
+                        <h4 class="modal-title">Ingreso a Trámites</h4>
                     </div>
 
                     <div class="modal-body" style="width: 280px; margin: auto">
@@ -83,7 +79,6 @@
                                 <label class="col-md-5" for="login">Usuario</label>
 
                                 <div class="controls col-md-5">
-                                    %{--<input type="text" id="login" placeholder="Usuario">--}%
                                     <input name="login" id="login" type="text" class="form-control required"
                                            placeholder="Usuario" required autofocus style="width: 160px;">
                                 </div>
@@ -93,7 +88,6 @@
                                 <label class="col-md-5" for="pass">Contraseña</label>
 
                                 <div class="controls col-md-5">
-                                    %{--<input type="password" id="pass" placeholder="Usuario">--}%
                                     <input name="pass" id="pass" type="password" class="form-control required"
                                            placeholder="Contraseña" required style="width: 160px;">
                                 </div>
@@ -111,7 +105,6 @@
                 </div>
             </div>
         </div>
-
 
         <div id="divCreditos" class="hidden">
             <div class="creditos">
@@ -134,14 +127,16 @@
             var $frm = $("#frmLogin");
             function doLogin() {
                 if ($frm.valid()) {
-                    $("#btn-login").replaceWith(spinner);
+                    // $("#btn-login").replaceWith(spinner);
+                    cargarLoader("Cargando...");
                     $("#frmLogin").submit();
                 }
             }
 
             function doPass() {
                 if ($("#frmPass").valid()) {
-                    $("#btn-pass").replaceWith(spinner);
+                    // $("#btn-pass").replaceWith(spinner);
+                    cargarLoader("Cargando...");
                     $("#frmPass").submit();
                 }
             }

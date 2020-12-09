@@ -3,7 +3,7 @@
 
 <html xmlns="http://www.w3.org/1999/html">
 <head>
-    <title>Proyecto FAREPS</title>
+    <title>Trámites</title>
     <meta name="layout" content="main"/>
     <style type="text/css">
     @page {
@@ -13,45 +13,24 @@
 
     .item {
         width: 260px;
-        height: 225px;
+        height: 260px;
         float: left;
         margin: 4px;
         font-family: 'open sans condensed';
-        background-color: #e7f5f1;
-        border: 1px;
-        border-color: #5c6e80;
-        border-style: solid;
-    }
-    .item2 {
-        width: 660px;
-        height: 160px;
-        float: left;
-        margin: 4px;
-        font-family: 'open sans condensed';
-        background-color: #eceeff;
-        border: 1px;
-        border-color: #5c6e80;
-        border-style: solid;
+        border: none;
+
     }
 
     .imagen {
-        width: 200px;
-        height: 140px;
+        width: 160px;
+        height: 160px;
         margin: auto;
         margin-top: 10px;
-    }
-    .imagen2 {
-        width: 180px;
-        height: 130px;
-        margin: auto;
-        margin-top: 10px;
-        margin-right: 40px;
-        float: right;
     }
 
     .texto {
         width: 90%;
-        /*height: 50px;*/
+        height: 50px;
         padding-top: 0px;
         margin: auto;
         margin: 8px;
@@ -62,8 +41,7 @@
     .fuera {
         margin-left: 15px;
         margin-top: 20px;
-        /*background-color: #317fbf; */
-        background-color: rgba(114, 131, 147, 0.9);
+        background-color: rgba(200, 200, 200, 0.9);
         border: none;
     }
 
@@ -75,150 +53,102 @@
         margin-top: 20px;
     }
 
-    body {
-        background : #e5e4e7;
-    }
+    .imagen:hover {filter: saturate(180%);}
+
+    .item:hover .imagen {-webkit-transform:scale(1.3);transform:scale(1.3);}
+    .item {overflow:hidden;}
+
     </style>
 </head>
 
 <body>
 <div class="dialog">
-    <g:set var="inst" value="${utilitarios.Parametros.get(1)}"/>
-
-    <div style="text-align: center;"><h2 class="titl">
-        %{--            <p class="text-warning">${inst.institucion}</p>--}%
-        <p class="text-warning">Sistema de Administración del Proyeto FAREPS</p>
-    </h2>
+    <div style="text-align: center;"><h2 class="titl"
+    >Trámites<br>
+        SISTEMA DE ADMINISTRACIÓN DOCUMENTAL<br/>
+        Tedein S.A.</h2>
     </div>
 
-    <div class="body ui-corner-all" style="width: 860px;position: relative;margin: auto;margin-top: 40px;height: 280px; ">
+    <g:if test="${!(session.usuario.getPuedeDirector() || session.usuario.getPuedeJefe())}">
 
-        <a href= "${createLink(controller:'proyecto', action: 'proy', id:1)}" style="text-decoration: none">
-            <div class="ui-corner-all item fuera">
-                <div class="ui-corner-all item" style="padding-left: 10px; padding-right: 10px">
-                    <div class="imagen">
-                        <asset:image src="apli/proyecto.png" title="Marco lógico de Proyecto"  width="100%"
-                                     height="100%"/>
-                    </div>
-                    <span class="texto">
-                        <span class="text-success" style="text-align: center"><strong>Proyecto</strong></span>
-                    </span>
-                    <div style="display: inline">
-                        Fortalecimiento de los Actores Rurales de la Economía Popular y Solidaria
-                    </div>
+        <div class="body ui-corner-all" style="width: 575px;position: relative;margin: auto;margin-top: 40px;height: 300px; ">
+
+        <g:if test="${session.usuario.esTriangulo()}">
+            <a href= "${createLink(controller:'tramite3', action: 'bandejaEntradaDpto')}" style="text-decoration: none" onclick="cargarLoader('Cargando...')">
+        </g:if>
+        <g:else>
+            <a href= "${createLink(controller:'tramite', action: 'bandejaEntrada')}" style="text-decoration: none" onclick="cargarLoader('Cargando...')">
+        </g:else>
+        <div class="ui-corner-all  item fuera" style="background-color: #78b665">
+            <div class="ui-corner-all ui-widget-content item">
+                <div class="imagen">
+                    <asset:image src="apli/entrada.png" style="padding: 10px; width: 100%; height:100%"/>
                 </div>
+
+%{--                <div class="texto"><span class="text-success"><strong>Bandeja de entrada</strong></span>: trámites que le han enviado y pendientes de contestación</div>--}%
+                <div class="texto"><span class="text-success"><strong>Bandeja de entrada</strong></span>: trámites que ingresan y pendientes de contestación</div>
             </div>
+        </div>
         </a>
 
-        <a href= "${createLink(controller:'taller', action: 'listTaller')}" style="text-decoration: none">
-            <div class="ui-corner-all item fuera">
-                <div class="ui-corner-all item" style="padding-left: 10px; padding-right: 10px">
-                    <div class="imagen">
-                        <asset:image src="apli/taller.png" title="Talleres" width="100%" height="100%"/>
-                    </div>
-                    <span class="texto">
-                        <span class="text-success"><strong>Talleres</strong></span>
-                    </span>
-                    <div style="display: inline">
-                        Fortalecimiento de las capacidades de las familias y sus organizaciones
-                    </div>
+        <g:if test="${session.usuario.esTriangulo()}">
+            <a href= "${createLink(controller:'tramite2', action: 'bandejaSalidaDep')}" style="text-decoration: none" onclick="cargarLoader('Cargando...')">
+        </g:if>
+        <g:else>
+            <a href= "${createLink(controller:'tramite2', action: 'bandejaSalida')}" style="text-decoration: none" onclick="cargarLoader('Cargando...')">
+        </g:else>
+        <div class="ui-corner-all item fuera" style="background-color: #5183e7">
+            <div class="ui-corner-all ui-widget-content item">
+                <div class="imagen">
+                    <asset:image src="apli/salida.png" style="padding: 10px; width: 100%; height:100%"/>
                 </div>
+
+%{--                <div class="texto"><span class="text-info"><strong>Bandeja de salida</strong></span>: Documentos por enviar y trámites que no le han recibido</div>--}%
+                <div class="texto"><span class="text-info"><strong>Bandeja de salida</strong></span>: trámites por enviar y que no han sido recibidos</div>
             </div>
+        </div>
         </a>
 
-        <a href= "${createLink(controller:'convenio', action: 'convenio')}" style="text-decoration: none">
-            <div class="ui-corner-all item fuera">
-                <div class="ui-corner-all item" style="padding-left: 10px; padding-right: 10px">
-                    <div class="imagen">
-                        <asset:image src="apli/convenio.png" title="Convenios" width="100%" height="100%"/>
-                    </div>
-                    <span class="texto">
-                        <span class="text-success"><strong>Convenios</strong></span>
-                    </span>
-                    <div style="display: inline">
-                        Convenios...
-                    </div>
-                </div>
-            </div>
-        </a>
+    </g:if>
 
-        <a href= "${createLink(controller:'proyecto', action: 'registroProyecto')}" style="text-decoration: none">
-            <div class="ui-corner-all item fuera">
-                <div class="ui-corner-all item" style="padding-left: 10px; padding-right: 10px">
-                    <div class="imagen">
-                        <asset:image src="apli/plan.png" title="Plan Operativo Anual" width="100%" height="100%"/>
-                    </div>
-                    <span class="texto">
-                        <span class="text-success"><strong>Plan Operativo Anual</strong></span>
-                    </span>
-                    <div style="display: inline">
-                        POA...
-                    </div>
-                </div>
-            </div>
-        </a>
+    <div style="text-align: center; margin-top: 70px">
 
-        <a href= "${createLink(controller:'proyecto', action: 'registroProyecto')}" style="text-decoration: none">
-            <div class="ui-corner-all item fuera">
-                <div class="ui-corner-all item" style="padding-left: 10px; padding-right: 10px">
-                    <div class="imagen">
-                        <asset:image src="apli/plan.png" title="Plan Operativo Anual" width="100%" height="100%"/>
-                    </div>
-                    <span class="texto">
-                        <span class="text-success"><strong>Administración del POA</strong></span>
-                    </span>
-                    <div style="display: inline">
-                        Avales...
-                    </div>
-                </div>
-            </div>
-        </a>
+        <g:if test="${session.usuario.getPuedeDirector()}">
+            <g:link controller="departamento" action="arbolReportes" class="openImagenDir" params="[dpto: Persona.get(session.usuario.id).departamento.id, inicio: '1', dir: '1']">
+                <asset:image src="ingreso_adm.png" style="width: 360px"/>
+            </g:link>
+        </g:if>
 
-        <a href= "${createLink(controller:'proyecto', action: 'registroProyecto')}" style="text-decoration: none">
-            <div class="ui-corner-all item fuera">
-                <div class="ui-corner-all item" style="padding-left: 10px; padding-right: 10px">
-                    <div class="imagen">
-                        <asset:image src="apli/plan.png" title="Plan Operativo Anual" width="100%" height="100%"/>
-                    </div>
-                    <span class="texto">
-                        <span class="text-success"><strong>Seguimiento</strong></span>
-                    </span>
-                    <div style="display: inline">
-                        Ejecución del POA...
-                    </div>
-                </div>
-            </div>
-        </a>
+        <g:if test="${session.usuario.getPuedeJefe()}">
+            <g:link controller="departamento" action="arbolReportes" class="openImagen" params="[dpto: Persona.get(session.usuario.id).departamento.id, inicio: '1']">
+                <asset:image src="ingreso_adm.png" style="width: 360px"/>
+            </g:link>
+        </g:if>
 
     </div>
-
 
 </div>
-<script type="text/javascript">
-    $(".fuera").hover(function () {
-        var d = $(this).find(".imagen,.imagen2")
-        d.width(d.width() + 10)
-        d.height(d.height() + 10)
+    <script type="text/javascript">
+        // $(".fuera").hover(function () {
+        //     var d = $(this).find(".imagen")
+        //     d.width(d.width() + 10)
+        //     d.height(d.height() + 10)
+        // }, function () {
+        //     var d = $(this).find(".imagen")
+        //     d.width(d.width() - 10)
+        //     d.height(d.height() - 10)
+        // })
 
-    }, function () {
-        var d = $(this).find(".imagen, .imagen2")
-        d.width(d.width() - 10)
-        d.height(d.height() - 10)
-    })
 
+        $(function () {
+            $(".openImagenDir").click(function () {
+                cargarLoader("Cargando...");
+            });
 
-    $(function () {
-        $(".openImagenDir").click(function () {
-            openLoader();
+            $(".openImagen").click(function () {
+                cargarLoader("Cargando....");
+            });
         });
-
-        $(".openImagen").click(function () {
-            openLoader();
-        });
-    });
-
-
-
-</script>
+    </script>
 </body>
 </html>
