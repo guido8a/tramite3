@@ -146,8 +146,8 @@
                 <g:if test="${tramite.deDepartamento}">
                     <g:link controller="tramite2" action="crearTramiteDep" id="${tramite.id}"
                             params="[esRespuesta: tramite.esRespuesta, esRespuestaNueva: tramite.esRespuestaNueva]"
-                            class="leave btn-editar btn btn-sm btn-azul btnRegresar" title="Editar encabezado">
-                        <i class="fa fa-pencil"></i>
+                            class="leave btn-editar btn btn-sm btn-primary btnRegresar" title="Editar encabezado">
+                        <i class="fa fa-edit"></i> Editar encabezado
                     </g:link>
                 </g:if>
                 <g:else>

@@ -125,17 +125,17 @@
     <div style="float: right">
         <div data-type="" class="alert borrador alertas" clase="E001">
             <span id="numBor" class="badge badge-light"></span>
-        ${WordUtils.capitalizeFully(tramites.EstadoTramite.findByCodigo('E001').descripcion)}
+            ${WordUtils.capitalizeFully(tramites.EstadoTramite.findByCodigo('E001').descripcion)}
         </div>
 
         <div data-type="enviado" class="alert enviado alertas" clase="E003">
             <span id="numEnv" class="badge badge-light"></span>
-        ${WordUtils.capitalizeFully(EstadoTramite.findByCodigo('E003').descripcion)}
+            ${WordUtils.capitalizeFully(EstadoTramite.findByCodigo('E003').descripcion)}
         </div>
 
         <div data-type="noRecibido" class="alert alert-danger alertas" clase="alerta">
             <span id="numNoRec" class="badge badge-light"></span>
-        No recibidos
+            No recibidos
         </div>
     </div>
 </div>
@@ -360,7 +360,7 @@
                                     bootbox.dialog({
                                         id      : "dlgCopiaPara",
                                         title   : '<i class="fa fa-files-o"></i> Copia para',
-                                        class   : "long",
+                                        class   : "modal-lg",
                                         message : msg,
                                         buttons : {
                                             cancelar : {
@@ -415,7 +415,7 @@
 
         var recibirExterno_old = {
             label  : 'Confirmar recepción',
-            icon   : "fa fa-check-square-o",
+            icon   : "fa fa-check",
             action : function (e) {
                 $.ajax({
                     type    : 'POST',
@@ -440,7 +440,7 @@
 
         var recibirExterno = {
             label  : 'Confirmar recepción destinatarios externos',
-            icon   : "fa fa-check-square-o",
+            icon   : "fa fa-user-check",
             action : function (e) {
                 $.ajax({
                     type    : "POST",
@@ -468,9 +468,10 @@
                                 }
                             };
                             buttons.desenviar = {
-                                label     : "<i class='fa fa-check-square-o'></i> Confirmar recepción",
-                                className : "btn-default",
+                                label     : "<i class='fa fa-save'></i> Confirmar recepción",
+                                className : "btn-success",
                                 callback  : function () {
+
                                     var ids = "";
                                     $(".chkOne").each(function () {
                                         if ($(this).hasClass("fa-check-square")) {
@@ -481,7 +482,7 @@
                                         }
                                     });
                                     if (ids) {
-                                        openLoader("");
+                                        var cl3 = cargarLoader("Guardando...");
                                         $.ajax({
                                             type    : "POST",
                                             url     : '${createLink(controller: 'externos', action:'recibirTramitesExternos_ajax')}',
@@ -490,6 +491,7 @@
                                                 ids : ids
                                             },
                                             success : function (msg) {
+                                                cl3.modal("hide")
                                                 var parts = msg.split("_");
                                                 log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
                                                 if (parts[0] == "OK") {
@@ -500,7 +502,6 @@
                                                     cargarBandeja();
                                                 } else {
                                                     resetValues();
-                                                    closeLoader();
                                                 }
                                             }
                                         });
@@ -704,7 +705,7 @@
                                                 callback  : function () {
                                                     var $txt = $("#aut");
                                                     if (validaAutorizacion($txt)) {
-                                                        openLoader("Anulando");
+                                                        var cl2 = cargarLoader("Anulando...");
                                                         $.ajax({
                                                             type    : 'POST',
                                                             url     : '${createLink(controller: "tramiteAdmin", action: "anularNuevo")}',
@@ -715,6 +716,7 @@
                                                                 aut   : $txt.val()
                                                             },
                                                             success : function (msg) {
+                                                                cl2.modal("hide");
                                                                 var parts = msg.split("*");
                                                                 if (parts[0] == 'OK') {
                                                                     log("Trámite anulado correctamente", 'success');
@@ -722,7 +724,6 @@
                                                                         location.href = "${createLink(controller: "tramite2", action: "bandejaSalidaDep")}";
                                                                     }, 500);
                                                                 } else if (parts[0] == 'NO') {
-                                                                    closeLoader();
                                                                     log(parts[1], 'error');
                                                                     setTimeout(function () {
                                                                         location.href = "${createLink(controller: "tramite2", action: "bandejaSalidaDep")}";
@@ -742,8 +743,6 @@
                         }
                     }
                 })
-
-
             }
         };//anular
 
@@ -854,11 +853,11 @@
                         },
                         recibir  : {
                             id        : 'btnEnviar',
-                            label     : '<i class="fa fa-thumbs-o-up"></i> Guardar',
+                            label     : '<i class="fa fa-save"></i> Guardar',
                             className : 'btn-success',
                             callback  : function () {
+                                var cl1 =  cargarLoader("Guardando...");
                                 var obs = $("#txaObsJefe").val();
-                                openLoader();
                                 $.ajax({
                                     type    : 'POST',
                                     url     : '${createLink(controller: 'tramite3', action: 'enviarTramiteJefe')}',
@@ -867,9 +866,9 @@
                                         obs : obs
                                     },
                                     success : function (msg) {
+                                        cl1.modal("hide");
                                         var parts = msg.split("_");
                                         cargarBandeja();
-                                        closeLoader();
                                         log(parts[1], parts[0] == "NO" ? "error" : "success");
                                     }
                                 });

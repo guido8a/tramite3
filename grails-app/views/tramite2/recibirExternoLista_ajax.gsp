@@ -1,14 +1,6 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: luz
-  Date: 15/07/15
-  Time: 12:04 PM
---%>
-
 <style type="text/css">
 .lista {
     height     : 300px;
-    /*background : red;*/
     overflow-x : hidden;
     overflow-y : auto;
 }
@@ -31,7 +23,7 @@ td {
 </g:if>
 <g:else>
 
-    <i class='fa fa-check-square-o fa-3x pull-left text-default text-shadow'></i>
+    <i class='fa fa-user-check fa-3x pull-left text-default text-shadow'></i>
 
     <p>
         ¿Está seguro que desea confirmar la recepción del trámite ${tramite.codigo}?<br/>Esta acción no se puede deshacer.
