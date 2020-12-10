@@ -81,8 +81,8 @@
 
     .quotes .box {
         position: relative;
-        width: 25vw;
-        height: 270px;
+        width: 35vw;
+        height: 300px;
         min-height: 100px;
         background: #f2f2f2;
         overflow: hidden;
@@ -91,6 +91,7 @@
         box-sizing: border-box;
         padding: 30px;
         box-shadow: -10px 25px 50px rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
     }
 
     .quotes .box::before {
@@ -109,7 +110,7 @@
     .quotes .box::after {
         content: '\201D';
         position: absolute;
-        bottom: -10%;
+        bottom: -20%;
         right: 5%;
         font-size: 120px;
         opacity: 0.2;
