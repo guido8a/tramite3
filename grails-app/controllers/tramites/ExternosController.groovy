@@ -68,7 +68,6 @@ class ExternosController {
 
                 def enviado = EstadoTramite.findByCodigo("E003")
                 def recibido = EstadoTramite.findByCodigo("E004")
-                //tambien puede recibir si ya esta en estado recibido (se pone en recibido cuando recibe el PARA)
                 if (pdt.tramite.estadoTramite != enviado && pdt.tramite.estadoTramite != recibido) {
                     return "<li>Se ha cancelado el proceso de recepción.<br/>Este trámite no puede ser gestionado.</li>"
                 }
@@ -93,7 +92,6 @@ class ExternosController {
 
                 pdtRecibe.fechaRecepcion = new Date()
                 pdtRecibe.save(flush: true)
-//                return "<li>Trámite ${c.rolPersonaTramite.descripcion} ${c.departamento ? c.departamento.descripcion : c.persona?.login} recibido correctamente</li>"
                 return ""
             } else {
                 return "<li>Ha ocurrido un error grave, no puede confirmar la recepción</li>"
@@ -128,7 +126,6 @@ class ExternosController {
                         def porEnviar = EstadoTramite.findByCodigo("E001")
                         def enviado = EstadoTramite.findByCodigo("E003")
                         def recibido = EstadoTramite.findByCodigo("E004")
-                        //tambien puede recibir si ya esta en estado recibido (se pone en recibido cuando recibe el PARA)
                         if (tramite.estadoTramite != enviado && tramite.estadoTramite != recibido) {
                             render "ERROR_Se ha cancelado el proceso de recepción.<br/>Este trámite no puede ser gestionado."
                             return
@@ -155,8 +152,6 @@ class ExternosController {
                         pdtRecibe.fechaRecepcion = new Date()
                         pdtRecibe.save(flush: true)
                         render "OK_Trámite recibido correctamente"
-
-
                     } else {
                         response.sendError(403)
                     }

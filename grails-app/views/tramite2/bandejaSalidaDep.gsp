@@ -449,14 +449,12 @@
                         id : id
                     },
                     success : function (msg) {
-                        //s.indexOf("oo") > -1
                         var buttons = {};
                         if (msg.indexOf("No puede") > -1) {
                             buttons.aceptar = {
                                 label     : "Aceptar",
                                 className : "btn-primary",
                                 callback  : function () {
-                                    openLoader();
                                     location.reload(true);
                                 }
                             }
@@ -471,7 +469,6 @@
                                 label     : "<i class='fa fa-save'></i> Confirmar recepción",
                                 className : "btn-success",
                                 callback  : function () {
-
                                     var ids = "";
                                     $(".chkOne").each(function () {
                                         if ($(this).hasClass("fa-check-square")) {

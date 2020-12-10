@@ -70,7 +70,7 @@
             <g:set var="clase" value="${clase + ' conPadre'}"/>
         </g:if>
 
-        <tr id="${row.trmt__id}" data-id="${row.trmt__id}"
+        <tr style="width: 100%;"  id="${row.trmt__id}" data-id="${row.trmt__id}"
             class="trTramite ${clase}"
             estado="${row.edtrcdgo}" %{--estado tramite codigo--}%
             de="${row.depr__id}" %{--id de la persona q crea el tram.--}%
@@ -79,22 +79,22 @@
             departamento="${row.deprdpto}" %{--dpto. de la pers. q crea el tramite--}%
             anio="${row.trmtfccr.format('yyyy')}" %{--fecha de creacion--}%
             padre="${row.trmtpdre}" %{--padre--}%>
-            <td title="${row.trmtasnt}" style="width: 145px;">
+            <td title="${row.trmtasnt}" style="width: 12%;">
                 <g:if test="${row.tptrcdgo == 'C'}">
-                    <i class="fa fa-eye-slash" style="margin-left: 10px"></i>
+                    <i class="fa fa-eye-slash"></i>
                 </g:if>
                 <g:if test="${row.trmtdctr > 0}">
                     <i class="fa fa-paperclip"></i>
                 </g:if>
                 ${row.trmtcdgo}
             </td>
-            <td>
+            <td style="width: 9%;">
                 ${row.deprdscr ?: row.deprdpto}
             </td>
-            <td style="width: 115px;">
+            <td style="width: 10%;">
                 ${row.trmtfccr.format("dd-MM-yyyy HH:mm")}
             </td>
-            <td>
+            <td style="width: 4%;">
                 <g:if test="${row.tpdccdgo == 'OFI'}">
                     EXT
                 </g:if>
@@ -102,7 +102,7 @@
                     ${row.prtrdpto}
                 </g:else>
             </td>
-            <td class="titleEspecial"
+            <td style="width: 25%;" class="titleEspecial"
                 title="<div style='max-height:150px; overflow-y:auto;'>${row.paratitl}</div>">%{--el title con los destinatarios y si recibieron o no--}%
                 <span class="para">
                     <g:if test="${row.prtrprsn}">%{--para persona (squi guarda la persona, interna o externa)--}%
@@ -130,21 +130,20 @@
                     </span>
                 </g:if>
             </td>
-            <td>
+            <td style="width: 7%;">
                 ${row.trmttppd}
             </td>
-            <td style="width: 115px;">
+            <td style="width: 10%;">
                 ${row.trmtfcen?.format('dd-MM-yyyy HH:mm')}
             </td>
-            <td style="width: 115px;">
+            <td style="width: 10%;">
                 ${row.trmtfcbq?.format('dd-MM-yyyy HH:mm')}
             </td>
-            <td>
+            <td style="width: 8%;">
                 ${row.edtrdscr}
             </td>
-            <td>
+            <td style="width: 5%;">
                 <g:if test="${row.edtrcdgo == 'E001' && !esEditor}">
-%{--                    <g:checkBox name="porEnviar" tramite="${row.trmt__id}" style="margin-left: 20px" class="form-control combo" checked="false"/>--}%
                     <div class="form-check form-check-inline">
                         <input class="form-check-input combo" type="checkbox" id="porEnviar" name="porEnviar" tramite="${row.trmt__id}">
                     </div>

@@ -197,7 +197,7 @@
             </tr>
             </thead>
         </table>
-        <div class=""  style="width: 99.7%;height: 350px; overflow-y: auto; margin-top: -20px">
+        <div style="width: 99.7%;height: 350px; overflow-y: auto; margin-top: -20px">
             <table class="table-bordered table-condensed table-hover" width="100%">
                 <tbody id="tabla_bandeja">
 

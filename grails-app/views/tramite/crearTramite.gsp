@@ -265,9 +265,7 @@
                                   tramite="${tramite}" tipo="pers"/>
             </div>
 
-
             <div class="col-xs-4 negrilla hide" id="divPara" style="margin-top: -10px"></div>
-
         </div>
 
         <div class="row">
@@ -403,7 +401,7 @@
                 <g:each in="${disponibles}" var="disp">
                     <g:if test="${disp.id.toInteger() < 0}">
                         <li data-id="${disp.id}" class="clickable ${disp.externo ? 'externo' : 'interno'}">
-                            <i class="fa fa-li ${disp.externo ? 'fa-paper-plane' : 'fa-building-o'}"></i> ${disp.label}
+                            <i class="fa fa-li ${disp.externo ? 'fa-paper-plane' : 'fa-building'}"></i> ${disp.label}
                         </li>
                     </g:if>
                     <g:else>
