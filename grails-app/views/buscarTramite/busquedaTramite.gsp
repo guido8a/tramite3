@@ -48,7 +48,7 @@
             </div>
             <div class="col-xs-2" style="padding-top: 5px; height: 63px;">
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="externo" name="externo"> <label class="text-info">Buscar externos</label>
+                    <input class="form-check-input combo" type="checkbox" id="externo" name="externo"> <label class="text-info">Buscar externos</label>
                 </div>
 
                 <a href="#" name="busqueda" class="btn btn-success btn-ajax" id="btnBusqueda"><i
@@ -186,7 +186,8 @@ desde el más reciente hasta el más antiguo</strong></span>
 
     $(".combo").click(function () {
         $('.btnBorrar').click();
-        if($(this).prop('checked') ==  true){
+        // if($(this).prop('checked') ==  true){
+        if($("#externo").is(':checked') ==  true){
             $(".contenedor").addClass('largo');
             $(".divExternos").removeClass('esconder')
         }else{
