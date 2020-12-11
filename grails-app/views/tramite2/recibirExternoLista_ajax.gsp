@@ -44,7 +44,7 @@ td {
                     <i class="chk chkAll fa fa-check-square fa-lg"></i>
                 </g:if>
                 <g:else>
-                    <i class="chk chkAll fa fa-square-o fa-lg"></i>
+                    <i class="chk chkAll fa fa-square fa-lg"></i>
                 </g:else>
             </th>
         </thead>

@@ -32,6 +32,7 @@
     <asset:stylesheet src="/apli/font-awesome.min.css"/>
     <asset:stylesheet src="/apli/CustomSvt.css"/>
     <asset:stylesheet src="/apli/tulpen/stylesheet.css"/>
+    <asset:stylesheet src="/apli/switcher.css"/>
 
 
 
@@ -65,6 +66,7 @@
 
 
     <asset:javascript src="/bootstrap-3.3.2/dist/js/bootstrap.min.js"/>
+    <asset:javascript src="/apli/jquery.switcher.min.js"/>
 
     <script type="text/javascript">
         var spinner = $('<asset:image src="apli/spinner32.gif" style="padding: 40px;"/>');

@@ -79,12 +79,12 @@
 <!-- botones -->
 <div class="btn-toolbar toolbar">
     <div class="btn-group">
-        <g:link action="redactar" class="btn btn-success btnSave">
+        %{--        <g:link action="redactar" class="btn btn-success btnSave">--}%
+        %{--            <i class="fa fa-save"></i> Guardar--}%
+        %{--        </g:link>--}%
+        <a href="#" class="btn btn-success" id="btnSave">
             <i class="fa fa-save"></i> Guardar
-        </g:link>
-%{--        <a href="#" class="btn btn-success btnSave">--}%
-%{--            <i class="fa fa-save"></i> Guardar--}%
-%{--        </a>--}%
+        </a>
         <g:if test="${tramite.padre || tramite.id}">
             <a href="#" class="btn btn-primary" id="btnDetalles">
                 <i class="fa fa-search"></i> Detalles
@@ -290,21 +290,30 @@
             </div>
 
             <div class="col-xs-2 negrilla" style="margin-top: 20px; width: 110px;" id="divCc">
-                <label for="cc"><input type="checkbox" name="cc" id="cc" ${cc != '' ? 'checked' : ''}/>
-                    Con copia
+                <label for="cc">
+                    <i class="fa fa-paste"></i> Con copia
                 </label>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="cc" name="cc" ${cc != '' ? 'checked' : ''}>
+                </div>
             </div>
 
             <div class="col-xs-2 negrilla hide" id="divConfidencial" style="margin-top: 20px; width: 125px;">
-                <label for="confi"><input type="checkbox" name="confi" id="confi" ${tramite.tipoTramite?.codigo == 'C' ? 'checked' : ''}/>
-                    Confidencial
+                <label for="confi">
+                    <i class="fa fa-user-secret"></i>  Confidencial
                 </label>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="confi" name="confi" ${tramite.tipoTramite?.codigo == 'C' ? 'checked' : ''}>
+                </div>
             </div>
 
             <div class="col-xs-2 negrilla hide" id="divAnexos" style="margin-top: 20px; width: 120px;">
-                <label for="anexo"><input type="checkbox" name="anexo" id="anexo" ${tramite.anexo == 1 ? 'checked' : ''}/>
-                    Con anexos
+                <label for="anexo">
+                    <i class="fa fa-paperclip"></i> Con anexos
                 </label>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="anexo" name="anexo" ${tramite.anexo == 1 ? 'checked' : ''}>
+                </div>
             </div>
 
             <div class="col-xs-2 negrilla hide" id="divAIP" style="margin-top: 20px; width: 120px;">
@@ -389,7 +398,7 @@
                 <g:each in="${disponibles}" var="disp">
                     <g:if test="${disp.id.toInteger() < 0}">
                         <li data-id="${disp.id}" class="clickable ${disp.externo ? 'externo' : 'interno'}">
-                            <i class="fa fa-li ${disp.externo ? 'fa-paper-plane' : 'fa-building-o'}"></i> ${disp.label}
+                            <i class="fa fa-li ${disp.externo ? 'fa-paper-plane' : 'fa-building'}"></i> ${disp.label}
                         </li>
                     </g:if>
                     <g:else>
@@ -433,7 +442,7 @@
                         </g:if>
                         <g:else>
                             <li data-id="-${disp.departamento.id}" class="clickable ${disp.departamento.externo == 1 ? 'externo' : 'interno'}">
-                                <i class="fa fa-li ${disp.departamento.externo ? 'fa-paper-plane' : 'fa-building-o'}"></i> ${disp.departamento.descripcion}
+                                <i class="fa fa-li ${disp.departamento.externo ? 'fa-paper-plane' : 'fa-building'}"></i> ${disp.departamento.descripcion}
                             </li>
                         </g:else>
                     </g:each>
@@ -462,6 +471,8 @@
     </div><!-- /.modal-dialog -->
 </div>
 <script type="text/javascript">
+
+    $.switcher('input[type=checkbox]');
 
     function destinatarioExiste(tipo, id) {
         var total = 0;
@@ -616,7 +627,8 @@
     }
 
     function validarCheck() {
-        var checked = $("#cc").is(":checked") && $("#cc").is(":visible");
+        // var checked = $("#cc").is(":checked") && $("#cc").is(":visible");
+        var checked = $("#cc").is(":checked");
         if (checked) {
             $("#divCopia").removeClass("hide");
         } else {
@@ -642,7 +654,7 @@
                     icon = "<i class='fa-li fa fa-user'></i>";
                     break;
                 case "direccion":
-                    icon = "<i class='fa-li fa fa-building-o'></i>";
+                    icon = "<i class='fa-li fa fa-building'></i>";
                     break;
             }
             $li.append(icon);
@@ -675,7 +687,7 @@
                 prioridad : $("#prioridad").val()
             },
             success : function (msg) {
-                var parts = msg.split("_")
+                var parts = msg.split("_");
                 if (parts[0] == "OK") {
                     $('#respuesta').text(parts[1]);
                 }
@@ -891,12 +903,10 @@
             return false;
         });
 
-        <g:if test="${!bloqueo}">
-        $(".btnSave").click(function () {
-
+        $("#btnSave").click(function () {
             var tpdc = $("#tipoDocumento").val();
+%{--            <g:if test="${!bloqueo}">--}%
             if ($(".frmTramite").valid()) {
-
                 $.ajax({
                     type    : "POST",
                     url     : "${createLink(controller: 'tramite2', action: 'confirmacion_ajax')}",
@@ -925,7 +935,6 @@
                                         $("#ulSeleccionados li").each(function () {
                                             cc += $(this).data("id") + "_";
                                         });
-
                                         $("#hiddenCC").val(cc);
                                         $(".frmTramite").submit();
                                         $(this).attr("disabled", true);
@@ -936,10 +945,12 @@
                     }
                 });
             }
-            return false;
+%{--            </g:if>--}%
+%{--            <g:else>--}%
+%{--            bootbox.alert('<i class="fa fa-exclamation-triangle text-danger fa-3x"></i>' + '<strong style="font-size: 14px">' + "   Acción bloqueada por trámites no recibidos" + '</strong>')--}%
+%{--            return false;--}%
+%{--            </g:else>--}%
         });
-
-        </g:if>
 
         var validator = $(".frmTramite").validate({
             errorClass     : "help-block",

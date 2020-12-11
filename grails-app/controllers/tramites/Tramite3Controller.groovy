@@ -7,7 +7,7 @@ import utilitarios.Parametros
 
 class Tramite3Controller{
 
-    def diasLaborablesServiceOld
+    def diasLaborablesService
     def tramitesService
     def dbConnectionService
 
@@ -373,7 +373,6 @@ class Tramite3Controller{
                 }
             }
 
-
             def externos = ["DEX", "OFI"]
             def rolPP = RolPersonaTramite.findByCodigo('R001')
             if (externos.contains(tramite.tipoDocumento.codigo)) {
@@ -467,7 +466,7 @@ class Tramite3Controller{
                 }
                 if (pdtPara.size() > 0) {
                     def limite = ahora
-                    limite = diasLaborablesServiceOld.fechaMasTiempo(limite, tramite.prioridad.tiempo)
+                    limite = diasLaborablesService.fechaMasTiempo(limite, tramite.prioridad.tiempo)
                     if (!limite) {
                         flash.message = "Ha ocurrido un error al calcular la fecha límite: " + limite
                         redirect(controller: 'tramite', action: 'errores')
@@ -1034,7 +1033,7 @@ class Tramite3Controller{
 
                 def limite = hoy
 
-                limite = diasLaborablesServiceOld.fechaMasTiempo(limite, tramite.prioridad.tiempo)
+                limite = diasLaborablesService.fechaMasTiempo(limite, tramite.prioridad.tiempo)
                 if (!limite) {
                     flash.message = "Ha ocurrido un error al calcular la fecha límite: "
                     redirect(controller: 'tramite', action: 'errores')

@@ -190,10 +190,10 @@
             <thead>
             <tr style="width: 100%">
                 <th style="width: 12%" class="cabecera sortable ${params.sort == 'trmtcdgo' ? (params.order + ' sorted') : ''}" data-sort="trmtcdgo" data-order="${params.order}">Documento</th>
-                <th style="width: 4%">De</th>
+                <th style="width: 9%">De</th>
                 <th style="width: 10%" class="cabecera sortable ${params.sort == 'trmtfccr' ? (params.order + ' sorted') : ''}" data-sort="trmtfccr" data-order="${params.order}">Fec. Creación</th>
                 <th style="width: 4%" class="cabecera sortable ${params.sort == 'prtrdpto' ? (params.order + ' sorted') : ''}" data-sort="prtrdpto" data-order="${params.order}">Para</th>
-                <th style="width: 29%">Destinatario</th>
+                <th style="width: 24%">Destinatario</th>
                 <th style="width: 7%" class="cabecera sortable ${params.sort == 'trmttppd' ? (params.order + ' sorted') : ''}" data-sort="trmttppd" data-order="${params.order}">Prioridad</th>
                 <th style="width: 10%" class="cabecera sortable ${params.sort == 'trmtfcen' ? (params.order + ' sorted') : ''}" data-sort="trmtfcen" data-order="${params.order}">Fecha Envío</th>
                 <th style="width: 10%" class="cabecera sortable ${params.sort == 'trmtfcbq' ? (params.order + ' sorted') : ''}" data-sort="trmtfcbq" data-order="${params.order}">F. Límite Recepción</th>
@@ -284,7 +284,7 @@
     }
 
     function doEnviar(imprimir, strIds) {
-        var cl3 = cargarLoader("Enviando...")
+        var cl3 = cargarLoader("Enviando...");
         $.ajax({
             type    : "POST",
             url     : "${g.createLink(controller: 'tramite2',action: 'enviarVarios')}",
@@ -428,7 +428,7 @@
 
         var recibirExterno = {
             label  : 'Confirmar recepción destinatarios externos',
-            icon   : "fa fa-check-square",
+            icon   : "fa fa-user-check",
             action : function (e) {
                 $.ajax({
                     type    : "POST",
@@ -456,8 +456,8 @@
                                 }
                             };
                             buttons.desenviar = {
-                                label     : "<i class='fa fa-check-square-o'></i> Confirmar recepción",
-                                className : "btn-default",
+                                label     : "<i class='fa fa-check'></i> Confirmar recepción",
+                                className : "btn-success",
                                 callback  : function () {
                                     var ids = "";
                                     $(".chkOne").each(function () {

@@ -97,18 +97,21 @@
 <mn:menu title="${g.layoutTitle(default: 'tramites3')}"/>
 <g:if test="${session.departamento.estado == 'B' && session.usuario.esTriangulo()}">
     <div id="bloqueo-warning" class="bloqueo ui-corner-all alert alert-danger " style="z-index: 200001; width: 240px; height: 190px;">
-        <div class="titulo-bloqueo">
+        <div class="titulo-bloqueo" style="text-align: center">
             <i class="fa fa-exclamation-circle"></i>
-            Alerta de bloqueo
+%{--            Alerta de bloqueo--}%
+            ALERTA DE BLOQUEO
             <a href="#" class="cerrar-bloqueo" style="float: right;text-align: right;color: black;width: 20px;height: 30px;line-height: 30px" title="cerrar">
                 <i class="fa fa-times"></i>
             </a>
         </div>
 
         <div class="texto-bloqueo">
-            Varias funciones del departamento ${session.departamento} están bloqueadas temporalmente debido a trámites no recibidos.
+            Varias funciones del departamento <strong style="color: #5183e7">${session.departamento}</strong> están bloqueadas temporalmente debido a trámites no recibidos.
         </div>
-        <a href="${g.createLink(controller: 'tramite3', action: 'bandejaEntradaDpto')}" class="" style="margin-top: 30px">Ver trámites no recibidos</a>
+        <div style="text-align: center">
+            <a href="${g.createLink(controller: 'tramite3', action: 'bandejaEntradaDpto')}" class="btn btn-info" style="margin-top: 5px"><i class="fa fa-eye"></i> Ver trámites no recibidos</a>
+        </div>
     </div>
 </g:if>
 <g:if test="${session.departamento.estado == 'W' && session.usuario.esTriangulo()}">
@@ -163,17 +166,7 @@
     <g:layoutBody/>
 </div>
 
-
-<!-- Bootstrap core JavaScript
-    ================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-%{--<script src="${resource(dir: 'bootstrap-3.0.1/js', file: 'bootstrap.min.js')}"></script>--}%
-%{--<elm:bootstrapJs/>--}%
-
-<!-- funciones de ui (tooltips, maxlength, bootbox, contextmenu, validacion en keydown para los numeros) -->
-%{--<script type="text/javascript" src="${resource(dir: 'js', file: 'ui.js')}"></script>--}%
 <script type="text/javascript">
-
 
     $(document).ready(function(){
         initControls();

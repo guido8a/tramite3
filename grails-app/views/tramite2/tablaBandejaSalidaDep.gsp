@@ -81,7 +81,7 @@
             padre="${row.trmtpdre}" %{--padre--}%>
             <td title="${row.trmtasnt}" style="width: 12%;">
                 <g:if test="${row.tptrcdgo == 'C'}">
-                    <i class="fa fa-eye-slash" style="margin-left: 10px"></i>
+                    <i class="fa fa-eye-slash"></i>
                 </g:if>
                 <g:if test="${row.trmtdctr > 0}">
                     <i class="fa fa-paperclip"></i>

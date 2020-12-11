@@ -299,7 +299,6 @@
 
             <div class="col-xs-2 negrilla" style="margin-top: 10px; width: 100px;" id="divCc">
                 <label for="cc">
-                    %{--                            <input type="checkbox" name="cc" id="cc"/>--}%
                     <i class="fa fa-paste"></i> Con copia
                 </label>
                 <div class="form-check form-check-inline">
@@ -309,7 +308,6 @@
 
             <div class="col-xs-2 negrilla hide" id="divConfidencial" style="margin-top: 10px;width: 110px;">
                 <label for="confi">
-                    %{--                            <input type="checkbox" name="confi" id="confi" ${tramite.tipoTramite?.codigo == 'C' ? 'checked' : ''}/>--}%
                     <i class="fa fa-user-secret"></i>  Confidencial
                 </label>
                 <div class="form-check form-check-inline">
@@ -319,7 +317,6 @@
 
             <div class="col-xs-2 negrilla hide" id="divAnexos" style="margin-top: 10px; width: 110px;">
                 <label for="anexo">
-                    %{--                            <input type="checkbox" name="anexo" id="anexo"/>--}%
                     <i class="fa fa-paperclip"></i> Con anexos
                 </label>
                 <div class="form-check form-check-inline">
@@ -445,7 +442,7 @@
                         </g:if>
                         <g:else>
                             <li data-id="-${disp.departamento.id}" class="clickable ${disp.departamento.externo == 1 ? 'externo' : 'interno'}">
-                                <i class="fa fa-li ${disp.departamento.externo ? 'fa-paper-plane' : 'fa-building-o'}"></i> ${disp.departamento.descripcion}
+                                <i class="fa fa-li ${disp.departamento.externo ? 'fa-paper-plane' : 'fa-building'}"></i> ${disp.departamento.descripcion}
                             </li>
                         </g:else>
                     </g:each>
@@ -646,7 +643,7 @@
                     icon = "<i class='fa-li fa fa-user'></i>";
                     break;
                 case "direccion":
-                    icon = "<i class='fa-li fa fa-building-o'></i>";
+                    icon = "<i class='fa-li fa fa-building'></i>";
                     break;
             }
             $li.append(icon);

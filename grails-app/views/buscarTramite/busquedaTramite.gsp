@@ -39,17 +39,18 @@
 
             <div class="col-xs-2" style="margin-left: 10px">
                 <label>Fecha Desde</label>
-%{--                <elm:datepicker name="fechaDsde" class="datepicker form-control" value=""/>--}%
                 <input name="fechaDsde" id='datetimepicker1' type='text' class="form-control"/>
             </div>
 
             <div class="col-xs-2" style="margin-left: -25px">
                 <label>Fecha Hasta</label>
                 <input name="fechaHsta" id='datetimepicker2' type='text' class="form-control"/>
-%{--                <elm:datepicker name="fechaHsta" class="datepicker form-control" value=""/>--}%
             </div>
             <div class="col-xs-2" style="padding-top: 5px; height: 63px;">
-            <g:checkBox name="externo" class="combo" /><label class="text-info">Buscar externos</label>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="externo" name="externo"> <label class="text-info">Buscar externos</label>
+                </div>
+
                 <a href="#" name="busqueda" class="btn btn-success btn-ajax" id="btnBusqueda"><i
                         class="fa fa-search"></i> Buscar</a>
                 <a href="#" name="borrar" class="btn btn-warning btnBorrar btn-sm" title="Borrar criterios">
@@ -59,12 +60,16 @@
             </div>
         </div>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-4">
         <div style="margin-left: 5px; display: inline-block; vertical-align: top; margin-top: -5px; float:left; color: #67a153" class="row">
             <g:radioGroup name="registros" labels="['Hasta 20 registros', 'Hasta 100 registros']" values="['20', '100']" value="20">
                 <g:message code="${it.label}"/>: ${it.radio} <span style="margin-left: 20px"></span>
             </g:radioGroup>
         </div>
+
+    </div>
+
+    <div class="col-md-4">
         <div style="float: left; margin-left: 5px; margin-top: -5px; color: #ff8f5b">
             <g:radioGroup name="fechas" labels="['Fecha de creación', 'Fecha de envío']" values="['fccr', 'fcen']" value="fccr">
                 <g:message code="${it.label}"/>: ${it.radio} <span style="margin-left: 20px"></span>
@@ -106,7 +111,7 @@
 
 %{--<div><span class="text-info" style="margin-left: 30px"><strong> * Se ordena por tipo de documento y fecha</strong></span>--}%
 <div><span class="text-info" style="margin-left: 30px"><strong> * Se ordena por fecha de creación del documento,
-        desde el más reciente hasta el más antiguo</strong></span>
+desde el más reciente hasta el más antiguo</strong></span>
 </div>
 
 <div class="modal fade " id="dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -130,6 +135,10 @@
 
 
 <script type="text/javascript">
+
+
+    $.switcher('input[type=checkbox]');
+    $.switcher('input[type=radio]');
 
     $(function () {
         $('#datetimepicker1, #datetimepicker2').datetimepicker({
