@@ -1,63 +1,47 @@
 <%@ page import="tramites.RolPersonaTramite; tramites.PersonaDocumentoTramite; tramites.EstadoTramite" %>
 
-%{--<script type="text/javascript" src="${resource(dir: 'js', file: 'ui.js')}"></script>--}%
-%{--<script type="text/javascript" src="${resource(dir: 'js/plugins/lzm.context/js', file: 'lzm.context-0.5.js')}"></script>--}%
-%{--<link href="${resource(dir: 'js/plugins/lzm.context/css', file: 'lzm.context-0.5.css')}" rel="stylesheet">--}%
-
-%{--<script type="text/javascript" src="${resource(dir: 'js/plugins/fixed-header-table-1.3', file: 'jquery.fixedheadertable.min.js')}"></script>--}%
-%{--<link href="${resource(dir: 'js/plugins/fixed-header-table-1.3/css', file: 'defaultTheme.css')}" rel="stylesheet">--}%
-
 <style type="text/css">
 table {
     font-size : 9pt;
 }
 
 .clearfix:after {
-
     content: ".";
-
     display: block;
-
     clear: both;
-
     visibility: hidden;
-
     line-height: 0;
-
     height: 0;
 }
 
 .clearfix {
-
     display: inline-block;
 }
 
 html[xmlns] .clearfix {
-
     display: block;
 }
 
 * html .clearfix {
-
     height: 1%;
 }
 </style>
 
 
-<div class="clearfix" style="width: 100%;"><util:renderHTML html="${msje}"/></div>
+<div class="clearfix mensaje" style="width: 100%;"><util:renderHTML html="${msje}"/></div>
 
 <table class="table table-bordered table-condensed table-hover" style="width: 100%;">
     <thead>
     <tr>
-        <th class="alinear" style="width: 10%">Documento</th>
+        <th class="alinear" style="width: 11%">Documento</th>
         <th class="alinear" style="width: 10%">Creación</th>
         <th class="alinear" style="width: 10%">De</th>
         <th class="alinear" style="width: 10%">Para</th>
-        <th class="alinear" style="width: 24%">Asunto</th>
+        <th class="alinear" style="width: 22%">Asunto</th>
         <th class="alinear" style="width: 6%">Prioridad</th>
         <th class="alinear" style="width: 10%">Envia</th>
         <th class="alinear" style="width: 10%">Envio</th>
-        <th class="alinear" style="width: 10%">Recepción</th>
+        <th class="alinear" style="width: 11%">Recepción</th>
     </tr>
     </thead>
 </table>
@@ -76,9 +60,7 @@ html[xmlns] .clearfix {
 
             <g:set var="recibe" value="${tramites.PersonaDocumentoTramite.findByTramiteAndRolPersonaTramite(tramite, rolRecibe)}"/>
             <g:set var="envia" value="${PersonaDocumentoTramite.findByTramiteAndRolPersonaTramite(tramite, rolEnvia)}"/>
-            <g:set var="receptoresAnulados" value="${(tramite.allCopias + tramite.para).findAll {
-                it?.estado == estadoAnulado
-            }}"/>
+            <g:set var="receptoresAnulados" value="${(tramite.allCopias + tramite.para).findAll {it?.estado == estadoAnulado }}"/>
 
             <g:set var="padre" value=""/>
             <g:set var="clase" value="${'nada'}"/>
@@ -111,9 +93,6 @@ html[xmlns] .clearfix {
             <g:if test="${copiasExternas.estado.codigo.contains('E003')}">
                 <g:set var="externo" value="${externo} externoCC"/>
             </g:if>
-        %{--            <g:if test="${(params.dgsg == 'DGSG') || tramite?.deId == session.usuario.id || (tramite?.departamento?.id == session.departamento.id && session.usuario.esTriangulo)}">--}%
-        %{--                <g:set var="clase" value="${clase + ' mio'}"/>--}%
-        %{--            </g:if>--}%
 
             <g:set var="para" value="${tramite.para?.persona ? tramite.para?.persona?.departamentoId : tramite.para?.departamentoId}"/>
             <g:each in="${tramite.copias}" var="copia">
@@ -134,7 +113,7 @@ html[xmlns] .clearfix {
                 dep="${tramite?.de?.departamentoId}" principal="${tramite.tramitePrincipal}" para="${para}" respuestas="${respuestas}"
                 de="${tramite.tipoDocumento.codigo == 'DEX' ? 'E_' + tramite?.id :
                         (tramite.deDepartamento ? 'D_' + tramite.deDepartamento?.id : 'P_' + tramite.de?.id)}" style="width: 100%">
-                <td class="codigo" style="width: 10%">
+                <td class="codigo" style="width: 11%">
                     <g:if test="${tramite?.tipoTramite?.codigo == 'C'}">
                         <i class="fa fa-eye-slash"></i>
                     </g:if>
@@ -184,22 +163,24 @@ html[xmlns] .clearfix {
                                 No visible en la cadena.<br/> Consulte al Administra- dor del Sistema</span>
                         </g:if>
                         <g:if test="${tramite.copias && tramite.copias.size() > 0}">
-                            <span class="small">
-                                <strong>CC:</strong>
-                                <g:each in="${tramite.copias}" var="c" status="i">
-                                    <g:if test="${c.persona}">
-                                        ${c.persona.nombre} ${c.persona.apellido} (${c.persona.departamento?.codigo})${i < tramite.copias.size() - 1 ? ', ' : ''}
-                                    </g:if>
-                                    <g:elseif test="${c.departamento}">
-                                        ${c.departamento.codigo}${i < tramite.copias.size() - 1 ? ', ' : ''}
-                                    </g:elseif>
-                                </g:each>
-                            </span>
+                            </br> <strong> Copias:</strong> <a href="#" name="informacion" class="btn btn-info btn-xs btnInfo" title="Copias" data-id="${tramite?.id}" style="float: right"><i class="fa fa-exclamation"></i></a>
+
+                        %{--                            <span class="small">--}%
+                        %{--                                <strong>CC:</strong>--}%
+                        %{--                                <g:each in="${tramite.copias}" var="c" status="i">--}%
+                        %{--                                    <g:if test="${c.persona}">--}%
+                        %{--                                        ${c.persona.nombre} ${c.persona.apellido} (${c.persona.departamento?.codigo})${i < tramite.copias.size() - 1 ? ', ' : ''}--}%
+                        %{--                                    </g:if>--}%
+                        %{--                                    <g:elseif test="${c.departamento}">--}%
+                        %{--                                        ${c.departamento.codigo}${i < tramite.copias.size() - 1 ? ', ' : ''}--}%
+                        %{--                                    </g:elseif>--}%
+                        %{--                                </g:each>--}%
+                        %{--                            </span>--}%
                         </g:if>
                     </g:else>
                 </td>
 
-                <td class="asunto" style="width: 24%">
+                <td class="asunto" style="width: 23%">
                     ${tramite.asunto}
                 </td>
 
@@ -231,6 +212,36 @@ html[xmlns] .clearfix {
 </div>
 
 <script type="text/javascript">
+
+    $(".btnInfo").click(function () {
+        var cl1 = cargarLoader("Cargando...");
+        var tramite = $(this).data("id");
+
+        $.ajax({
+            type: 'POST',
+            url: '${createLink(controller: 'buscarTramite', action: 'copias_ajax')}',
+            data:{
+                id: tramite
+            },
+            success: function(msg){
+                cl1.modal("hide");
+                bootbox.dialog({
+                    id      : "dlgCopias",
+                    title   : '<span class="text-danger"><i class="fa fa-users"></i> COPIAS</span>',
+                    message : msg,
+                    buttons : {
+                        cancelar : {
+                            label     : '<i class="fa fa-times"></i> Cancelar',
+                            className : 'btn-primary',
+                            callback  : function () {
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    });
+
     $(function () {
         $("tr").contextMenu({
             items  : createContextMenu,
@@ -241,9 +252,5 @@ html[xmlns] .clearfix {
                 $(".trHighlight").removeClass("trHighlight");
             }
         });
-
-        %{--$('.table').fixedHeaderTable({--}%
-        %{--    height : ${msg == '' ? 550 : 500}--}%
-        %{--});--}%
     });
 </script>

@@ -18,7 +18,6 @@
         margin: 4px;
         font-family: 'open sans condensed';
         border: none;
-
     }
 
     .imagen {
@@ -81,7 +80,7 @@
 
     .quotes .box {
         position: relative;
-        width: 35vw;
+        width: 80%;
         height: 300px;
         min-height: 100px;
         background: #f2f2f2;
@@ -172,14 +171,18 @@
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#75a9b9', endColorstr='#e5b596',GradientType=1 );
     }
 
-    .quotes .box.box3:hover,
-    .quotes .box.box3:hover~.bg {
-        opacity: 1;
-        background: #4b384c;
-        background: -moz-linear-gradient(-45deg, #4b384c 15%, #da5de2 100%);
-        background: -webkit-linear-gradient(-45deg, #4b384c 15%,#da5de2 100%);
-        background: linear-gradient(135deg, #4b384c 15%,#da5de2 100%);
-        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4b384c', endColorstr='#da5de2',GradientType=1 );
+    /*.quotes .box.box3:hover,*/
+    /*.quotes .box.box3:hover~.bg {*/
+    /*    opacity: 1;*/
+    /*    background: #4b384c;*/
+    /*    background: -moz-linear-gradient(-45deg, #4b384c 15%, #da5de2 100%);*/
+    /*    background: -webkit-linear-gradient(-45deg, #4b384c 15%,#da5de2 100%);*/
+    /*    background: linear-gradient(135deg, #4b384c 15%,#da5de2 100%);*/
+    /*    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4b384c', endColorstr='#da5de2',GradientType=1 );*/
+    /*}*/
+
+    .card{
+        width: 50%;
     }
 
     </style>
@@ -196,7 +199,7 @@
 
     <div class="quotes" style="margin-top: 100px">
         <div class="card">
-            <div class="box box1">
+            <div class="box box1" style="background-color: #e5ab9e">
                 <g:if test="${session.usuario.esTriangulo()}">
                     <a href= "${createLink(controller:'tramite3', action: 'bandejaEntradaDpto')}" style="text-decoration: none" onclick="cargarLoader('Cargando...')">
                 </g:if>
@@ -214,7 +217,7 @@
             <div class="bg"></div>
         </div>
         <div class="card">
-            <div class="box box2">
+            <div class="box box2" style="background-color: #75a9b9">
                 <g:if test="${session.usuario.esTriangulo()}">
                     <a href= "${createLink(controller:'tramite2', action: 'bandejaSalidaDep')}" style="text-decoration: none" onclick="cargarLoader('Cargando...')">
                 </g:if>

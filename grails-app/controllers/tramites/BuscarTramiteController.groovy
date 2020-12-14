@@ -429,6 +429,8 @@ class BuscarTramiteController {
 
     def tablaBusquedaAnulados() {
 
+        println("params ba " + params)
+
         def persona = Persona.get(session.usuario.id)
         def departamento = persona?.departamento
         def pxtPara
@@ -471,12 +473,12 @@ class BuscarTramiteController {
             isNotNull("fechaAnulacion")
             tramite {
                 if (params.asunto) {
-                    ilike('asunto', '%' + params.asunto + '%')
+                    ilike('asunto', '%' + params.asunto.trim() + '%')
                 }
                 if (params.memorando) {
-                    ilike('codigo', '%' + params.memorando + '%')
+                    ilike('codigo', '%' + params.memorando.trim() + '%')
                 }
-//                order('codigo', 'desc')
+                order('codigo', 'desc')
             }
             maxResults(20)
         }
@@ -490,5 +492,10 @@ class BuscarTramiteController {
         }
 
         return [tramites: tramitesFiltrados]
+    }
+
+    def copias_ajax(){
+        def tramite = Tramite.get(params.id)
+        return[tramite: tramite]
     }
 }

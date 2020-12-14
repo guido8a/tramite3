@@ -15,7 +15,6 @@
     }
 
     </style>
-
 </head>
 
 <body>
@@ -77,8 +76,7 @@
         </div>
     </div>
 
-
-    <div class="divExternos esconder text-info" style="width: 96%; margin-top: 10px; float: left" >
+    <div class="divExternos esconder text-info" style="width: 96%; margin-top: 5px; margin-bottom: 5px; float: left" >
         <div class="col-xs-1">
             <label>Institución:</label>
         </div>
@@ -98,10 +96,9 @@
             <g:textField name="contacto" value="" maxlength="30" class="form-control allCaps"/>
         </div>
     </div>
-
 </div>
 
-<div style="margin-top: 5px; min-height: 525px" class="vertical-container" id="divBandeja">
+<div style="margin-top: 5px; min-height: 550px" class="vertical-container" id="divBandeja">
     <p class="css-vertical-text">Resultado - Buscar trámites</p>
     <div class="linea"></div>
 
@@ -109,7 +106,6 @@
     </div>
 </div>
 
-%{--<div><span class="text-info" style="margin-left: 30px"><strong> * Se ordena por tipo de documento y fecha</strong></span>--}%
 <div><span class="text-info" style="margin-left: 30px"><strong> * Se ordena por fecha de creación del documento,
 desde el más reciente hasta el más antiguo</strong></span>
 </div>
@@ -133,9 +129,7 @@ desde el más reciente hasta el más antiguo</strong></span>
     </div><!-- /.modal-dialog -->
 </div>
 
-
 <script type="text/javascript">
-
 
     $.switcher('input[type=checkbox]');
     $.switcher('input[type=radio]');
@@ -180,7 +174,6 @@ desde el más reciente hasta el más antiguo</strong></span>
                 "&registros=" + rgst + "&fechas=" + radio + "&memo=" + memorando;
         }
 
-
         location.href='${createLink(controller: 'reportesPersonales', action: 'reporteExcelBusqueda')}?datos=' + datos
     });
 
@@ -189,10 +182,12 @@ desde el más reciente hasta el más antiguo</strong></span>
         // if($(this).prop('checked') ==  true){
         if($("#externo").is(':checked') ==  true){
             $(".contenedor").addClass('largo');
-            $(".divExternos").removeClass('esconder')
+            $(".divExternos").removeClass('esconder');
+            $(".mensaje").addClass('hidden')
         }else{
             $(".contenedor").removeClass('largo');
-            $(".divExternos").addClass('esconder')
+            $(".divExternos").addClass('esconder');
+            $(".mensaje").removeClass('hidden')
         }
     });
 
@@ -223,11 +218,11 @@ desde el más reciente hasta el más antiguo</strong></span>
         var institucion;
         var doc;
         var contacto;
-        var radio = $("[name='fechas']:checked").val()
-        var rgst = $("[name='registros']:checked").val()
+        var radio = $("[name='fechas']:checked").val();
+        var rgst = $("[name='registros']:checked").val();
         var datos;
 
-        if($(".combo").prop('checked') ==  true){
+        if($("#externo").is(':checked') ==  true){
             institucion = $("#institucion").val();
             doc = $("#docExterno").val();
             contacto = $("#contacto").val();
@@ -245,14 +240,16 @@ desde el más reciente hasta el más antiguo</strong></span>
             url     : "${g.createLink(controller: 'buscarTramite', action: 'tablaBusquedaTramite')}",
             data    : datos,
             success : function (msg) {
-//                clearInterval(interval)
                 $("#bandeja").html(msg);
-                // $("#btnBusqueda").show(500);
                 $("#btnBusqueda").removeClass('disabled');
+                if($("#externo").is(':checked') ==  true){
+                    $(".mensaje").addClass('hidden')
+                }else{
+                    $(".mensaje").removeClass('hidden')
+                }
             },
             error   : function (msg) {
                 $("#bandeja").html("Ha ocurrido un error");
-                // $("#btnBusqueda").show(500);
                 $("#btnBusqueda").removeClass('disabled');
             }
         });
@@ -376,7 +373,6 @@ desde el más reciente hasta el más antiguo</strong></span>
             }
         };
 
-
         var parcialDetalle = {
             label  : 'Cadena a partir del trámite',
             icon   : "fa fa-puzzle-piece",
@@ -384,7 +380,6 @@ desde el más reciente hasta el más antiguo</strong></span>
                 location.href = '${createLink(controller: 'tramite3', action: 'arbolTramiteParcial')}/' + id + "?b=bqt"
             }
         };
-
 
         var detalles = {
             label  : 'Detalles',
@@ -465,7 +460,6 @@ desde el más reciente hasta el más antiguo</strong></span>
             }
         };
 
-
         var parcialAdmin = {
             label  : 'Administrar a partir del trámite',
             icon   : "fa fa-cog",
@@ -473,7 +467,6 @@ desde el más reciente hasta el más antiguo</strong></span>
                 location.href = '${createLink(controller: "tramiteAdmin", action: "arbolAdminTramiteParcial")}?id=' + id;
             }
         };
-
 
         var anexos = {
             label  : 'Anexos',
@@ -512,7 +505,6 @@ desde el más reciente hasta el más antiguo</strong></span>
                                         var $frm = $("#frm-ampliar");
                                         var $txt = $("#aut");
                                         if ($frm.valid()) {
-//                                                    if (validaAutorizacion($txt)) {
                                             openLoader("Ampliando plazo");
                                             $.ajax({
                                                 type    : "POST",
@@ -610,7 +602,6 @@ desde el más reciente hasta el más antiguo</strong></span>
             }
         };
 
-
         var imprimir = {
             label  : "Ver - Imprimir",
             icon   : "fa fa-search",
@@ -657,7 +648,6 @@ desde el más reciente hasta el más antiguo</strong></span>
                 }
             }
         }
-
 
         if (enviado || recibido) {
             <g:if test="${session.usuario.getPuedeCopiar()}">
