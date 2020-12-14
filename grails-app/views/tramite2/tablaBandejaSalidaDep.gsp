@@ -116,11 +116,19 @@
                         </g:each>
                     </g:else>
                 </span>
-                <span class="copias">
-                    ${row.copidpto.replaceAll('cc: *', '[CC] ')}${row.copidpto && row.copidpto != "" && row.copiprsn && row.copiprsn != "" ? ', ' : ''}
-                    ${row.copiprsn.replaceAll('cc: *', '[CC] ')}
-                </span>
 
+                <g:if test="${row.copidpto && row.copidpto != "" || row.copiprsn && row.copiprsn != ""}">
+                    <br> <strong style="float: right"> Copias: <a href="#"
+                                                                  name="informacion" class="btn btn-info btn-xs btnCopias"
+                                                                  title="Copias" data-row="${row.copidpto.replaceAll('cc: *', '[CC] ')}"
+                                                                  data-row2="${row.copidpto && row.copidpto != "" && row.copiprsn && row.copiprsn != "" ? ', ' : ''}" data-row3="${row.copiprsn.replaceAll('cc: *', '[CC] ')}"
+                                                                  style="margin-left: 2px"><i class="fa fa-exclamation"></i></a></strong>
+                %{--                    <span class="copias">--}%
+                %{--                        ${row.copidpto.replaceAll('cc: *', '[CC] ')}${row.copidpto && row.copidpto != "" && row.copiprsn && row.copiprsn != "" ? ', ' : ''}--}%
+                %{--                        ${row.copiprsn.replaceAll('cc: *', '[CC] ')}--}%
+                %{--                    </span>--}%
+
+                </g:if>
                 <g:if test="${!((row.prtrprsn && row.prtrprsn != '') ||
                         (row.paradpto && row.paradpto != '') ||
                         (row.copidpto && row.copidpto != '') ||
@@ -149,6 +157,9 @@
                     </div>
                 </g:if>
             </td>
+            <g:if test="${rows.size() < 7}">
+                <td style="width: 1%"></td>
+            </g:if>
         </tr>
     </g:each>
 </g:else>
@@ -161,6 +172,12 @@
         bootbox.alert('<strong>' + tramite + '</strong>' + '<br>' + '<strong>' + 'ASUNTO: ' + '</strong>' + asunto)
     });
 
+    $(".btnCopias").click(function () {
+        var row = $(this).data("row");
+        var row2 = $(this).data("row2");
+        var row3 = $(this).data("row3");
+        bootbox.alert(row + row2 + row3);
+    });
 
     $.switcher('input[type=checkbox]');
 
