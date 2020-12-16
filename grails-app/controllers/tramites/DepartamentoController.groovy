@@ -2,7 +2,6 @@ package tramites
 
 import seguridad.Persona
 
-
 class DepartamentoController {
     def tramitesService
     def dbConnectionService
@@ -983,5 +982,4 @@ class DepartamentoController {
             render "no"
         }
     }
-
 }

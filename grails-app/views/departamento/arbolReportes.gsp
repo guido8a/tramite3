@@ -1,18 +1,11 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: luz
-  Date: 3/17/14
-  Time: 3:13 PM
---%>
-
-<%@ page import="happy.tramites.Departamento" contentType="text/html;charset=UTF-8" %>
+<%@ page import="tramites.Departamento" contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
     <meta name="layout" content="main">
     <title>Departamentos</title>
 
-    <script src="${resource(dir: 'js/plugins/jstree-e22db21/dist', file: 'jstree.min.js')}"></script>
-    <link href="${resource(dir: 'js/plugins/jstree-e22db21/dist/themes/default', file: 'style.min.css')}" rel="stylesheet">
+    <asset:javascript src="/jstree-3.0.8/dist/jstree.min.js"/>
+    <asset:stylesheet src="/jstree-3.0.8/dist/themes/default/style.min.css"/>
 
     <style type="text/css">
 
@@ -41,30 +34,24 @@
 </head>
 
 <body>
-<g:set var="iconActivar" value="fa-hdd-o"/>
-<g:set var="iconDesactivar" value="fa-power-off"/>
+<g:set var="iconActivar" value="fa-power-off text-success"/>
+<g:set var="iconDesactivar" value="fa-power-off text-danger"/>
+<g:set var="iconDanger" value="fa-exclamation-triangle text-danger"/>
 
 <div id="list-cuenta">
 
     <!-- botones -->
     <div class="btn-toolbar toolbar">
-        %{--
-                        <div class="btn-group">
-                            <g:link controller="inicio" action="parametros" class="btn btn-default">
-                                <i class="fa fa-arrow-left"></i> Regresar
-                            </g:link>
-                        </div>
-        --}%
         <div class="btn-group col-md-2" style="margin-top: 4px;">
             <p style="font-size: 18px; font-weight: bold; margin-right: 40px;">Reportes</p>
         </div>
 
         <div class="btn-group" style="margin-top: 4px;">
             <g:link action="arbolReportes" params="[sort: 'nombre']" class="btn btn-sm btn-info">
-                <i class="fa fa-sort-alpha-asc"></i> Ordenar por nombre
+                <i class="fa fa-sort-amount-down"></i> Ordenar por nombre
             </g:link>
             <g:link action="arbolReportes" params="[sort: 'apellido']" class="btn btn-sm btn-info">
-                <i class="fa fa-sort-alpha-asc"></i> Ordenar por apellido
+                <i class="fa fa-sort-amount-down"></i> Ordenar por apellido
             </g:link>
         </div>
 
@@ -91,11 +78,9 @@
         <p>
             Cargando los departamentos
         </p>
-
         <p>
             <img src="${resource(dir: 'images/spinners', file: 'loading_new.GIF')}" alt='Cargando...'/>
         </p>
-
         <p>
             Por favor espere
         </p>
@@ -106,7 +91,7 @@
     </div>
 </div>
 
-<elm:select name="selDptoOrig" from="${Departamento.findAllByActivo(1, [sort: 'descripcion'])}"
+<elm:select name="selDptoOrig" from="${tramites.Departamento.findAllByActivo(1, [sort: 'descripcion'])}"
             optionKey="id" optionValue="descripcion" optionClass="id" class="form-control hide"/>
 
 <!-- Modal -->
@@ -177,40 +162,27 @@
         var items = {};
 
         if (nodeType != "root" && !nodeType.match("inactivo") && !nodeType.match("Inactivo")) {
-            %{--console.log("${session.usuario.puedeJefe}", "${session.usuario.puedeDirector}", "${session.usuario.departamentoId}");--}%
-            %{--if (("${session.usuario.puedeJefe}" == "true" && "${session.usuario.departamentoId}" == nodeId.toString()) ||--}%
-            %{--"${session.usuario.puedeDirector}" == "true") {--}%
             items.retrasadosWeb = {
-                %{--label  : "Trámites retrasados",--}%
-                %{--icon   : " fa fa-globe",--}%
-                %{--action : function (e, e2) {--}%
-                %{--if (nodeType.match("padre") || nodeType.match("hijo")) {--}%
-                %{--location.href = "${g.createLink(controller: 'retrasadosWeb',action: 'reporteRetrasadosConsolidado')}?dpto=" + nodeId;--}%
-                %{--} else {--}%
-                %{--location.href = "${g.createLink(controller: 'retrasadosWeb',action: 'reporteRetrasadosConsolidado')}?prsn=" + nodeId;--}%
-                %{--}--}%
-                %{--}--}%
-
                 label: "Documentos retrasados",
-                icon: "fa fa-globe",
+                icon: "fa fa-print",
                 submenu: {
                     pdf: {
                         label: "PDF",
-                        icon: "fa fa-file-pdf-o",
+                        icon: "fa fa-file-pdf",
                         action: function () {
                             if (nodeType.match("padre") || nodeType.match("hijo")) {
                                 location.href = "${g.createLink(controller: 'retrasados',action: 'reporteRetrasadosArbol')}/" +
-                                        nodeId + "?tipo=dpto";
+                                    nodeId + "?tipo=dpto";
                             }
                             else {
                                 location.href = "${g.createLink(controller: 'retrasados',action: 'reporteRetrasadosDetalle')}/" +
-                                        nodeId + "?tipo=prsn&dpto=" + parentId;
+                                    nodeId + "?tipo=prsn&dpto=" + parentId;
                             }
                         }
                     },
                     xls: {
                         label: "EXCEL",
-                        icon: "fa fa-file-excel-o",
+                        icon: "fa fa-file-excel",
                         action: function () {
                             if (nodeType.match("padre") || nodeType.match("hijo")) {
                                 location.href = "${g.createLink(controller: 'retrasadosExcel',action: 'reporteRetrasadosArbolExcel')}/" + nodeId
@@ -225,11 +197,11 @@
 
             items.documentos = {
                 label: "Documentos generados",
-                icon: "fa fa-file-pdf-o",
+                icon: "fa fa-print",
                 submenu: {
                     pdf: {
                         label: "PDF",
-                        icon: "fa fa-file-pdf-o",
+                        icon: "fa fa-file-pdf",
                         action: function () {
                             $("#modalFecha_title").html("Periodo:");
                             $('#modalFechas').modal('show');
@@ -237,59 +209,19 @@
                                 if ($("#formFechas").valid()) {
                                     if (nodeType.match("padre") || nodeType.match("hijo")) {
                                         location.href = "${g.createLink(controller: 'retrasados', action: 'reporteGeneradosArbol')}/" +
-                                        nodeId + "?desde=" + $("#desde_input").val() + "&hasta=" + $("#hasta_input").val() + "&tipo=dpto";
+                                            nodeId + "?desde=" + $("#desde_input").val() + "&hasta=" + $("#hasta_input").val() + "&tipo=dpto";
                                     } else {
                                         location.href = "${g.createLink(controller: 'documentosGenerados',action: 'reporteDetalladoPdf')}/" +
-                                        nodeId + "?desde=" + $("#desde_input").val() + "&hasta=" + $("#hasta_input").val() + "&tipo=prsn&dpto=" + parentId;
+                                            nodeId + "?desde=" + $("#desde_input").val() + "&hasta=" + $("#hasta_input").val() + "&tipo=prsn&dpto=" + parentId;
                                     }
                                     $('#modalFechas').modal('hide');
                                 }
                             });
                         }
-
-
-
-
-                        %{--submenu : {--}%
-                        %{--detallado   : {--}%
-                        %{--label  : "Detallado",--}%
-                        %{--icon   : "fa fa-files-o",--}%
-                        %{--action : function () {--}%
-                        %{--$('#modalFechas').modal('show');--}%
-                        %{--$("#btnPrint").unbind("click").click(function () {--}%
-                        %{--if ($("#formFechas").valid()) {--}%
-                        %{--if (nodeType.match("padre") || nodeType.match("hijo")) {--}%
-                        %{--location.href = "${g.createLink(controller: 'documentosGenerados',action: 'reporteDetalladoPdf')}/" + nodeId + "?desde=" + $("#desde_input").val() + "&hasta=" + $("#hasta_input").val() + "&tipo=dpto";--}%
-                        %{--} else {--}%
-                        %{--location.href = "${g.createLink(controller: 'documentosGenerados',action: 'reporteDetalladoPdf')}/" + nodeId + "?desde=" + $("#desde_input").val() + "&hasta=" + $("#hasta_input").val() + "&tipo=prsn&dpto=" + parentId;--}%
-                        %{--}--}%
-                        %{--$('#modalFechas').modal('hide');--}%
-                        %{--}--}%
-                        %{--});--}%
-                        %{--}--}%
-                        %{--},--}%
-                        %{--noDetallado : {--}%
-                        %{--label  : "Resumen",--}%
-                        %{--icon   : "fa fa-files-o",--}%
-                        %{--action : function () {--}%
-                        %{--$('#modalFechas').modal('show');--}%
-                        %{--$("#btnPrint").unbind("click").click(function () {--}%
-                        %{--if ($("#formFechas").valid()) {--}%
-                        %{--if (nodeType.match("padre") || nodeType.match("hijo")) {--}%
-                        %{--location.href = "${g.createLink(controller: 'documentosGenerados',action: 'reporteGeneralPdf')}/" + nodeId + "?desde=" + $("#desde_input").val() + "&hasta=" + $("#hasta_input").val() + "&tipo=dpto";--}%
-                        %{--} else {--}%
-                        %{--location.href = "${g.createLink(controller: 'documentosGenerados',action: 'reporteGeneralPdf')}/" + nodeId + "?desde=" + $("#desde_input").val() + "&hasta=" + $("#hasta_input").val() + "&tipo=prsn&dpto=" + parentId;--}%
-                        %{--}--}%
-                        %{--$('#modalFechas').modal('hide');--}%
-                        %{--}--}%
-                        %{--});--}%
-                        %{--}--}%
-                        %{--}--}%
-                        %{--}--}%
                     },
                     xls: {
                         label: "EXCEL",
-                        icon: "fa fa-file-excel-o",
+                        icon: "fa fa-file-excel",
                         action: function () {
                             $("#modalFecha_title").html("Periodo:");
                             $('#modalFechas').modal('show');
@@ -306,55 +238,18 @@
                                 }
                             });
                         }
-                        %{--submenu : {--}%
-                        %{--detallado   : {--}%
-                        %{--label  : "Detallado",--}%
-                        %{--icon   : "fa fa-files-o",--}%
-                        %{--action : function () {--}%
-                        %{--$('#modalFechas').modal('show');--}%
-                        %{--$("#btnPrint").unbind("click").click(function () {--}%
-                        %{--if ($("#formFechas").valid()) {--}%
-                        %{--if (nodeType.match("padre") || nodeType.match("hijo")) {--}%
-                        %{--location.href = "${g.createLink(controller: 'documentosGenerados',action: 'reporteDetalladoXlsx')}/" + nodeId + "?desde=" + $("#desde_input").val() + "&hasta=" + $("#hasta_input").val() + "&tipo=dpto";--}%
-                        %{--} else {--}%
-                        %{--location.href = "${g.createLink(controller: 'documentosGenerados',action: 'reporteDetalladoXlsx')}/" + nodeId + "?desde=" + $("#desde_input").val() + "&hasta=" + $("#hasta_input").val() + "&tipo=prsn&dpto=" + parentId;--}%
-                        %{--}--}%
-                        %{--$('#modalFechas').modal('hide');--}%
-                        %{--}--}%
-                        %{--});--}%
-                        %{--}--}%
-                        %{--},--}%
-                        %{--noDetallado : {--}%
-                        %{--label  : "Resumen",--}%
-                        %{--icon   : "fa fa-files-o",--}%
-                        %{--action : function () {--}%
-                        %{--$('#modalFechas').modal('show');--}%
-                        %{--$("#btnPrint").unbind("click").click(function () {--}%
-                        %{--if ($("#formFechas").valid()) {--}%
-                        %{--if (nodeType.match("padre") || nodeType.match("hijo")) {--}%
-                        %{--location.href = "${g.createLink(controller: 'documentosGenerados',action: 'reporteGeneralXlsx')}/" + nodeId + "?desde=" + $("#desde_input").val() + "&hasta=" + $("#hasta_input").val() + "&tipo=dpto";--}%
-                        %{--} else {--}%
-                        %{--location.href = "${g.createLink(controller: 'documentosGenerados',action: 'reporteGeneralXlsx')}/" + nodeId + "?desde=" + $("#desde_input").val() + "&hasta=" + $("#hasta_input").val() + "&tipo=prsn&dpto=" + parentId;--}%
-                        %{--}--}%
-                        %{--$('#modalFechas').modal('hide');--}%
-                        %{--}--}%
-                        %{--});--}%
-                        %{--}--}%
-                        %{--}--}%
-                        %{--}--}%
                     }
                 }
             };
-//                    }
 
             if (nodeType.match("padre") || nodeType.match("hijo")) {
                 items.documentosSinSum = {
                     label: "Docs. generados sin sum",
-                    icon: "fa fa-file-pdf-o",
+                    icon: "fa fa-print",
                     submenu: {
                         xls: {
                             label: "EXCEL",
-                            icon: "fa fa-file-excel-o",
+                            icon: "fa fa-file-excel",
                             action: function () {
                                 $("#modalFecha_title").html("Periodo:");
                                 $('#modalFechas').modal('show');
@@ -373,11 +268,11 @@
             if (!nodeType.match("usuario") && !nodeType.match("jefe")) {
                 items.gestion = {
                     label: "Gestión de trámites",
-                    icon: "fa fa-file-text",
+                    icon: "fa fa-print",
                     submenu: {
                         pdf: {
                             label: "PDF",
-                            icon: "fa fa-file-pdf-o",
+                            icon: "fa fa-file-pdf",
                             action: function () {
                                 $("#modalFecha_title").html("Periodo:");
                                 $('#modalFechas').modal('show');
@@ -391,7 +286,7 @@
                         },
                         xls: {
                             label: "Excel",
-                            icon: "fa fa-file-excel-o",
+                            icon: "fa fa-file-excel",
                             action: function () {
                                 $("#modalFecha_title").html("Periodo:");
                                 $('#modalFechas').modal('show');
@@ -410,11 +305,11 @@
             if (nodeType.match("usuario") || nodeType.match("jefe") || nodeType.match("director")) {
                 items.salida = {
                     label: "T. contestados y no env.",
-                    icon: "fa fa-file-text",
+                    icon: "fa fa-print",
                     submenu: {
                         pdf: {
                             label: "PDF",
-                            icon: "fa fa-file-pdf-o",
+                            icon: "fa fa-file-pdf",
                             action: function () {
                                 if (nodeType.match("padre") || nodeType.match("hijo")) {
 
@@ -428,15 +323,14 @@
                 };
             }
 
-            console.log('tipo de nodo:', nodeType)
             if (!nodeType.match("usuario") && !nodeType.match("jefe") && !nodeType.match("director")) {
                 items.tiempos = {
                     label: "Tiempos de respuesta",
-                    icon: "fa fa-file-text",
+                    icon: "fa fa-print",
                     submenu: {
                         pdf: {
                             label: "PDF",
-                            icon: "fa fa-file-pdf-o",
+                            icon: "fa fa-file-pdf",
                             action: function () {
                                 $("#modalFecha_title").html("Trámites enviados en el periodo:");
                                 $('#modalFechas').modal('show');
@@ -450,7 +344,7 @@
                         },
                         xls: {
                             label: "Excel",
-                            icon: "fa fa-file-excel-o",
+                            icon: "fa fa-file-excel",
                             action: function () {
                                 $("#modalFecha_title").html("Trámites enviados en el periodo:");
                                 $('#modalFechas').modal('show');
@@ -466,15 +360,14 @@
                 };
             }
 
-
             if (nodeType.match("usuario") || nodeType.match("jefe") || nodeType.match("director")) {
                 items.tiempos = {
                     label: "Tiempos de respuesta",
-                    icon: "fa fa-file-text",
+                    icon: "fa fa-print",
                     submenu: {
                         pdf: {
                             label: "PDF",
-                            icon: "fa fa-file-pdf-o",
+                            icon: "fa fa-file-pdf",
                             action: function () {
                                 $("#modalFecha_title").html("Trámites enviados en el periodo:");
                                 $('#modalFechas').modal('show');
@@ -488,7 +381,7 @@
                         },
                         xls: {
                             label: "Excel",
-                            icon: "fa fa-file-excel-o",
+                            icon: "fa fa-file-excel",
                             action: function () {
                                 $("#modalFecha_title").html("Trámites enviados en el periodo:");
                                 $('#modalFechas').modal('show');
@@ -503,9 +396,6 @@
                     }
                 };
             }
-
-
-
         }
 
         return items;
@@ -536,7 +426,6 @@
             $("#loading").hide();
             $("#tree").removeClass("hide").show();
         }).on("select_node.jstree", function (node, selected, event) {
-//                    $('#tree').jstree('toggle_node', selected.selected[0]);
         }).jstree({
             plugins     : ["types", "state", "contextmenu", "wholerow", "search"],
             core        : {
@@ -585,10 +474,10 @@
                     icon : "fa fa-folder text-warning"
                 },
                 padreActivo               : {
-                    icon : "fa fa-building-o text-info"
+                    icon : "fa fa-hotel text-info"
                 },
                 padreInactivo             : {
-                    icon : "fa fa-building-o text-muted"
+                    icon : "fa fa-hotel text-muted"
                 },
                 padreExternoActivo        : {
                     icon : "fa fa-paper-plane text-info"
@@ -603,10 +492,10 @@
                     icon : "fa fa-home text-muted"
                 },
                 hijoExternoActivo         : {
-                    icon : "fa fa-paper-plane-o text-success"
+                    icon : "fa fa-paper-plane text-success"
                 },
                 hijoExternoInactivo       : {
-                    icon : "fa fa-paper-plane-o text-muted"
+                    icon : "fa fa-paper-plane text-muted"
                 },
                 usuarioActivo             : {
                     icon : "fa fa-user text-info"
@@ -627,22 +516,22 @@
                     icon : "fa fa-user text-muted"
                 },
                 usuarioTrianguloActivo    : {
-                    icon : "fa fa-download text-info"
+                    icon : "fa fa-user-circle  text-info"
                 },
                 usuarioTrianguloInactivo  : {
-                    icon : "fa fa-download text-muted"
+                    icon : "fa fa-user-circle  text-muted"
                 },
                 jefeTrianguloActivo       : {
-                    icon : "fa fa-cloud-download text-warning"
+                    icon : "fa fa-user-tie text-warning"
                 },
                 jefeTrianguloInactivo     : {
-                    icon : "fa fa-cloud-download text-muted"
+                    icon : "fa fa-user-tie text-muted"
                 },
                 directorTrianguloActivo   : {
-                    icon : "fa fa-cloud-download text-danger"
+                    icon : "fa fa-user-tie text-danger"
                 },
                 directorTrianguloInactivo : {
-                    icon : "fa fa-cloud-download text-muted"
+                    icon : "fa fa-user-tie text-muted"
                 }
             }
         });
@@ -657,9 +546,7 @@
                 return false;
             }
         });
-
     });
 </script>
-
 </body>
 </html>

@@ -336,10 +336,10 @@ class BuscarTramiteController {
             }
             tramite {
                 if (params.asunto) {
-                    ilike('asunto', '%' + params.asunto + '%')
+                    ilike('asunto', '%' + params.asunto.trim() + '%')
                 }
                 if (params.memorando) {
-                    ilike('codigo', '%' + params.memorando + '%')
+                    ilike('codigo', '%' + params.memorando.trim() + '%')
                 }
                 if (persona.esTriangulo()) {
                     eq('deDepartamento', departamento)

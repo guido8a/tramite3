@@ -1,5 +1,3 @@
-
-
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
@@ -1114,7 +1112,6 @@
                         icon : "far fa-user-circle text-muted"
                     },
                     jefeTrianguloActivo       : {
-                        // icon : "fa fa-cloud-download text-warning"
                         icon : "fas fa-user-tie text-warning"
                     },
                     jefeTrianguloInactivo     : {

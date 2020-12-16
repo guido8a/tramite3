@@ -94,8 +94,8 @@
             </div><!-- /.modal-dialog -->
         </div>
 
+        <script type="text/javascript">
 
-        <script>
             $(function () {
                 var cellWidth = 150;
                 var celHegth = 25;
@@ -112,9 +112,6 @@
                 });
 
             });
-        </script>
-
-        <script type="text/javascript">
 
             $(function () {
                 $('#datetimepicker1, #datetimepicker2').datetimepicker({
@@ -145,6 +142,16 @@
             }
 
             $(".btnBusqueda").click(function () {
+                buscarEnviados();
+            });
+
+            $("input").keyup(function (ev) {
+                if (ev.keyCode == 13) {
+                    buscarEnviados();
+                }
+            });
+
+            function buscarEnviados(){
                 $("#bandeja").html("").append($("<div style='width:100%; text-align: center;'/>").append(spinnerSquare64));
                 var memorando = $("#memorando").val();
                 var asunto = $("#asunto").val();
@@ -152,7 +159,6 @@
                 var fechaRecepcion = $("#datetimepicker2").val();
 
                 var datos = "memorando=" + memorando + "&asunto=" + asunto + "&fechaDesde=" + fechaRecepcion + "&fechaHasta=" + fecha
-
                 $.ajax({
                     type    : "POST",
                     url     : "${g.createLink(controller: 'buscarTramite', action: 'tablaBusquedaEnviados')}",
@@ -161,27 +167,7 @@
                         $("#bandeja").html(msg);
                     }
                 });
-            });
-
-            $("input").keyup(function (ev) {
-                if (ev.keyCode == 13) {
-                    $("#bandeja").html("").append($("<div style='width:100%; text-align: center;'/>").append(spinnerSquare64));
-                    var memorando = $("#memorando").val();
-                    var asunto = $("#asunto").val();
-                    var fecha = $("#datetimepicker1").val();
-                    var fechaRecepcion = $("#fdatetimepicker2").val();
-
-                    var datos = "memorando=" + memorando + "&asunto=" + asunto + "&fechaDesde=" + fechaRecepcion + "&fechaHasta=" + fecha
-                    $.ajax({
-                        type    : "POST",
-                        url     : "${g.createLink(controller: 'buscarTramite', action: 'tablaBusquedaEnviados')}",
-                        data    : datos,
-                        success : function (msg) {
-                            $("#bandeja").html(msg);
-                        }
-                    });
-                }
-            });
+            }
 
             var padre
 
