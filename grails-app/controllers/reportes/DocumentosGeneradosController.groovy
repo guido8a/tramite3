@@ -57,7 +57,7 @@ class DocumentosGeneradosController {
 
     def reporteGeneralPdf() {
 
-        def desde = new Date()
+        def desde = new Date() - 180
         def hasta = new Date()
 
         if(params.desde){
@@ -102,8 +102,11 @@ class DocumentosGeneradosController {
         def paramsLeft = [align: Element.ALIGN_LEFT, valign: Element.ALIGN_MIDDLE]
         def prmsHeaderHojaRight = [align: Element.ALIGN_RIGHT]
         def prmsHeaderHoja = [align: Element.ALIGN_CENTER]
+        def prmsHeaderHoja1 = [align: Element.ALIGN_CENTER, colspan: 4]
         def totalResumenGenerado = 0
+        def totalResumenGeneradoNormal = 0
         def totalRecibido = 0
+        def totalRecibidoNormal = 0
         def usuario = Persona.get(session.usuario.id)
         def departamentoUsuario = usuario?.departamento?.id
         def sqlGen
@@ -120,12 +123,12 @@ class DocumentosGeneradosController {
             cn2.eachRow(sqlGen.toString()){
                 totalResumenGenerado += 1
             }
-        }else{
-            sqlGen = "select * from trmt_generados("+ params.id +","+ null +"," + "'"  + desde + "'" + "," +  "'" + hasta + "'" + ")"
-            println "sql--> $sqlGen"
-            cn2.eachRow(sqlGen.toString()){
-                totalResumenGenerado += 1
-            }
+        }
+
+        sqlGen = "select * from trmt_generados("+ params.id +","+ null +"," + "'"  + desde + "'" + "," +  "'" + hasta + "'" + ")"
+        println "sql--> $sqlGen"
+        cn2.eachRow(sqlGen.toString()){
+            totalResumenGeneradoNormal += 1
         }
 
         def tablaTotalesRecibidos = reportesPdfService.crearTabla(reportesPdfService.arregloEnteros([50,20,15,15]),0,0)
@@ -136,13 +139,26 @@ class DocumentosGeneradosController {
                 totalRecibido += 1
             }
             cn.close()
-        }else{
-            sql = "select * from trmt_recibidos("+ params.id +","+ null +"," + "'"  + desde + "'" + "," +  "'" + hasta + "'" + ")"
-            cn.eachRow(sql.toString()){
-                totalRecibido += 1
-            }
-            cn.close()
         }
+        sql = "select * from trmt_recibidos("+ params.id +","+ null +"," + "'"  + desde + "'" + "," +  "'" + hasta + "'" + ")"
+        cn.eachRow(sql.toString()){
+            totalRecibidoNormal += 1
+        }
+        cn.close()
+
+        if(usuario.esTriangulo()) {
+            reportesPdfService.addCellTabla(tablaTotalesRecibidos, new Paragraph("Usuario", fontBold), prmsHeaderHoja)
+            reportesPdfService.addCellTabla(tablaTotalesRecibidos, new Paragraph("Perfil", fontBold), prmsHeaderHoja)
+            reportesPdfService.addCellTabla(tablaTotalesRecibidos, new Paragraph("Generados", fontBold), prmsHeaderHoja)
+            reportesPdfService.addCellTabla(tablaTotalesRecibidos, new Paragraph("Recibidos", fontBold), prmsHeaderHoja)
+            reportesPdfService.addCellTabla(tablaTotalesRecibidos, new Paragraph(pers?.nombre + " " + pers?.apellido + "  (" + pers?.login + ")", font), paramsLeft)
+            reportesPdfService.addCellTabla(tablaTotalesRecibidos, new Paragraph(" " + session?.perfil, font), paramsLeft)
+            reportesPdfService.addCellTabla(tablaTotalesRecibidos, new Paragraph(" " + totalResumenGenerado, font), prmsHeaderHoja)
+            reportesPdfService.addCellTabla(tablaTotalesRecibidos, new Paragraph(" " + totalRecibido, font), prmsHeaderHoja)
+        }
+
+        reportesPdfService.addCellTabla(tablaTotalesRecibidos, new Paragraph("Usuario normal de " + "(" + pers?.login + ")", fontBold), prmsHeaderHoja1)
+
 
         reportesPdfService.addCellTabla(tablaTotalesRecibidos, new Paragraph("Usuario", fontBold), prmsHeaderHoja)
         reportesPdfService.addCellTabla(tablaTotalesRecibidos, new Paragraph("Perfil", fontBold), prmsHeaderHoja)
@@ -150,8 +166,8 @@ class DocumentosGeneradosController {
         reportesPdfService.addCellTabla(tablaTotalesRecibidos, new Paragraph("Recibidos", fontBold), prmsHeaderHoja)
         reportesPdfService.addCellTabla(tablaTotalesRecibidos, new Paragraph(pers?.nombre + " " + pers?.apellido + "  (" + pers?.login + ")", font), paramsLeft)
         reportesPdfService.addCellTabla(tablaTotalesRecibidos, new Paragraph(" " + session?.perfil, font), paramsLeft)
-        reportesPdfService.addCellTabla(tablaTotalesRecibidos, new Paragraph(" " + totalResumenGenerado, font), prmsHeaderHoja)
-        reportesPdfService.addCellTabla(tablaTotalesRecibidos, new Paragraph(" " + totalRecibido, font), prmsHeaderHoja)
+        reportesPdfService.addCellTabla(tablaTotalesRecibidos, new Paragraph(" " + totalResumenGeneradoNormal, font), prmsHeaderHoja)
+        reportesPdfService.addCellTabla(tablaTotalesRecibidos, new Paragraph(" " + totalRecibidoNormal, font), prmsHeaderHoja)
 
         document.add(tablaTotalesRecibidos)
         document.close();

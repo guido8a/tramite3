@@ -75,7 +75,6 @@
                             <div class="alert alert-info">
                                 Se generará un reporte
                                 de sus <span class="info">documentos generados y recibidos</span>
-                                desde <span class="info" id="${reporte}_desde"></span> hasta  <span class="info" id="${reporte}_hasta"></span>.
                             </div>
 
                             <div class="row">
