@@ -114,16 +114,19 @@ class Persona implements Auditable{
 //        if (id == 5513L) {
 //        println "puede permiso " + codigoPermiso + "    " + this.permisos + "   " + this.permisos.codigo
 //        }
-        if (this.permisos.size() > 0) {
+        def prms = PermisoUsuario.findAllByPersonaAndFechaFinIsNull(this)
+        println "permisos: ${prms.permisoTramite.codigo}"
+//        if (this.permisos.size() > 0) {
+        if (prms.size() > 0) {
 
 //            if (id == 5513L) {
 //            println "AQUI"
 //            }
             def perm = null
-            this.permisos.each {
+            prms.each {
                 if (!perm) {
-                    if (it.codigo == codigoPermiso) {
-                        perm = PermisoUsuario.findAllByPermisoTramiteAndPersona(it, this)
+                    if (it.permisoTramite.codigo == codigoPermiso) {
+                        perm = PermisoUsuario.findAllByPermisoTramiteAndPersona(it.permisoTramite, this)
                         def perm2 = null
                         perm.each { pr ->
 //                            if (id == 5513L) {

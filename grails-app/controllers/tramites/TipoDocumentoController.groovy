@@ -30,8 +30,9 @@ class TipoDocumentoController {
     }
 
     def list() {
+        params.max = 15
         if(session.usuario.puedeAdmin) {
-            params.max = Math.min(params.max ? params.max.toInteger() : 10, 100)
+            params.max = Math.min(params.max ? params.max.toInteger() : 15, 100)
             def tipoDocumentoInstanceList = getLista(params, false)
             def tipoDocumentoInstanceCount = getLista(params, true).size()
             if (tipoDocumentoInstanceList.size() == 0 && params.offset && params.max) {

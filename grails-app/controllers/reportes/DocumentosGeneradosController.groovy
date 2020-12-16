@@ -113,13 +113,16 @@ class DocumentosGeneradosController {
         desde = desde.format("yyyy/MM/dd HH:mm")
         hasta = hasta.format("yyyy/MM/dd HH:mm")
 
+        println "--genera--  ${usuario.esTriangulo()}"
         if(usuario.esTriangulo()){
             sqlGen = "select * from trmt_generados("+ params.id +","+ departamentoUsuario +"," + "'"  + desde + "'" + "," +  "'" + hasta + "'" + ")"
+            println "sql tr--> $sqlGen"
             cn2.eachRow(sqlGen.toString()){
                 totalResumenGenerado += 1
             }
         }else{
             sqlGen = "select * from trmt_generados("+ params.id +","+ null +"," + "'"  + desde + "'" + "," +  "'" + hasta + "'" + ")"
+            println "sql--> $sqlGen"
             cn2.eachRow(sqlGen.toString()){
                 totalResumenGenerado += 1
             }
