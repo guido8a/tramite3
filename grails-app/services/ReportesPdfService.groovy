@@ -304,22 +304,19 @@ class ReportesPdfService {
         def chunkPieWeb = new Chunk("www.pichincha.gob.ec", fontPiePaginaBold)
         def chunkNumPag = new Chunk(espacio + "pág. ", fontPiePagina)
 
-        Image logo = Image.getInstance(imagen);
-        logo.setAlignment(Image.LEFT);
-//        logo.scaleAbsoluteHeight(40);
-//        logo.scaleAbsoluteWidth(40);
-        logo.scalePercent(15);
-
-        Chunk chunkLogo = new Chunk(logo, x, -40);
-//        Chunk chunkLogo = new Chunk(logo, x, -10);
-
-        Phrase phraseHeader = new Phrase()
-        phraseHeader.add(chunkLogo)
-        phraseHeader.add(chunkLeyenda)
+//        Image logo = Image.getInstance(imagen);
+//        logo.setAlignment(Image.LEFT);
+//        logo.scalePercent(15);
+//
+//        Chunk chunkLogo = new Chunk(logo, x, -40);
+//
+//        Phrase phraseHeader = new Phrase()
+//        phraseHeader.add(chunkLogo)
+//        phraseHeader.add(chunkLeyenda)
 
         def util = new UtilitariosTagLib()
         Paragraph paragraphHeader = new Paragraph()
-        paragraphHeader.add(new Paragraph(phraseHeader))
+//        paragraphHeader.add(new Paragraph(phraseHeader))
         paragraphHeader.add(new Paragraph("SISTEMA DE ADMINISTRACIÓN DOCUMENTAL", fontSubtituloGad))
         paragraphHeader.add(new Paragraph(tituloReporte, fontSubtituloGad))
         def parFecha = new Paragraph("Reporte generado el " + util.fechaConFormato(fecha: new Date(), formato: "dd MMMM yyyy HH:mm:ss").toString(), fontFecha)
@@ -345,66 +342,6 @@ class ReportesPdfService {
         document.setFooter(footer);
     }
 
-//    def membrete(Document document) {
-//        println ">>>>>>>>>>>> " + grailsApplication
-//
-////        File layoutFolder = ApplicationHolder.application.parentContext.getResource("images/logo_gadpp_reportes.png").file
-//        File layoutFolder = grailsApplication.parentContext.getResource("images/logo_gadpp_reportes.png").file
-//        def absolutePath = layoutFolder.absolutePath
-////        println "Absolute Path to Layout Folder: ${absolutePath}"
-//
-////        def imagen = "/home/luz/logo_gadpp_reportes.png"
-//        def imagen = absolutePath
-//
-//        def page = document.getPageSize()
-//        def rot = page.getRotation()
-//        def x = -100
-//        def espacio = "            "
-//        if (rot == 90) {
-//            x = -230
-//            espacio += espacio + espacio + espacio + "    "
-//        }
-//
-//        def aux = Parametros.list([sort: "id", order: "asc"])
-//        def leyenda = ""
-//        if (aux.size() == 1) {
-//            leyenda = aux.first().institucion
-//        } else if (aux.size() > 1) {
-//            println "Hay ${aux.size()} parametros!!: " + aux
-//            leyenda = aux.first().institucion
-//        }
-//        def chunkLeyenda = new Chunk(leyenda, fontEncabezado)
-//        def chunkPieDireccion = new Chunk("Manuel Larrea N13-45 y Antonio Ante • Teléfonos troncal: (593-2) 2527077 • 2549163 • ", fontPiePagina)
-//        def chunkPieWeb = new Chunk("www.pichincha.gob.ec", fontPiePaginaBold)
-//        def chunkNumPag = new Chunk(espacio + "pág. ")
-//
-//        Image logo = Image.getInstance(imagen);
-//        logo.setAlignment(Image.LEFT);
-////        logo.scaleAbsoluteHeight(20);
-////        logo.scaleAbsoluteWidth(20);
-////        logo.scalePercent(100);
-////        Chunk chunkLogo = new Chunk(logo, x, -20);
-//        Chunk chunkLogo = new Chunk(logo, x, -10);
-//
-//        Phrase phraseHeader = new Phrase()
-//        phraseHeader.add(chunkLogo)
-//        phraseHeader.add(chunkLeyenda)
-//
-//        HeaderFooter header = new HeaderFooter(phraseHeader, false);
-//        header.setAlignment(Element.ALIGN_CENTER);
-//        header.setBorder(Rectangle.NO_BORDER);
-//        document.setHeader(header);
-//
-//        Phrase phrasePiePagina = new Phrase();
-//        phrasePiePagina.add(chunkPieDireccion)
-//        phrasePiePagina.add(chunkPieWeb)
-//        phrasePiePagina.add(chunkNumPag)
-//
-//        HeaderFooter footer = new HeaderFooter(phrasePiePagina, true);
-//        footer.setAlignment(Element.ALIGN_CENTER);
-//        footer.setBorder(Rectangle.NO_BORDER);
-//        document.setFooter(footer);
-//    }
 
     /**
      * crearTabla: crea una tabla para los pdfs

@@ -86,7 +86,7 @@
                                 <div class="col-md-2">
 %{--                                    <elm:datepicker name="desde_${reporte}" class="form-control date" value="${new Date() - 15}" maxDate="+0"--}%
 %{--                                                    extra="data-tipo='desde' data-reporte='${reporte}'" onChangeDate="updateFecha"/>--}%
-                                    <input name="desde_${reporte}" id='datetimepicker1' type='text' class="form-control" onChangeDate="updateFecha" value="${new Date()}"/>
+                                    <input name="desde_${reporte}" id='datetimepicker1' type='text' class="form-control"/>
                                 </div>
 
                                 <div class="col-md-1">
@@ -96,7 +96,7 @@
                                 <div class="col-md-2">
 %{--                                    <elm:datepicker name="hasta_${reporte}" class="form-control date" value="${new Date()}" maxDate="+0"--}%
 %{--                                                    extra="data-tipo='hasta' data-reporte='${reporte}'" onChangeDate="updateFecha"/>--}%
-                                    <input name="hasta_${reporte}" id='datetimepicker2' type='text' class="form-control" onChangeDate="updateFecha" value="${new Date()}"/>
+                                    <input name="hasta_${reporte}" id='datetimepicker2' type='text' class="form-control"/>
                                 </div>
                             </div>
 
