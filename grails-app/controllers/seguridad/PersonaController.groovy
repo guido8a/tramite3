@@ -1614,5 +1614,10 @@ class PersonaController {
 
     }
 
+    def guardarPerfiles_ajax (){
+        println("params " + params)
+        render "ok_1"
+    }
+
 
 }

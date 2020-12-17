@@ -1,5 +1,3 @@
-
-
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
@@ -75,19 +73,23 @@
                     <a href="#" class="btn btn-warning btn-sm" id="nonePerf"><i class="fa fa-times"></i> Quitar todos los perfiles</a>
                 </p>
                 <g:form name="frmPerfiles" action="savePerfiles_ajax">
-                    <ul class="fa-ul">
-                        <g:each in="${seguridad.Prfl.list([sort: 'nombre'])}" var="perfil">
-                            <li class="perfil">
-                                <i data-id="${perfil.id}" data-cd="${perfil.codigo}"
-                                   class="fa-li fa ${perfilesUsu.contains(perfil.id) ? "fa-check-square" : "fa-square"}"></i>
-                                <span>${perfil.nombre} ${perfil.observaciones ? '(' + perfil.observaciones + ')' : ''}</span>
-                            </li>
-                        </g:each>
-                    </ul>
+                %{--                    <ul class="fa-ul">--}%
+                    <g:each in="${seguridad.Prfl.list([sort: 'nombre'])}" var="perfil">
+                        <div class="form-check form-check-inline" style="margin-top: 3px">
+                            <input class="form-check-input perfil" type="checkbox" data-id="${perfil?.id}" name="perfil_name" id="perfilId" ${perfil?.id in perfilesUsu ? 'checked' : ''}>
+                            ${perfil.nombre} ${perfil.observaciones ? '(' + perfil.observaciones + ')' : ''}
+                        </div>
+                    %{--                            <li class="perfil">--}%
+                    %{--                                <i data-id="${perfil.id}" data-cd="${perfil.codigo}"--}%
+                    %{--                                   class="fa-li fa ${perfilesUsu.contains(perfil.id) ? "fa-check-square" : "fa-square"}"></i>--}%
+                    %{--                                <span>${perfil.nombre} ${perfil.observaciones ? '(' + perfil.observaciones + ')' : ''}</span>--}%
+                    %{--                            </li>--}%
+                    </g:each>
+                %{--                    </ul>--}%
                 </g:form>
-                <a href="#" class="btn btn-success" id="btnPerfiles">
-                    <i class="fa fa-save"></i> Guardar
-                </a>
+            %{--                <a href="#" class="btn btn-success" id="btnPerfiles" style="margin-top: 5px">--}%
+            %{--                    <i class="fa fa-save"></i> Guardar--}%
+            %{--                </a>--}%
             </div>
         </div>
     </div>
@@ -95,75 +97,109 @@
 
 <script type="text/javascript">
 
-    function loadAccesos() {
-        var $div = $("#divAccesos");
-        $div.html(spinnerSquare64);
+    $.switcher('input[type=checkbox]');
+
+    $(".perfil").click(function () {
+        var id = $(this).data("id");
+        var checked = $(this).is(":checked");
+        if (checked) {
+            guardarPerfil('si',id)
+        } else {
+            guardarPerfil('no',id)
+        }
+    });
+
+    function guardarPerfil(estado, id){
+        var cl1 = cargarLoader("Guardando...");
         $.ajax({
-            type    : "POST",
-            url     : "${createLink(action:'accesos')}",
-            data    : {
-                id : "${usuario.id}"
+            type: 'POST',
+            url: '${createLink(controller: 'persona', action: 'guardarPerfiles_ajax')}',
+            data:{
+                id: id,
+                estado: estado
             },
-            success : function (msg) {
-                $div.html(msg);
-            }
-        });
-    }
-    function loadPermisos() {
-        var $div = $("#divPermisos");
-        $div.html(spinnerSquare64);
-        $.ajax({
-            type    : "POST",
-            url     : "${createLink(action:'permisos')}",
-            data    : {
-                id : "${usuario.id}"
-            },
-            success : function (msg) {
-                $div.html(msg);
+            success: function (msg) {
+                cl1.modal("hide");
+                var parts = msg.split("_");
+                if(parts[0] == 'ok'){
+                    log(parts[1],"success")
+                }else{
+                    log("Error al asignar el perfil","error")
+                }
             }
         });
     }
 
-    function validarFechasAcceso($elm, e) {
-        var fecha = e.date;
-        var $hasta = $("#accsFechaFinal_input");
-        if ($hasta.datepicker('getDate') < fecha) {
-            $hasta.datepicker('setDate', fecha);
-        }
-        $hasta.datepicker('setStartDate', fecha);
-    }
+    %{--function loadAccesos() {--}%
+    %{--    var $div = $("#divAccesos");--}%
+    %{--    $div.html(spinnerSquare64);--}%
+    %{--    $.ajax({--}%
+    %{--        type    : "POST",--}%
+    %{--        url     : "${createLink(action:'accesos')}",--}%
+    %{--        data    : {--}%
+    %{--            id : "${usuario.id}"--}%
+    %{--        },--}%
+    %{--        success : function (msg) {--}%
+    %{--            $div.html(msg);--}%
+    %{--        }--}%
+    %{--    });--}%
+    %{--}--}%
 
-    function validarFechasPermiso($elm, e) {
-        var fecha = e.date;
-        var $hasta = $("#fechaFin_input");
-        if ($hasta.datepicker('getDate') < fecha) {
-            $hasta.datepicker('setDate', fecha);
-        }
-        $hasta.datepicker('setStartDate', fecha);
-    }
+    %{--function loadPermisos() {--}%
+    %{--    var $div = $("#divPermisos");--}%
+    %{--    $div.html(spinnerSquare64);--}%
+    %{--    $.ajax({--}%
+    %{--        type    : "POST",--}%
+    %{--        url     : "${createLink(action:'permisos')}",--}%
+    %{--        data    : {--}%
+    %{--            id : "${usuario.id}"--}%
+    %{--        },--}%
+    %{--        success : function (msg) {--}%
+    %{--            $div.html(msg);--}%
+    %{--        }--}%
+    %{--    });--}%
+    %{--}--}%
+
+    // function validarFechasAcceso($elm, e) {
+    //     var fecha = e.date;
+    //     var $hasta = $("#accsFechaFinal_input");
+    //     if ($hasta.datepicker('getDate') < fecha) {
+    //         $hasta.datepicker('setDate', fecha);
+    //     }
+    //     $hasta.datepicker('setStartDate', fecha);
+    // }
+
+    // function validarFechasPermiso($elm, e) {
+    //     var fecha = e.date;
+    //     var $hasta = $("#fechaFin_input");
+    //     if ($hasta.datepicker('getDate') < fecha) {
+    //         $hasta.datepicker('setDate', fecha);
+    //     }
+    //     $hasta.datepicker('setStartDate', fecha);
+    // }
 
     $(function () {
         var $btnPerfiles = $("#btnPerfiles");
-        var $btnPermisos = $("#btnPermisos");
-        var $btnAccesos = $("#btnAccesos");
+        // var $btnPermisos = $("#btnPermisos");
+        // var $btnAccesos = $("#btnAccesos");
 
-        loadPermisos();
-        loadAccesos();
+        // loadPermisos();
+        // loadAccesos();
 
-        $("#frmAccesos, #frmPermisos").validate({
-            errorClass     : "help-block",
-            errorPlacement : function (error, element) {
-                if (element.parent().hasClass("input-group")) {
-                    error.insertAfter(element.parent());
-                } else {
-                    error.insertAfter(element);
-                }
-                element.parents(".grupo").addClass('has-error');
-            },
-            success        : function (label) {
-                label.parents(".grupo").removeClass('has-error');
-            }
-        });
+        // $("#frmAccesos, #frmPermisos").validate({
+        //     errorClass     : "help-block",
+        //     errorPlacement : function (error, element) {
+        //         if (element.parent().hasClass("input-group")) {
+        //             error.insertAfter(element.parent());
+        //         } else {
+        //             error.insertAfter(element);
+        //         }
+        //         element.parents(".grupo").addClass('has-error');
+        //     },
+        //     success        : function (label) {
+        //         label.parents(".grupo").removeClass('has-error');
+        //     }
+        // });
 
         function doSave(url, data) {
             console.log(url, data);
@@ -182,7 +218,6 @@
                 }
             });
         }
-
 
         $("#nonePerf").click(function () {
             $(".perfil .fa-li").removeClass("fa-check-square").addClass("fa-square");
@@ -231,57 +266,57 @@
             return false;
         });
 
-        $btnPermisos.click(function () {
-            var $frm = $("#frmPermisos");
-            if ($frm.valid()) {
-                var url = $frm.attr("action");
-                var data = "persona.id=${usuario.id}";
-                data += "&" + $frm.serialize();
-                $btnPermisos.hide().after(spinner);
-                $.ajax({
-                    type    : "POST",
-                    url     : url,
-                    data    : data,
-                    success : function (msg) {
-                        var parts = msg.split("_");
-                        log(parts[1], parts[0] == "OK" ? "success" : "error");
-                        spinner.remove();
-                        $btnPermisos.show();
-                        $frm.find("input, textarea").val("");
-                        $("#fechaInicio").val("date.struct");
-                        $("#fechaFin").val("date.struct");
-                        loadPermisos();
-                    }
-                });
-            }
-            return false;
-        });
+        %{--$btnPermisos.click(function () {--}%
+        %{--    var $frm = $("#frmPermisos");--}%
+        %{--    if ($frm.valid()) {--}%
+        %{--        var url = $frm.attr("action");--}%
+        %{--        var data = "persona.id=${usuario.id}";--}%
+        %{--        data += "&" + $frm.serialize();--}%
+        %{--        $btnPermisos.hide().after(spinner);--}%
+        %{--        $.ajax({--}%
+        %{--            type    : "POST",--}%
+        %{--            url     : url,--}%
+        %{--            data    : data,--}%
+        %{--            success : function (msg) {--}%
+        %{--                var parts = msg.split("_");--}%
+        %{--                log(parts[1], parts[0] == "OK" ? "success" : "error");--}%
+        %{--                spinner.remove();--}%
+        %{--                $btnPermisos.show();--}%
+        %{--                $frm.find("input, textarea").val("");--}%
+        %{--                $("#fechaInicio").val("date.struct");--}%
+        %{--                $("#fechaFin").val("date.struct");--}%
+        %{--                loadPermisos();--}%
+        %{--            }--}%
+        %{--        });--}%
+        %{--    }--}%
+        %{--    return false;--}%
+        %{--});--}%
 
-        $btnAccesos.click(function () {
-            var $frm = $("#frmAccesos");
-            if ($frm.valid()) {
-                var url = $frm.attr("action");
-                var data = "usuario.id=${usuario.id}";
-                data += "&" + $frm.serialize();
-                $btnAccesos.hide().after(spinner);
-                $.ajax({
-                    type    : "POST",
-                    url     : url,
-                    data    : data,
-                    success : function (msg) {
-                        var parts = msg.split("_");
-                        log(parts[1], parts[0] == "OK" ? "success" : "error");
-                        spinner.remove();
-                        $btnAccesos.show();
-                        $frm.find("input, textarea").val("");
-                        $("#accsFechaInicial").val("date.struct");
-                        $("#accsFechaFinal").val("date.struct");
-                        loadAccesos();
-                    }
-                });
-            }
-            return false;
-        });
+        %{--$btnAccesos.click(function () {--}%
+        %{--    var $frm = $("#frmAccesos");--}%
+        %{--    if ($frm.valid()) {--}%
+        %{--        var url = $frm.attr("action");--}%
+        %{--        var data = "usuario.id=${usuario.id}";--}%
+        %{--        data += "&" + $frm.serialize();--}%
+        %{--        $btnAccesos.hide().after(spinner);--}%
+        %{--        $.ajax({--}%
+        %{--            type    : "POST",--}%
+        %{--            url     : url,--}%
+        %{--            data    : data,--}%
+        %{--            success : function (msg) {--}%
+        %{--                var parts = msg.split("_");--}%
+        %{--                log(parts[1], parts[0] == "OK" ? "success" : "error");--}%
+        %{--                spinner.remove();--}%
+        %{--                $btnAccesos.show();--}%
+        %{--                $frm.find("input, textarea").val("");--}%
+        %{--                $("#accsFechaInicial").val("date.struct");--}%
+        %{--                $("#accsFechaFinal").val("date.struct");--}%
+        %{--                loadAccesos();--}%
+        %{--            }--}%
+        %{--        });--}%
+        %{--    }--}%
+        %{--    return false;--}%
+        %{--});--}%
     });
 </script>
 
