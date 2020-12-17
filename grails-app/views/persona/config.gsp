@@ -111,15 +111,17 @@
 
     function guardarPerfil(estado, id){
         var cl1 = cargarLoader("Guardando...");
+        var data = "id=${usuario.id}";
+        $(".perfil").each(function () {
+            if ($(this).is(":checked")) {
+                data += "&perfil=" + $(this).data("id");
+            }
+        });
         $.ajax({
             type: 'POST',
             %{--url: '${createLink(controller: 'persona', action: 'guardarPerfiles_ajax')}',--}%
             url: '${createLink(controller: 'persona', action: 'savePerfiles_ajax')}',
-            data:{
-                perfil: id,
-                estado: estado,
-                id: '${usuario?.id}'
-            },
+            data:data,
             success: function (msg) {
                 cl1.modal("hide");
                 var parts = msg.split("_");
