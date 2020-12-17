@@ -113,10 +113,12 @@
         var cl1 = cargarLoader("Guardando...");
         $.ajax({
             type: 'POST',
-            url: '${createLink(controller: 'persona', action: 'guardarPerfiles_ajax')}',
+            %{--url: '${createLink(controller: 'persona', action: 'guardarPerfiles_ajax')}',--}%
+            url: '${createLink(controller: 'persona', action: 'savePerfiles_ajax')}',
             data:{
-                id: id,
-                estado: estado
+                perfil: id,
+                estado: estado,
+                id: '${usuario?.id}'
             },
             success: function (msg) {
                 cl1.modal("hide");

@@ -651,25 +651,42 @@ class PersonaController {
         println "save perfiles: " + params
         def usu = Persona.get(params.id)
         def now = new Date()
-//        def perfilesUsu = Sesn.findAllByUsuario(usu).perfil.id*.toString()
         def perfilesUsu = Sesn.findAllByUsuarioAndFechaInicioLessThanAndFechaFinIsNull(usu, now).perfil.id*.toString()
 
-        def arrRemove = perfilesUsu, arrAdd = []
+//        def arrRemove = perfilesUsu, arrAdd = []
+       def arrRemove = []
+       def arrAdd = []
         def errores = ""
 
-        if (params.perfil instanceof java.lang.String) {
-            params.perfil = [params.perfil]
-        }
-//        println "params perfil: " + params.perfil
+//        if (params.perfil instanceof java.lang.String) {
+//            params.perfil = [params.perfil]
+//        }
+
+        println "params perfil: " + params.perfil
         println "perfiles usu: " + perfilesUsu
 
-        params.perfil.each { pid ->
-            if (perfilesUsu.contains(pid)) {
-                //ya tiene este perfil: le quito de la lista de los de eliminar
-                arrRemove.remove(pid)
-            } else {
-                //no tiene este perfil: le pongo en la lista de agregar
-                arrAdd.add(pid)
+//        params.perfil.each { pid ->
+//            if (perfilesUsu.contains(pid)) {
+//                //ya tiene este perfil: le quito de la lista de los de eliminar
+//                arrRemove.remove(pid)
+//            } else {
+//                //no tiene este perfil: le pongo en la lista de agregar
+//                arrAdd.add(pid)
+//            }
+//        }
+
+
+        if(perfilesUsu.contains(params.perfil)){
+            if(params.estado =='no'){
+                arrRemove.add(params.perfil)
+            }else{
+
+            }
+        }else{
+            if(params.estado == 'si'){
+                arrAdd.add(params.perfil)
+            }else{
+
             }
         }
 
@@ -744,12 +761,12 @@ class PersonaController {
             }
 
             if (errores == "") {
-                render "OK_Cambios efectuados exitosamente"
+                render "ok_Perfil asignado correctamente"
             } else {
-                render "<ul>" + errores + "</ul>"
+                render "no_<ul>" + errores + "</ul>"
             }
         } else {
-            render "<ul>" + errores + "</ul>"
+            render "no_<ul>" + errores + "</ul>"
         }
     }
 
