@@ -654,8 +654,6 @@ class PersonaController {
         def perfilesUsu = Sesn.findAllByUsuarioAndFechaInicioLessThanAndFechaFinIsNull(usu, now).perfil.id*.toString()
 
         def arrRemove = perfilesUsu, arrAdd = []
-//       def arrRemove = []
-//       def arrAdd = []
         def errores = ""
 
         if (params.perfil instanceof java.lang.String) {
@@ -674,21 +672,6 @@ class PersonaController {
                 arrAdd.add(pid)
             }
         }
-
-
-//        if(perfilesUsu.contains(params.perfil)){
-//            if(params.estado =='no'){
-//                arrRemove.add(params.perfil)
-//            }else{
-//
-//            }
-//        }else{
-//            if(params.estado == 'si'){
-//                arrAdd.add(params.perfil)
-//            }else{
-//
-//            }
-//        }
 
         println "Añadir: " + arrAdd
         println "Remover: " + arrRemove
