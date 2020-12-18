@@ -1,12 +1,4 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: gato
-  Date: 18/02/14
-  Time: 12:52 PM
---%>
-
-
-<%@ page import="happy.tramites.EstadoTramite; org.apache.commons.lang.WordUtils" contentType="text/html;charset=UTF-8" %>
+<%@ page import="org.apache.commons.lang.WordUtils" contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
     <meta name="layout" content="main">
@@ -39,11 +31,11 @@
 
 <div class="btn-toolbar toolbar" style="margin-top: 10px !important">
     <div class="btn-group">
-        <g:link action="list" class="btn btn-success btnActualizar">
-            <i class="fa fa-refresh"></i> Actualizar
+        <g:link action="list" class="btn btn-info btnActualizar">
+            <i class="fa fa-sync-alt"></i> Actualizar
         </g:link>
-        <g:link action="index" controller="inicio" class="btn btn-default ">
-            <i class="fa fa-sing-out"></i> Salir
+        <g:link action="index" controller="inicio" class="btn btn-primary ">
+            <i class="fa fa-times"></i> Salir
         </g:link>
     </div>
 </div>

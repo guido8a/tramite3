@@ -180,9 +180,19 @@ class DocumentosGeneradosController {
     }
 
     def reporteDetalladoPdf() {
-        println "generados reporteDetalladoPdf $params"
-        def desde = new Date().parse("dd-MM-yyyy HH:mm", params.desde + " 00:00")
-        def hasta = new Date().parse("dd-MM-yyyy HH:mm", params.hasta + " 23:59")
+//        println "generados reporteDetalladoPdf $params"
+
+        def desde = new Date()
+        def hasta = new Date()
+
+        if(params.desde){
+            desde = new Date().parse("dd-MM-yyyy HH:mm", params.desde + " 00:00")
+        }
+
+        if(params.hasta){
+            hasta = new Date().parse("dd-MM-yyyy HH:mm", params.hasta + " 23:59")
+        }
+
 
         def fileName = "detalle_documentos_generados_"
         def title = "Detalle de los documentos generados y recibidos de "
@@ -338,8 +348,19 @@ class DocumentosGeneradosController {
     }
 
     def reporteGeneralXlsx() {
-        def desde = new Date().parse("dd-MM-yyyy HH:mm", params.desde + " 00:00")
-        def hasta = new Date().parse("dd-MM-yyyy HH:mm", params.hasta + " 23:59")
+
+        println("params " + params)
+
+        def desde = new Date()
+        def hasta = new Date()
+
+        if(params.desde){
+            desde = new Date().parse("dd-MM-yyyy HH:mm", params.desde + " 00:00")
+        }
+
+        if(params.hasta){
+            hasta = new Date().parse("dd-MM-yyyy HH:mm", params.hasta + " 23:59")
+        }
 
         def fileName = "documentos_generados_"
         def title = ["Reporte de documentos generados y recibidos"]
@@ -462,8 +483,17 @@ class DocumentosGeneradosController {
 
 //        println("params detallado xls " + params)
 
-        def desde = new Date().parse("dd-MM-yyyy HH:mm", params.desde + " 00:00")
-        def hasta = new Date().parse("dd-MM-yyyy HH:mm", params.hasta + " 23:59")
+        def desde = new Date()
+        def hasta = new Date()
+
+        if(params.desde){
+            desde = new Date().parse("dd-MM-yyyy HH:mm", params.desde + " 00:00")
+        }
+
+        if(params.hasta){
+            hasta = new Date().parse("dd-MM-yyyy HH:mm", params.hasta + " 23:59")
+        }
+
         def fileName = "detalle_documentos_generados_"
         def title = ["Reporte de documentos generados y recibidos"]
         def title2 = ""

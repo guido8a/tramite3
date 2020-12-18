@@ -99,7 +99,7 @@
                                 </div>
                             </div>
 
-                            <div class="row">
+                            <div class="row" style="min-height: 200px">
                                 <div class="col-md-12">
                                     <div class="btn-group">
                                         <g:link class="btn btn-info generar" controller="documentosGenerados" action="reporteGeneralPdf" params="[id: persona.id]">

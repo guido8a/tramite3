@@ -292,10 +292,6 @@
         items.detalles = detalles;
         items.arbol = arbol;
         </g:if>
-%{--        <g:if test="${session.usuario.getPuedeCopiar()}">--}%
-%{--        items.copia = copia;--}%
-%{--        </g:if>--}%
-
         return items
     }
 

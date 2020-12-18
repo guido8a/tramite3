@@ -258,28 +258,28 @@
                 }
             };
 
-            if (nodeType.match("padre") || nodeType.match("hijo")) {
-                items.documentosSinSum = {
-                    label: "Docs. generados sin sum",
-                    icon: "fa fa-print",
-                    submenu: {
-                        xls: {
-                            label: "EXCEL",
-                            icon: "fa fa-file-excel",
-                            action: function () {
-                                $("#modalFecha_title").html("Periodo:");
-                                $('#modalFechas').modal('show');
-                                $("#btnPrint").unbind("click").click(function () {
-                                    if ($("#formFechas").valid()) {
-                                        location.href = "${g.createLink(controller: 'retrasadosExcel',action: 'reporteGeneradosArbolExcelSinSum')}/" + nodeId + "?desde=" + $("#datetimepicker1").val() + "&hasta=" + $("#datetimepicker2").val();
-                                        $('#modalFechas').modal('hide');
-                                    }
-                                });
-                            }
-                        }
-                    }
-                };
-            }
+            %{--if (nodeType.match("padre") || nodeType.match("hijo")) {--}%
+            %{--    items.documentosSinSum = {--}%
+            %{--        label: "Docs. generados sin sum",--}%
+            %{--        icon: "fa fa-print",--}%
+            %{--        submenu: {--}%
+            %{--            xls: {--}%
+            %{--                label: "EXCEL",--}%
+            %{--                icon: "fa fa-file-excel",--}%
+            %{--                action: function () {--}%
+            %{--                    $("#modalFecha_title").html("Periodo:");--}%
+            %{--                    $('#modalFechas').modal('show');--}%
+            %{--                    $("#btnPrint").unbind("click").click(function () {--}%
+            %{--                        if ($("#formFechas").valid()) {--}%
+            %{--                            location.href = "${g.createLink(controller: 'retrasadosExcel',action: 'reporteGeneradosArbolExcelSinSum')}/" + nodeId + "?desde=" + $("#datetimepicker1").val() + "&hasta=" + $("#datetimepicker2").val();--}%
+            %{--                            $('#modalFechas').modal('hide');--}%
+            %{--                        }--}%
+            %{--                    });--}%
+            %{--                }--}%
+            %{--            }--}%
+            %{--        }--}%
+            %{--    };--}%
+            %{--}--}%
 
             if (!nodeType.match("usuario") && !nodeType.match("jefe")) {
                 items.gestion = {

@@ -362,6 +362,8 @@ class BuscarTramiteController {
 
     def tablaBusquedaArchivados() {
 
+        println("params " + params)
+
         def persona = Persona.get(session.usuario.id)
         def departamento = persona?.departamento
         def res
@@ -370,11 +372,11 @@ class BuscarTramiteController {
         def rolCopia = RolPersonaTramite.findByCodigo('R002');
 
         if (params.fecha) {
-            params.fechaFin = new Date().parse("dd-MM-yyyy HH:mm:ss", params.fecha + " 23:59:59")
+            params.fechaIni = new Date().parse("dd-MM-yyyy HH:mm:ss", params.fecha + " 23:59:59")
         }
 
         if (params.fechaRecepcion) {
-            params.fechaIni = new Date().parse("dd-MM-yyyy HH:mm:ss", params.fechaRecepcion + " 00:00:00")
+            params.fechaFin = new Date().parse("dd-MM-yyyy HH:mm:ss", params.fechaRecepcion + " 00:00:00")
         }
 
         res = PersonaDocumentoTramite.withCriteria {
