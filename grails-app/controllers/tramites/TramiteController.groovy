@@ -978,6 +978,7 @@ class TramiteController {
         }
 
         def sql = "SELECT * FROM entrada_prsn($session.usuario.id) ${where} ORDER BY ${params.sort} ${params.order}"
+        println("sql " + sql)
         def cn = dbConnectionService.getConnection()
         def rows = cn.rows(sql.toString())
         return [rows: rows, busca: busca]

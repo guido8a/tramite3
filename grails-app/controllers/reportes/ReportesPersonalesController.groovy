@@ -449,4 +449,8 @@ class ReportesPersonalesController {
         }
     }
 
+    def reportes(){
+
+    }
+
 }
