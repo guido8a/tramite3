@@ -41,7 +41,6 @@ class Persona implements Auditable{
     */
 
     def permisos = []
-    static transients = ['permisos']
     static auditable = true
     /*Fin*/
 
@@ -112,21 +111,22 @@ class Persona implements Auditable{
 
     def puedePermiso(String codigoPermiso) {
 //        if (id == 5513L) {
-//        println "puede permiso " + codigoPermiso + "    " + this.permisos + "   " + this.permisos.codigo
+        println "puede permiso " + codigoPermiso + "    " + this.permisos + "   " + this.permisos.codigo
 //        }
         def prms = PermisoUsuario.findAllByPersonaAndFechaFinIsNull(this)
+//        def prms = PermisoUsuario.findAllByPersona(this)
         println "permisos: ${prms.permisoTramite.codigo}"
-//        if (this.permisos.size() > 0) {
-        if (prms.size() > 0) {
+        if (this.permisos.size() > 0) {
+//        if (prms.size() > 0) {
 
 //            if (id == 5513L) {
 //            println "AQUI"
 //            }
             def perm = null
-            prms.each {
+            this.permisos.each {
                 if (!perm) {
-                    if (it.permisoTramite.codigo == codigoPermiso) {
-                        perm = PermisoUsuario.findAllByPermisoTramiteAndPersona(it.permisoTramite, this)
+                    if (it.codigo == codigoPermiso) {
+                        perm = PermisoUsuario.findAllByPermisoTramiteAndPersona(it, this)
                         def perm2 = null
                         perm.each { pr ->
 //                            if (id == 5513L) {
@@ -176,6 +176,7 @@ class Persona implements Auditable{
 //            if (id == 5513L) {
 //            println "\t" + (perms.size() > 0)
 //          d
+
             return perms.size() > 0
         }
     }
@@ -336,6 +337,8 @@ class Persona implements Auditable{
     }
 
     def esTriangulo() {
+//        println "session: $session"
+        println "estriangulo --> ${this.puedePermiso('E001')}"
         return this.puedePermiso("E001")
     }
 
