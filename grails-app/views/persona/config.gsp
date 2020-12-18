@@ -110,64 +110,88 @@
     });
 
     function guardarPerfil(estado, id){
-        var cl1 = cargarLoader("Guardando...");
-        var data = "id=${usuario.id}";
-        $(".perfil").each(function () {
-            if ($(this).is(":checked")) {
-                data += "&perfil=" + $(this).data("id");
+
+
+        bootbox.confirm({
+            message: "<i class='fa fa-cogs fa-3x pull-left text-info text-shadow'></i>  " +
+                "<p style='text-align: center; font-size: 14px; font-weight: bold'>  Está seguro de activar/desactivar el perfil seleccionado?</p>",
+            buttons: {
+                confirm: {
+                    label: "<i class='fa fa-save'></i> Aceptar",
+                    className: 'btn-success'
+                },
+                cancel: {
+                    label: "<i class='fa fa-times'></i> Cancelar",
+                    className: 'btn-primary'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    var cl1 = cargarLoader("Guardando...");
+                    var data = "id=${usuario.id}";
+                    $(".perfil").each(function () {
+                        if ($(this).is(":checked")) {
+                            data += "&perfil=" + $(this).data("id");
+                        }
+                    });
+
+                    if(verificarPerfiles()){
+                        if(verificarJefe()){
+                            savePerfil(data,cl1)
+                        }else{
+                            cl1.modal("hide");
+                            bootbox.confirm({
+                                message: "<i class='fa fa-exclamation-triangle fa-3x pull-left text-warning text-shadow'></i>  " +
+                                    "<p style='margin-left: 10px'>  No puede asignar a la vez el perfil de JEFE y el de DIRECTOR a la misma persona</p>",
+                                buttons: {
+                                    confirm: {
+                                        label: "<i class='fa fa-times'></i> Aceptar",
+                                        className: 'btn-success'
+                                    },
+                                    cancel: {
+                                        label: "<i class='fa fa-times'></i> Cancelar",
+                                        className: 'btn-primary hidden'
+                                    }
+                                },
+                                callback: function (result) {
+                                    if (result) {
+                                        var cl2 = cargarLoader("Cargando...");
+                                        location.reload(true);
+                                    }
+                                }
+                            });
+                        }
+                    }else{
+                        cl1.modal("hide");
+                        bootbox.confirm({
+                            message: "<i class='fa fa-exclamation-triangle fa-3x pull-left text-warning text-shadow'></i>  " +
+                                "<p style='margin-left: 10px'>  No ha seleccionado ningún perfil. El usuario no podrá ingresar al sistema. ¿Desea continuar?.</p>",
+                            buttons: {
+                                confirm: {
+                                    label: "<i class='fa fa-save'></i> Aceptar",
+                                    className: 'btn-success'
+                                },
+                                cancel: {
+                                    label: "<i class='fa fa-times'></i> Cancelar",
+                                    className: 'btn-primary'
+                                }
+                            },
+                            callback: function (result) {
+                                if (result) {
+                                    savePerfil(data,cl1)
+                                }else{
+                                    location.reload(true);
+                                }
+                            }
+                        });
+                    }
+                }else{
+                    var cl3 = cargarLoader("Cargando...");
+                    location.reload(true);
+                }
             }
         });
 
-        if(verificarPerfiles()){
-            if(verificarJefe()){
-                savePerfil(data,cl1)
-            }else{
-                cl1.modal("hide");
-                bootbox.confirm({
-                    message: "<i class='fa fa-exclamation-triangle fa-3x pull-left text-warning text-shadow'></i>  " +
-                        "<p>  No puede asignar a la vez el perfil de JEFE y el de DIRECTOR a la misma persona</p>",
-                    buttons: {
-                        confirm: {
-                            label: "<i class='fa fa-times'></i> Aceptar",
-                            className: 'btn-success'
-                        },
-                        cancel: {
-                            label: "<i class='fa fa-times'></i> Cancelar",
-                            className: 'btn-primary hidden'
-                        }
-                    },
-                    callback: function (result) {
-                        if (result) {
-                            var cl2 = cargarLoader("Cargando...")
-                             location.reload(true);
-                        }
-                    }
-                });
-            }
-        }else{
-            cl1.modal("hide");
-            bootbox.confirm({
-                message: "<i class='fa fa-exclamation-triangle fa-3x pull-left text-warning text-shadow'></i>  " +
-                    "<p>  No ha seleccionado ningún perfil. El usuario no podrá ingresar al sistema. ¿Desea continuar?.</p>",
-                buttons: {
-                    confirm: {
-                        label: "<i class='fa fa-save'></i> Aceptar",
-                        className: 'btn-success'
-                    },
-                    cancel: {
-                        label: "<i class='fa fa-times'></i> Cancelar",
-                        className: 'btn-primary'
-                    }
-                },
-                callback: function (result) {
-                    if (result) {
-                        savePerfil(data,cl1)
-                    }else{
-                        location.reload(true);
-                    }
-                }
-            });
-        }
     }
 
     function verificarPerfiles(){

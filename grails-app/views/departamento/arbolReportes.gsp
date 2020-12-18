@@ -113,7 +113,8 @@
                         </div>
 
                         <div class="col-md-4" style="z-index: 1500">
-                            <elm:datepicker name="desde" class="form-control required"/>
+%{--                            <elm:datepicker name="desde" class="form-control required"/>--}%
+                            <input name="desde" id='datetimepicker1' type='text' class="form-control required"/>
                         </div>
 
                         <div class="col-md-2">
@@ -123,15 +124,16 @@
                         </div>
 
                         <div class="col-md-4" style="z-index: 1500">
-                            <elm:datepicker name="hasta" class="form-control required" maxDate="+0"/>
+%{--                            <elm:datepicker name="hasta" class="form-control required" maxDate="+0"/>--}%
+                            <input name="hasta" id='datetimepicker2' type='text' class="form-control required"/>
                         </div>
                     </div>
                 </form>
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" id="btnPrint"><i class="fa fa-print"></i> Generar
+                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar</button>
+                <button type="button" class="btn btn-success" id="btnPrint"><i class="fa fa-print"></i> Generar
                 </button>
             </div>
         </div>
@@ -139,6 +141,20 @@
 </div>
 
 <script type="text/javascript">
+
+    $(function () {
+        $('#datetimepicker1, #datetimepicker2').datetimepicker({
+            locale: 'es',
+            format: 'DD-MM-YYYY',
+            // daysOfWeekDisabled: [0, 6],
+            // inline: true,
+            // sideBySide: true,
+            showClose: true,
+            icons: {
+                close: 'closeText'
+            }
+        });
+    });
 
     var index = 0;
 
@@ -209,10 +225,10 @@
                                 if ($("#formFechas").valid()) {
                                     if (nodeType.match("padre") || nodeType.match("hijo")) {
                                         location.href = "${g.createLink(controller: 'retrasados', action: 'reporteGeneradosArbol')}/" +
-                                            nodeId + "?desde=" + $("#desde_input").val() + "&hasta=" + $("#hasta_input").val() + "&tipo=dpto";
+                                            nodeId + "?desde=" + $("#datetimepicker1").val() + "&hasta=" + $("#datetimepicker2").val() + "&tipo=dpto";
                                     } else {
                                         location.href = "${g.createLink(controller: 'documentosGenerados',action: 'reporteDetalladoPdf')}/" +
-                                            nodeId + "?desde=" + $("#desde_input").val() + "&hasta=" + $("#hasta_input").val() + "&tipo=prsn&dpto=" + parentId;
+                                            nodeId + "?desde=" + $("#datetimepicker1").val() + "&hasta=" + $("#datetimepicker2").val() + "&tipo=prsn&dpto=" + parentId;
                                     }
                                     $('#modalFechas').modal('hide');
                                 }
@@ -229,9 +245,9 @@
                                 if ($("#formFechas").valid()) {
 //
                                     if (nodeType.match("padre") || nodeType.match("hijo")) {
-                                        location.href = "${g.createLink(controller: 'retrasadosExcel',action: 'reporteGeneradosArbolExcel')}/" + nodeId + "?desde=" + $("#desde_input").val() + "&hasta=" + $("#hasta_input").val();
+                                        location.href = "${g.createLink(controller: 'retrasadosExcel',action: 'reporteGeneradosArbolExcel')}/" + nodeId + "?desde=" + $("#datetimepicker1").val() + "&hasta=" + $("#datetimepicker1").val();
                                     } else {
-                                        location.href = "${g.createLink(controller: 'documentosGenerados',action: 'reporteDetalladoXlsx')}/" + nodeId + "?desde=" + $("#desde_input").val() + "&hasta=" + $("#hasta_input").val() + "&tipo=prsn&dpto=" + parentId;
+                                        location.href = "${g.createLink(controller: 'documentosGenerados',action: 'reporteDetalladoXlsx')}/" + nodeId + "?desde=" + $("#datetimepicker1").val() + "&hasta=" + $("#datetimepicker2").val() + "&tipo=prsn&dpto=" + parentId;
                                     }
 
                                     $('#modalFechas').modal('hide');
@@ -255,7 +271,7 @@
                                 $('#modalFechas').modal('show');
                                 $("#btnPrint").unbind("click").click(function () {
                                     if ($("#formFechas").valid()) {
-                                        location.href = "${g.createLink(controller: 'retrasadosExcel',action: 'reporteGeneradosArbolExcelSinSum')}/" + nodeId + "?desde=" + $("#desde_input").val() + "&hasta=" + $("#hasta_input").val();
+                                        location.href = "${g.createLink(controller: 'retrasadosExcel',action: 'reporteGeneradosArbolExcelSinSum')}/" + nodeId + "?desde=" + $("#datetimepicker1").val() + "&hasta=" + $("#datetimepicker2").val();
                                         $('#modalFechas').modal('hide');
                                     }
                                 });
@@ -278,7 +294,7 @@
                                 $('#modalFechas').modal('show');
                                 $("#btnPrint").unbind("click").click(function () {
                                     if ($("#formFechas").valid()) {
-                                        location.href = "${g.createLink(controller: 'reporteGestion',action: 'reporteGestion5')}/" + nodeId + "?desde=" + $("#desde_input").val() + "&hasta=" + $("#hasta_input").val();
+                                        location.href = "${g.createLink(controller: 'reporteGestion',action: 'reporteGestion5')}/" + nodeId + "?desde=" + $("#datetimepicker1").val() + "&hasta=" + $("#datetimepicker2").val();
                                         $('#modalFechas').modal('hide');
                                     }
                                 });
@@ -292,7 +308,7 @@
                                 $('#modalFechas').modal('show');
                                 $("#btnPrint").unbind("click").click(function () {
                                     if ($("#formFechas").valid()) {
-                                        location.href = "${g.createLink(controller: 'reporteGestionExcel',action: 'reporteGestion')}/" + nodeId + "?desde=" + $("#desde_input").val() + "&hasta=" + $("#hasta_input").val();
+                                        location.href = "${g.createLink(controller: 'reporteGestionExcel',action: 'reporteGestion')}/" + nodeId + "?desde=" + $("#datetimepicker1").val() + "&hasta=" + $("#datetimepicker2").val();
                                         $('#modalFechas').modal('hide');
                                     }
                                 });
@@ -336,7 +352,7 @@
                                 $('#modalFechas').modal('show');
                                 $("#btnPrint").unbind("click").click(function () {
                                     if ($("#formFechas").valid()) {
-                                        location.href = "${g.createLink(controller: 'reporteGestionExcel',action: 'reporteTiempoRespuestaDepPdf')}/" + nodeId + "?desde=" + $("#desde_input").val() + "&hasta=" + $("#hasta_input").val();
+                                        location.href = "${g.createLink(controller: 'reporteGestionExcel',action: 'reporteTiempoRespuestaDepPdf')}/" + nodeId + "?desde=" + $("#datetimepicker1").val() + "&hasta=" + $("#datetimepicker2").val();
                                         $('#modalFechas').modal('hide');
                                     }
                                 });
@@ -350,7 +366,7 @@
                                 $('#modalFechas').modal('show');
                                 $("#btnPrint").unbind("click").click(function () {
                                     if ($("#formFechas").valid()) {
-                                        location.href = "${g.createLink(controller: 'reporteGestionExcel',action: 'reporteTiempoRespuesta')}/" + nodeId + "?desde=" + $("#desde_input").val() + "&hasta=" + $("#hasta_input").val();
+                                        location.href = "${g.createLink(controller: 'reporteGestionExcel',action: 'reporteTiempoRespuesta')}/" + nodeId + "?desde=" + $("#datetimepicker1").val() + "&hasta=" + $("#datetimepicker2").val();
                                         $('#modalFechas').modal('hide');
                                     }
                                 });
@@ -373,7 +389,7 @@
                                 $('#modalFechas').modal('show');
                                 $("#btnPrint").unbind("click").click(function () {
                                     if ($("#formFechas").valid()) {
-                                        location.href = "${g.createLink(controller: 'reporteGestionExcel',action: 'reporteTiempoRespuestaUsuarioPdf')}/" + nodeId + "?desde=" + $("#desde_input").val() + "&hasta=" + $("#hasta_input").val();
+                                        location.href = "${g.createLink(controller: 'reporteGestionExcel',action: 'reporteTiempoRespuestaUsuarioPdf')}/" + nodeId + "?desde=" + $("#datetimepicker1").val() + "&hasta=" + $("#datetimepicker2").val();
                                         $('#modalFechas').modal('hide');
                                     }
                                 });
@@ -387,7 +403,7 @@
                                 $('#modalFechas').modal('show');
                                 $("#btnPrint").unbind("click").click(function () {
                                     if ($("#formFechas").valid()) {
-                                        location.href = "${g.createLink(controller: 'reporteGestionExcel',action: 'reporteTiempoRespuestaUsuario')}/" + nodeId + "?desde=" + $("#desde_input").val() + "&hasta=" + $("#hasta_input").val();
+                                        location.href = "${g.createLink(controller: 'reporteGestionExcel',action: 'reporteTiempoRespuestaUsuario')}/" + nodeId + "?desde=" + $("#datetimepicker1").val() + "&hasta=" + $("#datetimepicker2").val();
                                         $('#modalFechas').modal('hide');
                                     }
                                 });
