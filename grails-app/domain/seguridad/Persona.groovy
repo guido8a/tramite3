@@ -337,8 +337,6 @@ class Persona implements Auditable{
     }
 
     def esTriangulo() {
-//        println "session: $session"
-        println "estriangulo --> ${this.puedePermiso('E001')}"
         return this.puedePermiso("E001")
     }
 
