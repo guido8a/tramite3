@@ -72,10 +72,8 @@
         transition: all 0.4s ease 0s;
     }
 
-
     .mensaje {
         color: #494949 !important;
-        /*text-transform: uppercase;*/
         text-decoration: none;
         background: #ffffff;
         padding: 20px;
@@ -97,8 +95,8 @@
 
 <ul class="nav nav-pills">
     <li class="active"><a data-toggle="pill" href="#generales">Generales</a></li>
-    <li><a data-toggle="pill" href="#obra">Trámites</a></li>
-%{--    <li><a data-toggle="pill" href="#cont">Personales / Oficina</a></li>--}%
+%{--    <li><a data-toggle="pill" href="#obra">Trámites</a></li>--}%
+    %{--    <li><a data-toggle="pill" href="#cont">Personales / Oficina</a></li>--}%
 </ul>
 
 <div class="tab-content">
@@ -112,6 +110,14 @@
                         <i class="fa fa-user-slash fa-4x text-success"></i>
                         <br/> Bandejas bloqueadas
                     </a>
+                    <a href="#" id="btnOficina" class="btn btn-info btn-ajax example_c item" texto="anua">
+                        <i class="fa fa-chart-bar fa-4x text-success"></i>
+                        <br/> Estadísticas
+                    </a>
+                </p>
+            </div>
+            <div class="col-md-12 col-xs-5">
+                <p>
                     <a href="#" id="btnDepartamentos" class="btn btn-info btn-ajax example_c item" texto="dire">
                         <i class="fa fa-building fa-4x text-success"></i>
                         <br/> Departamentos
@@ -122,11 +128,6 @@
                     </a>
                 </p>
             </div>
-        </div>
-    </div>
-
-    <div id="obra" class="tab-pane fade">
-        <div class="row">
             <div class="col-md-12 col-xs-5">
                 <p>
                     <a href="#" id="btnAnulados" class="btn btn-info btn-ajax example_c item" texto="tpob">
@@ -141,29 +142,46 @@
                         <i class="fa fa-user fa-4x text-success"></i>
                         <br/> Personales
                     </a>
-                    <a href="#" id="btnOficina" class="btn btn-info btn-ajax example_c item" texto="anua">
-                        <i class="fa fa-home fa-4x text-success"></i>
-                        <br/> Oficina
-                    </a>
                 </p>
             </div>
         </div>
     </div>
 
-%{--    <div id="cont" class="tab-pane fade">--}%
+%{--    <div id="obra" class="tab-pane fade">--}%
 %{--        <div class="row">--}%
 %{--            <div class="col-md-12 col-xs-5">--}%
 %{--                <p>--}%
-%{--                    <g:link class="link btn btn-info btn-ajax example_c item" texto="grgf"  controller="reportes" action="mapa">--}%
-%{--                        <i class="fa fa-map-marked-alt fa-4x text-success"></i>--}%
-%{--                        <br/> Localización de proyectos--}%
-%{--                    </g:link>--}%
+%{--                    <a href="#" id="btnAnulados" class="btn btn-info btn-ajax example_c item" texto="tpob">--}%
+%{--                        <i class="fa fa-ban fa-4x text-success"></i>--}%
+%{--                        <br/> Anulados--}%
+%{--                    </a>--}%
+%{--                    <a href="#" id="btnArchivados" class="btn btn-info btn-ajax example_c item" texto="prsp">--}%
+%{--                        <i class="fa fa-file-archive fa-4x text-success"></i>--}%
+%{--                        <br/> Archivados--}%
+%{--                    </a>--}%
+%{--                    <a href="#" id="btnPersonal" class="btn btn-info btn-ajax example_c item" texto="crit">--}%
+%{--                        <i class="fa fa-user fa-4x text-success"></i>--}%
+%{--                        <br/> Personales--}%
+%{--                    </a>--}%
 %{--                </p>--}%
 %{--            </div>--}%
 %{--        </div>--}%
 %{--    </div>--}%
 
-    <div id="tool" style="margin-left: 350px; width: 300px; height: 160px; display: none;padding:25px;"
+    %{--    <div id="cont" class="tab-pane fade">--}%
+    %{--        <div class="row">--}%
+    %{--            <div class="col-md-12 col-xs-5">--}%
+    %{--                <p>--}%
+    %{--                    <g:link class="link btn btn-info btn-ajax example_c item" texto="grgf"  controller="reportes" action="mapa">--}%
+    %{--                        <i class="fa fa-map-marked-alt fa-4x text-success"></i>--}%
+    %{--                        <br/> Localización de proyectos--}%
+    %{--                    </g:link>--}%
+    %{--                </p>--}%
+    %{--            </div>--}%
+    %{--        </div>--}%
+    %{--    </div>--}%
+
+    <div id="tool" style="margin-left: 450px; width: 300px; height: 160px; display: none; padding:25px; margin-top: -100px"
          class="ui-widget-content ui-corner-all mensaje">
     </div>
 
@@ -175,13 +193,13 @@
 </div>
 
 <div id="undd" style="display:none">
-    <h3>Reporte de encuestas</h3><br>
-    <p>Reporte de las encuestas generadas en el sistema</p>
+    <h3>Empleados</h3><br>
+    <p>Reporte de empleados</p>
 </div>
 
 <div id="trnp" style="display:none">
-    <h3>Organizaciones</h3><br>
-    <p>Listado de organizaciones por provincia.</p>
+    <h3>Bandejas bloqueadas</h3><br>
+    <p>Reporte de bandejas bloqueadas</p>
 </div>
 
 <div id="dpto" style="display:none">
@@ -190,8 +208,8 @@
 </div>
 
 <div id="dire" style="display:none">
-    <h3>Socios</h3><br>
-    <p>Listado de socios por organización.</p>
+    <h3>Departamentos</h3><br>
+    <p>Reporte de departamentos</p>
 </div>
 
 <div id="func" style="display:none">
@@ -200,21 +218,21 @@
 </div>
 
 <div id="crit" style="display:none">
-    <h3>POA por grupo de gasto</h3><br>
-    <p>Ejecución del POA por grupo de gasto</p>
+    <h3>Personales</h3><br>
+    <p>Pantalla de reportes de trámites personales</p>
 </div>
 
 <div id="tpob" style="display:none">
-    <h3>POA por fuente</h3><br>
-    <p>Ejecución del POA por fuente de financiamiento.</p>
+    <h3>Anulados</h3><br>
+    <p>Pantalla de reportes de trámites anulados</p>
 </div>
 <div id="csob" style="display:none">
     <h3>Clase de Obra</h3><br>
     <p>Clase de obra, ejemplo: aulas, pavimento, cubierta, estructuras, adoquinado, puentes, mejoramiento, etc.</p>
 </div>
 <div id="prsp" style="display:none">
-    <h3>POA por componente</h3><br>
-    <p>Ejecución del POA por componente y actividad.</p>
+    <h3>Archivados</h3><br>
+    <p>Pantalla de reportes de trámites archivados</p>
 </div>
 <div id="edob" style="display:none">
     <h3>Estado de la Obra</h3><br>
@@ -241,8 +259,8 @@
     <p>Registro de los años para el control y manejo de los índices año por año.</p>
 </div>
 <div id="anua" style="display:none">
-    <h3>Cronograma valorado</h3><br>
-    <p>Cronograma valorado por año</p>
+    <h3>Reportes estadísticos</h3><br>
+    <p>Estadísticas de personas y departamentos</p>
 </div>
 <div id="fnfn" style="display: none">
     <h3>Fuente de financiamiento</h3>
@@ -276,7 +294,6 @@
         location.href="${createLink(controller: 'buscarTramite', action: 'busquedaAnulados')}";
     });
 
-
     $("#btnDepartamentos").click(function () {
         location.href="${createLink(controller: 'departamentoExport', action: 'reporteSinUsuarios')}";
     });
@@ -284,7 +301,7 @@
     $("#btnBloqueadas").click(function () {
         // var cl1 = cargarLoader("Cargando....");
         location.href="${createLink(controller: 'bloqueados', action: 'reporteConsolidado')}";
-     });
+    });
 
     function prepare() {
         $(".fa-ul li span").each(function () {

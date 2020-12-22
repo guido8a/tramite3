@@ -159,13 +159,14 @@
             var $form = $("#frmPersona");
             var $btn = $("#dlgCreateEditPersona").find("#btnSave");
             if ($form.valid()) {
+                var cl1 = cargarLoader("Guardando...")
                 $btn.replaceWith(spinner);
-                openLoader("Grabando");
                 $.ajax({
                     type    : "POST",
                     url     : $form.attr("action"),
                     data    : $form.serialize(),
                     success : function (msg) {
+                        cl1.modal("hide")
                         var parts = msg.split("_");
                         if (parts[0] != "INFO") {
                             log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
@@ -176,7 +177,6 @@
                                 return false;
                             }
                         } else {
-                            closeLoader();
                             bootbox.dialog({
                                 title   : "Alerta",
                                 message : parts[1],
@@ -916,7 +916,7 @@
                     items.ausentismo = {
                         separator_before : true,
                         label            : "Ausentismo",
-                        icon             : "fa fa-user-circle-injured",
+                        icon             : "fa fa-user-clock text-warning",
                         action           : function () {
                             location.href = "${createLink(controller: 'persona', action: 'personalAdm')}/" + nodeId;
                         }
