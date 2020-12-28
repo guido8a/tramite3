@@ -982,4 +982,45 @@ class DepartamentoController {
             render "no"
         }
     }
+
+    def guardarTipoDocumento_ajax(){
+        println("params tid " + params)
+        def departamento = Departamento.get(params.departamento)
+        def tipo = TipoDocumento.get(params.id)
+        def existe = TipoDocumentoDepartamento.findByDepartamentoAndTipo(departamento, tipo)
+        def nuevoTipo
+        def texto = ''
+
+        if(existe){
+            if(params.tipo == 'no'){
+                existe.estado = 0
+                texto = "Tipo de documento quitado correctamente"
+            }else{
+                existe.estado = 1
+                texto = "Tipo de documento agregado correctamente"
+            }
+            if(existe.save(flush:true)){
+                render "ok_${texto}"
+            }else{
+                render "no_Error al quitar el tipo de documento"
+            }
+        }else{
+            nuevoTipo = new TipoDocumentoDepartamento()
+            nuevoTipo.departamento = departamento
+            nuevoTipo.tipo = tipo
+
+            if(params.tipo == 'no'){
+                nuevoTipo.estado = 0
+                texto = "Tipo de documento quitado correctamente"
+            }else{
+                nuevoTipo.estado = 1
+                texto = "Tipo de documento agregado correctamente"
+            }
+            if(nuevoTipo.save(flush:true)){
+                render "ok_${texto}"
+            }else{
+                render "no_Error al quitar el tipo de documento"
+            }
+        }
+    }
 }

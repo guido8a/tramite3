@@ -89,9 +89,9 @@
                 </div>
             </div><!-- /input-group -->
             <div class="btn-group col-md-1" style="margin-top: 4px; width: 100px">
-                <div class="input-group">
-                    Ocultar Inactivos: <g:checkBox name="activos" value="${false}" />
-                </div><!-- /input-group -->
+%{--                <div class="input-group">--}%
+%{--                  Ocultar Inactivos  : <g:checkBox name="activos" value="${false}" />--}%
+%{--                </div><!-- /input-group -->--}%
             </div>
 
             <div class="btn-group pull-right ui-corner-all leyenda">
@@ -119,10 +119,9 @@
         </div>
     </div>
 
-%{--    <elm:select name="selDptoOrig" from="${tramites.Departamento.findAllByActivo(1, [sort: 'descripcion'])}"--}%
-%{--                optionKey="id" optionValue="descripcion" optionClass="id" class="form-control hide" style="margin-top: 30px;"/>--}%
-
     <script type="text/javascript">
+
+        $.switcher('input[type=checkbox]');
 
         var index = 0;
 
@@ -133,19 +132,19 @@
             var $form = $("#frmDepartamento");
             var $btn = $("#dlgCreateEdit").find("#btnSave");
             if ($form.valid()) {
+                var cl2 = cargarLoader("Guardando...");
                 $btn.replaceWith(spinner);
-                openLoader("Grabando");
                 $.ajax({
                     type    : "POST",
                     url     : $form.attr("action"),
                     data    : $form.serialize(),
                     success : function (msg) {
+                        cl2.modal("hide");
                         var parts = msg.split("_");
                         log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
                         if (parts[0] == "OK") {
                             location.reload(true);
                         } else {
-                            closeLoader();
                             spinner.replaceWith($btn);
                             return false;
                         }
@@ -230,10 +229,7 @@
 
         function createEditRow(id, tipo) {
             var data = tipo == "Crear" ? {padre : id} : {id : id};
-            var c =  bootbox.dialog({
-                message: '<div class="text-center"><i class="fa fa-spin fa-spinner"></i> Cargando...</div>',
-                closeButton: false
-            });
+            var c =  cargarLoader("Cargando...");
             $.ajax({
                 type    : "POST",
                 url     : "${createLink(controller: 'departamento', action:'form_ajax')}",
@@ -305,7 +301,7 @@
                             guardar  : {
                                 id        : "btnSave",
                                 label     : "<i class='fa fa-save'></i> Guardar",
-                                className : "btn-success",
+                                className : "btn-success hidden",
                                 callback  : function () {
                                     var data = "id=" + id;
                                     var band = false;

@@ -69,27 +69,14 @@
 
         <div id="collapsePerfiles" class="panel-collapse collapse in">
             <div class="panel-body">
-%{--                <p>--}%
-%{--                    <a href="#" class="btn btn-warning btn-sm" id="nonePerf"><i class="fa fa-times"></i> Quitar todos los perfiles</a>--}%
-%{--                </p>--}%
                 <g:form name="frmPerfiles" action="savePerfiles_ajax">
-                %{--                    <ul class="fa-ul">--}%
                     <g:each in="${seguridad.Prfl.list([sort: 'nombre'])}" var="perfil">
                         <div class="form-check form-check-inline" style="margin-top: 7px">
                             <input class="form-check-input perfil" type="checkbox" data-id="${perfil?.id}" name="perfil_name" id="perfilId" ${perfil?.id in perfilesUsu ? 'checked' : ''}>
                             ${perfil.nombre} ${perfil.observaciones ? '(' + perfil.observaciones + ')' : ''}
                         </div>
-                    %{--                            <li class="perfil">--}%
-                    %{--                                <i data-id="${perfil.id}" data-cd="${perfil.codigo}"--}%
-                    %{--                                   class="fa-li fa ${perfilesUsu.contains(perfil.id) ? "fa-check-square" : "fa-square"}"></i>--}%
-                    %{--                                <span>${perfil.nombre} ${perfil.observaciones ? '(' + perfil.observaciones + ')' : ''}</span>--}%
-                    %{--                            </li>--}%
                     </g:each>
-                %{--                    </ul>--}%
                 </g:form>
-            %{--                <a href="#" class="btn btn-success" id="btnPerfiles" style="margin-top: 5px">--}%
-            %{--                    <i class="fa fa-save"></i> Guardar--}%
-            %{--                </a>--}%
             </div>
         </div>
     </div>
@@ -110,7 +97,6 @@
     });
 
     function guardarPerfil(estado, id){
-
 
         bootbox.confirm({
             message: "<i class='fa fa-cogs fa-3x pull-left text-info text-shadow'></i>  " +
