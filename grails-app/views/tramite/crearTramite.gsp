@@ -70,6 +70,10 @@
         max-height : 60px;
         overflow   : auto;
     }
+
+        .cv{
+            color: #67a153;
+        }
     </style>
 </head>
 
@@ -116,11 +120,13 @@
                 <div class="linea"></div>
 
                 <div class="row">
-                    <div class="col-xs-1 negrilla">Documento:</div>
+                    <span class="col-xs-1 badge bg-primary">Documento:</span>
                     <div class="col-xs-2">${principal.codigo}</div>
-                    <div class="col-xs-1 negrilla" style="width: 55px">Fecha:</div>
+%{--                    <div class="col-xs-1 negrilla cv" style="width: 55px">Fecha:</div>--}%
+                    <span class="col-xs-1 badge bg-primary">Fecha:</span>
                     <div class="col-xs-2">${principal.fechaCreacion.format("dd-MM-yyyy")}</div>
-                    <div class="col-xs-1 negrilla" style="width: 32px">De:</div>
+%{--                    <div class="col-xs-1 negrilla cv" style="width: 32px">De:</div>--}%
+                    <span class="col-xs-1 badge bg-primary">De:</span>
                     <div class="col-xs-3">
                         <g:if test="${principal.tipoDocumento.codigo == 'DEX'}">
                             <td>${principal.paraExterno}</td>
@@ -132,20 +138,44 @@
                 </div>
 
                 <div class="row claseMin">
-                    <div class="col-xs-12">
-                        <g:each in="${tramites.PersonaDocumentoTramite.findAllByTramiteAndRolPersonaTramiteNotInList(principal, rolesNo, [sort: 'rolPersonaTramite'])}" var="pdt" status="j">
-                            <span style="font-weight: bold">${pdt.rolPersonaTramite.descripcion}:</span>
-                            <span style="margin-right: 10px">
-                                ${(pdt.departamento) ? pdt.departamento : "" + pdt.persona.departamento.codigo + ":" + pdt.persona}
-                                ${pdt.fechaRecepcion ? "(" + pdt.fechaRecepcion.format("dd-MM-yyyy") + ")" : ""}
-                            </span>
-                        </g:each>
-                    </div>
+%{--                    <div class="col-xs-12">--}%
+%{--                        <g:each in="${tramites.PersonaDocumentoTramite.findAllByTramiteAndRolPersonaTramiteNotInList(principal, rolesNo, [sort: 'rolPersonaTramite'])}" var="pdt" status="j">--}%
+%{--                            <span style="font-weight: bold">${pdt.rolPersonaTramite.descripcion}:</span>--}%
+%{--                            <span style="margin-right: 10px">--}%
+%{--                                ${(pdt.departamento) ? pdt.departamento : "" + pdt.persona.departamento.codigo + ":" + pdt.persona}--}%
+%{--                                ${pdt.fechaRecepcion ? "(" + pdt.fechaRecepcion.format("dd-MM-yyyy") + ")" : ""}--}%
+%{--                            </span>--}%
+%{--                        </g:each>--}%
+
+
+                        <div class="col-md-1 negrilla">Destinatarios:</div>
+                        <div class="col-xs-11">
+                            <g:set var="tt" value="${tramites.PersonaDocumentoTramite.findAllByTramiteAndRolPersonaTramiteNotInList(principal, rolesNo, [sort: 'rolPersonaTramite']).size()}"/>
+                            <g:if test="${tt > 3}">
+                                <g:set var="pdt" value="${tramites.PersonaDocumentoTramite.findAllByTramiteAndRolPersonaTramiteNotInList(principal, rolesNo, [sort: 'rolPersonaTramite'])}"/>
+                                <span style="font-weight: bold">${pdt.rolPersonaTramite.descripcion[0]}:</span>
+                                <span style="margin-right: 10px">
+                                    ${(pdt.departamento[0]) ? pdt.departamento[0] : "" + pdt.persona.departamento.codigo[0] + ":" + pdt.persona[0]}
+                                    ${pdt.fechaRecepcion[0] ? "(" + pdt.fechaRecepcion[0].format("dd-MM-yyyy") + ")" : ""}
+                                </span>
+                                <a href="#" name="destinatarios" title="Copias" class="btn btn-success btn-sm btnDestPadre" data-padre="${principal?.id}"><i class="fa fa-users"></i> Copias</a>
+                            </g:if>
+                            <g:else>
+                                <g:each in="${tramites.PersonaDocumentoTramite.findAllByTramiteAndRolPersonaTramiteNotInList(principal, rolesNo, [sort: 'rolPersonaTramite'])}" var="pdt" status="j">
+                                    <span style="font-weight: bold">${pdt.rolPersonaTramite.descripcion}:</span>
+                                    <span style="margin-right: 10px">
+                                        ${(pdt.departamento) ? pdt.departamento : "" + pdt.persona.departamento.codigo + ":" + pdt.persona}
+                                        ${pdt.fechaRecepcion ? "(" + pdt.fechaRecepcion.format("dd-MM-yyyy") + ")" : ""}
+                                    </span>
+                                </g:each>
+                            </g:else>
+                        </div>
+%{--                    </div>--}%
                 </div>
 
                 <div class="row">
                     <div class="col-md-1 negrilla">Asunto:</div>
-                    <div class="col-md-11">${principal.asunto}</div>
+                    <div class="col-md-11" style="font-size: 14px; font-weight: bold">${principal.asunto}</div>
                 </div>
                 <g:if test="${principal.personaPuedeLeer(session.usuario) && principal.texto?.trim()?.size() > 0}">
                     <div class="row">
@@ -158,8 +188,14 @@
 
                 <g:if test="${principal.observaciones && principal.observaciones?.trim()?.size() > 0}">
                     <div class="row claseMin">
-                        <div class="col-md-1 negrilla">Obs:</div>
-                        <div class="col-md-11">${principal.observaciones}</div>
+                        <div class="col-md-1 negrilla">Observaciones:</div>
+                        <g:set var="cc" value="${principal.observaciones.trim().split("\\s+")}"/>
+                        <g:if test="${cc.length >= 30}">
+                            <div class="col-md-11">${principal.observaciones[0..199]}<a href="#" name="observaciones" title="Observaciones" data-ob="${principal.observaciones}" class="btn btn-success btn-sm btnInfo"><i class="fa fa-exclamation"></i></a></div>
+                        </g:if>
+                        <g:else>
+                            <div class="col-md-11">${principal.observaciones}</div>
+                        </g:else>
                     </div>
                 </g:if>
             </div>
@@ -172,11 +208,14 @@
                 <div class="linea"></div>
 
                 <div class="row">
-                    <div class="col-xs-1 negrilla">Documento:</div>
+%{--                    <div class="col-xs-1 negrilla">Documento:</div>--}%
+                    <span class="col-xs-1 badge bg-primary">Documento:</span>
                     <div class="col-xs-2">${padre.codigo}</div>
-                    <div class="col-xs-1 negrilla" style="width: 55px">Fecha:</div>
+%{--                    <div class="col-xs-1 negrilla" style="width: 55px">Fecha:</div>--}%
+                    <span class="col-xs-1 badge bg-primary">Fecha:</span>
                     <div class="col-xs-2">${padre.fechaCreacion.format("dd-MM-yyyy")}</div>
-                    <div class="col-xs-1 negrilla" style="width: 32px">De:</div>
+%{--                    <div class="col-xs-1 negrilla" style="width: 32px">De:</div>--}%
+                    <span class="col-xs-1 badge bg-primary">De:</span>
 
                     <div class="col-xs-3">
                         <g:if test="${padre.tipoDocumento.codigo == 'DEX'}">
@@ -189,20 +228,33 @@
                 </div>
 
                 <div class="row ">
-                    <div class="col-xs-10">
-                        <g:each in="${tramites.PersonaDocumentoTramite.findAllByTramiteAndRolPersonaTramiteNotInList(padre, rolesNo, [sort: 'rolPersonaTramite'])}" var="pdt" status="j">
-                            <span style="font-weight: bold">${pdt.rolPersonaTramite.descripcion}:</span>
-                            <span style="margin-right: 10px">
-                                ${(pdt.departamento) ? pdt.departamento : "" + pdt.persona.departamento.codigo + ":" + pdt.persona}
-                                ${pdt.fechaRecepcion ? "(" + pdt.fechaRecepcion.format("dd-MM-yyyy") + ")" : ""}
-                            </span>
-                        </g:each>
+                    <div class="col-md-1 negrilla">Destinatarios:</div>
+                    <div class="col-xs-11">
+                        <g:set var="tt1" value="${tramites.PersonaDocumentoTramite.findAllByTramiteAndRolPersonaTramiteNotInList(padre, rolesNo, [sort: 'rolPersonaTramite']).size()}"/>
+                        <g:if test="${tt1 > 3}">
+                            <g:set var="pad" value="${tramites.PersonaDocumentoTramite.findAllByTramiteAndRolPersonaTramiteNotInList(padre, rolesNo, [sort: 'rolPersonaTramite'])}"/>
+                                <span style="font-weight: bold">${pad.rolPersonaTramite.descripcion[0]}:</span>
+                                <span style="margin-right: 10px">
+                                    ${(pad.departamento[0]) ? pad.departamento[0] : "" + pad.persona.departamento.codigo[0] + ":" + pad.persona[0]}
+                                    ${pad.fechaRecepcion[0] ? "(" + pad.fechaRecepcion[0].format("dd-MM-yyyy") + ")" : ""}
+                                </span>
+                            <a href="#" name="destinatarios1" title="Copias" class="btn btn-success btn-sm btnDestPadre" data-padre="${padre?.id}"><i class="fa fa-users"></i> Copias</a>
+                        </g:if>
+                        <g:else>
+                            <g:each in="${tramites.PersonaDocumentoTramite.findAllByTramiteAndRolPersonaTramiteNotInList(padre, rolesNo, [sort: 'rolPersonaTramite'])}" var="pdt" status="j">
+                                <span style="font-weight: bold">${pdt.rolPersonaTramite.descripcion}:</span>
+                                <span style="margin-right: 10px">
+                                    ${(pdt.departamento) ? pdt.departamento : "" + pdt.persona.departamento.codigo + ":" + pdt.persona}
+                                    ${pdt.fechaRecepcion ? "(" + pdt.fechaRecepcion.format("dd-MM-yyyy") + ")" : ""}
+                                </span>
+                            </g:each>
+                        </g:else>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-1 negrilla">Asunto:</div>
-                    <div class="col-md-11">${padre.asunto}</div>
+                    <div class="col-md-11" style="font-size: 14px; font-weight: bold">${padre.asunto}</div>
                 </div>
 
                 <g:if test="${padre.personaPuedeLeer(session.usuario) && padre.texto?.trim()?.size() > 0}">
@@ -217,10 +269,15 @@
 
                 <g:if test="${padre.observaciones && padre.observaciones?.trim()?.size() > 0}">
                     <div class="row claseMin">
-                        <div class="col-md-1 negrilla">Obs:</div>
-
-                        <div class="col-md-11">${padre.observaciones}</div>
-                    </div>
+                        <div class="col-md-1 negrilla">Observaciones:</div>
+                        <g:set var="cc1" value="${padre.observaciones.trim().split("\\s+")}"/>
+                        <g:if test="${cc1.length >= 30}">
+                            <div class="col-md-11">${padre.observaciones[0..199]}<a href="#" name="observaciones1" title="Observaciones" data-ob="${padre.observaciones}" class="btn btn-success btn-sm btnObservacionesPadre"><i class="fa fa-exclamation"></i></a></div>
+                        </g:if>
+                        <g:else>
+                            <div class="col-md-11">${padre.observaciones}</div>
+                        </g:else>
+                   </div>
                 </g:if>
             </div>
         </g:if>
@@ -471,6 +528,41 @@
     </div><!-- /.modal-dialog -->
 </div>
 <script type="text/javascript">
+
+    $(".btnInfo").click(function () {
+        var observaciones = $(this).data("ob");
+        bootbox.alert('<strong>' + 'OBSERVACIONES: ' + '</strong>' + observaciones)
+    });
+
+    $(".btnObservacionesPadre").click(function () {
+        var observaciones = $(this).data("ob");
+        bootbox.alert('<strong>' + 'OBSERVACIONES: ' + '</strong>' + observaciones)
+    });
+
+    $(".btnDestPadre").click(function () {
+        var padre = $(this).data("padre");
+        $.ajax({
+            type: 'POST',
+            url: '${createLink(controller: 'tramite', action: 'destinatariosPadre_ajax')}',
+            data:{
+                padre: padre
+            },
+            success:function (msg) {
+                bootbox.dialog({
+                    title   : "Destinatarios",
+                    message : msg,
+                    buttons : {
+                        aceptar : {
+                            label     : "Aceptar",
+                            className : "btn-primary",
+                            callback  : function () {
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    });
 
     $.switcher('input[type=checkbox]');
 

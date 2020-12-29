@@ -653,7 +653,7 @@
                         submenu : {
                             si : {
                                 label  : "Con usuarios",
-                                icon   : "fa fa-user-circles text-info",
+                                icon   : "fa fa-user text-info",
                                 action : function () {
                                     location.href = "${createLink(controller: 'departamentoExport', action: 'crearPdf')}/-1?usu=true&sort=${params.sort}";
                                 }
@@ -823,7 +823,7 @@
                     submenu : {
                         si : {
                             label  : "Con usuarios",
-                            icon   : "fa fa-user-circles text-info",
+                            icon   : "fa fa-user text-info",
                             action : function () {
                                 location.href = "${createLink(controller: 'departamentoExport', action: 'crearPdf')}/" + nodeId + "?usu=true&sort=${params.sort}";
                             }

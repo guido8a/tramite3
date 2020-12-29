@@ -1600,4 +1600,12 @@ class TramiteController {
             render 'ok'
         }
     }
+
+    def destinatariosPadre_ajax(){
+        println("params " + params)
+        def padre = Tramite.get(params.padre)
+        def rolesNo = [RolPersonaTramite.findByCodigo("E004"), RolPersonaTramite.findByCodigo("E003")]
+        def prt = tramites.PersonaDocumentoTramite.findAllByTramiteAndRolPersonaTramiteNotInList(padre, rolesNo, [sort: 'rolPersonaTramite'])
+        return [personaDocuTra: prt]
+    }
 }
