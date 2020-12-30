@@ -7,7 +7,7 @@
     <style type="text/css">
 
     body {
-        background-color : #DFD;
+        background-color : #e0ede4;
     }
 
     .etiqueta {
@@ -197,7 +197,7 @@
             </tr>
             </thead>
         </table>
-        <div style="width: 99.7%;height: 450px; overflow-y: auto; margin-top: -20px">
+        <div style="width: 99.7%;height: 540px; overflow-y: auto; margin-top: -20px">
             <table class="table-bordered table-condensed table-hover" width="100%">
                 <tbody id="tabla_bandeja">
 
