@@ -20,6 +20,6 @@ class TipoDocumento implements Auditable{
     }
     static constraints = {
         codigo(maxSize: 4, blank: false, attributes: [title: 'codigo'])
-        descripcion(maxSize: 31, blank: false, attributes: [title: 'descripcion'])
+        descripcion(maxSize: 63, blank: false, attributes: [title: 'descripcion'])
     }
 }
