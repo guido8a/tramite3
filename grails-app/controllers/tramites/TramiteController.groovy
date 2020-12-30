@@ -1608,4 +1608,9 @@ class TramiteController {
         def prt = tramites.PersonaDocumentoTramite.findAllByTramiteAndRolPersonaTramiteNotInList(padre, rolesNo, [sort: 'rolPersonaTramite'])
         return [personaDocuTra: prt]
     }
+
+    def observaciones_ajax(){
+        def tramite = Tramite.get(params.id)
+        return[tramite:tramite]
+    }
 }

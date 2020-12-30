@@ -692,7 +692,7 @@
                     },
                     success: function (msg){
                         if(msg == 'ok'){
-                            bootbox.alert("No se puede anular el trámite, ya que posee trámites derivados");
+                            bootbox.alert('<i class="fa fa-exclamation-triangle fa-2x text-danger"></i> No se puede anular el trámite, ya que posee trámites derivados');
                         }else{
                             $.ajax({
                                 type    : "POST",

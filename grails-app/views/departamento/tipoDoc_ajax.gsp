@@ -77,7 +77,7 @@
                             <g:each in="${tramites.TipoDocumento.list([sort: 'descripcion'])}" var="tipoDoc">
                                 <div class="form-check form-check-inline" style="margin-top: 2px">
                                     <input class="form-check-input tipo" type="checkbox" data-id="${tipoDoc?.id}" name="tipo_name" id="tipoId" ${tipoDoc?.id in permisos ? 'checked' : ''}>
-                                    ${tipoDoc.descripcion}
+                                    <strong>( ${tipoDoc?.codigo} )</strong> ${tipoDoc.descripcion}
                                 </div>
                             </g:each>
 

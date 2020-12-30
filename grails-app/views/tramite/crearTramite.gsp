@@ -138,16 +138,6 @@
                 </div>
 
                 <div class="row claseMin">
-%{--                    <div class="col-xs-12">--}%
-%{--                        <g:each in="${tramites.PersonaDocumentoTramite.findAllByTramiteAndRolPersonaTramiteNotInList(principal, rolesNo, [sort: 'rolPersonaTramite'])}" var="pdt" status="j">--}%
-%{--                            <span style="font-weight: bold">${pdt.rolPersonaTramite.descripcion}:</span>--}%
-%{--                            <span style="margin-right: 10px">--}%
-%{--                                ${(pdt.departamento) ? pdt.departamento : "" + pdt.persona.departamento.codigo + ":" + pdt.persona}--}%
-%{--                                ${pdt.fechaRecepcion ? "(" + pdt.fechaRecepcion.format("dd-MM-yyyy") + ")" : ""}--}%
-%{--                            </span>--}%
-%{--                        </g:each>--}%
-
-
                         <div class="col-md-1 negrilla">Destinatarios:</div>
                         <div class="col-xs-11">
                             <g:set var="tt" value="${tramites.PersonaDocumentoTramite.findAllByTramiteAndRolPersonaTramiteNotInList(principal, rolesNo, [sort: 'rolPersonaTramite']).size()}"/>
@@ -170,7 +160,6 @@
                                 </g:each>
                             </g:else>
                         </div>
-%{--                    </div>--}%
                 </div>
 
                 <div class="row">
@@ -191,7 +180,7 @@
                         <div class="col-md-1 negrilla">Observaciones:</div>
                         <g:set var="cc" value="${principal.observaciones.trim().split("\\s+")}"/>
                         <g:if test="${cc.length >= 30}">
-                            <div class="col-md-11">${principal.observaciones[0..199]}<a href="#" name="observaciones" title="Observaciones" data-ob="${principal.observaciones}" class="btn btn-success btn-sm btnInfo"><i class="fa fa-exclamation"></i></a></div>
+                            <div class="col-md-11">${principal.observaciones[0..199]}<a href="#" name="observaciones" title="Observaciones" data-id="${principal.id}" class="btn btn-success btn-sm btnInfo"><i class="fa fa-exclamation"></i></a></div>
                         </g:if>
                         <g:else>
                             <div class="col-md-11">${principal.observaciones}</div>
@@ -208,13 +197,10 @@
                 <div class="linea"></div>
 
                 <div class="row">
-%{--                    <div class="col-xs-1 negrilla">Documento:</div>--}%
                     <span class="col-xs-1 badge bg-primary">Documento:</span>
                     <div class="col-xs-2">${padre.codigo}</div>
-%{--                    <div class="col-xs-1 negrilla" style="width: 55px">Fecha:</div>--}%
                     <span class="col-xs-1 badge bg-primary">Fecha:</span>
                     <div class="col-xs-2">${padre.fechaCreacion.format("dd-MM-yyyy")}</div>
-%{--                    <div class="col-xs-1 negrilla" style="width: 32px">De:</div>--}%
                     <span class="col-xs-1 badge bg-primary">De:</span>
 
                     <div class="col-xs-3">
@@ -272,7 +258,7 @@
                         <div class="col-md-1 negrilla">Observaciones:</div>
                         <g:set var="cc1" value="${padre.observaciones.trim().split("\\s+")}"/>
                         <g:if test="${cc1.length >= 30}">
-                            <div class="col-md-11">${padre.observaciones[0..199]}<a href="#" name="observaciones1" title="Observaciones" data-ob="${padre.observaciones}" class="btn btn-success btn-sm btnObservacionesPadre"><i class="fa fa-exclamation"></i></a></div>
+                            <div class="col-md-11">${padre.observaciones[0..199]}<a href="#" name="observaciones1" title="Observaciones" data-id="${padre.id}" class="btn btn-success btn-sm btnInfo"><i class="fa fa-exclamation"></i></a></div>
                         </g:if>
                         <g:else>
                             <div class="col-md-11">${padre.observaciones}</div>
@@ -530,8 +516,28 @@
 <script type="text/javascript">
 
     $(".btnInfo").click(function () {
-        var observaciones = $(this).data("ob");
-        bootbox.alert('<strong>' + 'OBSERVACIONES: ' + '</strong>' + observaciones)
+        var id = $(this).data("id");
+        $.ajax({
+            type: 'POST',
+            url: '${createLink(controller: 'tramite', action: 'observaciones_ajax')}',
+            data:{
+                id: id
+            },
+            success:function (msg) {
+                bootbox.dialog({
+                    title   : "Observaciones",
+                    message : msg,
+                    buttons : {
+                        aceptar : {
+                            label     : "Aceptar",
+                            className : "btn-primary",
+                            callback  : function () {
+                            }
+                        }
+                    }
+                });
+            }
+        });
     });
 
     $(".btnObservacionesPadre").click(function () {
