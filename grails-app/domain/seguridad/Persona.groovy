@@ -111,11 +111,11 @@ class Persona implements Auditable{
 
     def puedePermiso(String codigoPermiso) {
 //        if (id == 5513L) {
-        println "puede permiso " + codigoPermiso + "    " + this.permisos + "   " + this.permisos.codigo
+//        println "puede permiso " + codigoPermiso + "    " + this.permisos + "   " + this.permisos.codigo
 //        }
         def prms = PermisoUsuario.findAllByPersonaAndFechaFinIsNull(this)
 //        def prms = PermisoUsuario.findAllByPersona(this)
-        println "permisos: ${prms.permisoTramite.codigo}"
+//        println "permisos: ${prms.permisoTramite.codigo}"
         if (this.permisos.size() > 0) {
 //        if (prms.size() > 0) {
 

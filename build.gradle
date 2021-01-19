@@ -71,6 +71,7 @@ dependencies {
     compile 'org.grails.plugins:audita:1.0'
     compile files('PDFOne.jar')
 //    compile "org.grails.plugins:rendering:1.0.0"
+    compile 'org.grails.plugins:quartz:2.0.13'
 }
 
 bootRun {
