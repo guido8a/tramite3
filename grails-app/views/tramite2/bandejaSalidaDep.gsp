@@ -359,7 +359,7 @@
                                 success : function (msg) {
                                     bootbox.dialog({
                                         id      : "dlgCopiaPara",
-                                        title   : '<i class="fa fa-files-o"></i> Copia para',
+                                        title   : '<i class="fa fa-copy"></i> Copia para',
                                         class   : "modal-lg",
                                         message : msg,
                                         buttons : {

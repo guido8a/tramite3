@@ -100,7 +100,7 @@ class ReportesPdfService {
      * @param keywords
      */
     def propiedadesDocumento(Document documento, String title, String keywords) {
-        propiedadesDocumento(documento, title, "Generado por el sistema happy", keywords, "happy", "Tedein S.A.")
+        propiedadesDocumento(documento, title, "Generado por el sistema tramites", keywords, "happy", "Tedein S.A.")
     }
 
     /**

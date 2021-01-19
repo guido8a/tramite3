@@ -304,6 +304,8 @@ class BuscarTramiteController {
 
     def tablaBusquedaEnviados() {
 
+        println("params " + params)
+
         def persona = Persona.get(session.usuario.id)
         def departamento = persona?.departamento
         def pxtPara
@@ -327,7 +329,7 @@ class BuscarTramiteController {
                 ge('fechaEnvio', params.fechaDesde)
             }
             if (params.fechaHasta) {
-                le('fechaEnvio', params.fechaHasta)
+                le('fechaRecepcion', params.fechaHasta)
             }
             isNotNull("fechaEnvio")
             or {

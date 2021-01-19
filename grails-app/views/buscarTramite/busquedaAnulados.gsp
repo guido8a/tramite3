@@ -160,8 +160,8 @@
         $("#bandeja").html("").append($("<div style='width:100%; text-align: center;'/>").append(spinnerSquare64));
         var memorando = $("#memorando").val();
         var asunto = $("#asunto").val();
-        var fecha = $("#datetimepicker1").val();
-        var fechaRecepcion = $("#datetimepicker2").val();
+        var fecha = $("#datetimepicker2").val();
+        var fechaRecepcion = $("#datetimepicker1").val();
 
         var datos = "memorando=" + memorando + "&asunto=" + asunto + "&fechaHasta=" + fecha + "&fechaDesde=" + fechaRecepcion
 

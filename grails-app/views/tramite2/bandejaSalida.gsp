@@ -928,11 +928,11 @@
             }
         }
         </g:if>
-        if (porEnviar) {
-            <g:if test="${!esEditor}">
-            items.imprimir = permisoImprimir;
-            </g:if>
-        }
+        %{--if (porEnviar) {--}%
+        %{--    <g:if test="${!esEditor}">--}%
+        %{--    items.imprimir = permisoImprimir;--}%
+        %{--    </g:if>--}%
+        %{--}--}%
         if (tieneAnexo) {
             items.anexos = anexos;
         }

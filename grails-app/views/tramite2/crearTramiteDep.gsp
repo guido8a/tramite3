@@ -341,11 +341,13 @@
             </div>
 
             <div class="col-xs-2 negrilla hide" id="divAIP" style="margin-top: 20px; width: 120px;">
-                <label for="aip"><input type="checkbox" name="aip" id="aip" ${tramite.aip == 'S' ? 'checked' : ''}/>
-                    Trámite AIP
+                <label for="aip">
+                    <i class="fa fa-paperclip"></i> Trámite AIP
                 </label>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="aip" name="aip" ${tramite.aip == 'S' ? 'checked' : ''}>
+                </div>
             </div>
-
         </div>
 
         <div class="row">
