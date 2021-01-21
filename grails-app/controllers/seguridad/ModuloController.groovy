@@ -1,4 +1,6 @@
-package seguridad
+
+
+import seguridad.Modulo
 
 class ModuloController {
 
@@ -133,27 +135,28 @@ class ModuloController {
 
     def list() {
         if (session.usuario.puedeAdmin) {
-        params.max = Math.min(params.max ? params.max.toInteger() : 10, 100)
-        def moduloInstanceList = Modulo.list(params)
-        def moduloInstanceCount = Modulo.count()
-        if (moduloInstanceList.size() == 0 && params.offset && params.max) {
-            params.offset = params.offset - params.max
+            params.max = Math.min(params.max ? params.max.toInteger() : 10, 100)
+            def moduloInstanceList = Modulo.list(params)
+            def moduloInstanceCount = Modulo.count()
+            if (moduloInstanceList.size() == 0 && params.offset && params.max) {
+                params.offset = params.offset - params.max
+            }
+            moduloInstanceList = Modulo.list(params)
+            return [moduloInstanceList: moduloInstanceList, moduloInstanceCount: moduloInstanceCount]
+        } else {
+            flash.message = "Está tratando de ingresar a un pantalla restringida para su perfil. Está acción será registrada."
+            response.sendError(403)
         }
-        moduloInstanceList = Modulo.list(params)
-        return [moduloInstanceList: moduloInstanceList, moduloInstanceCount: moduloInstanceCount]
-    } else {
-        flash.message = "Está tratando de ingresar a un pantalla restringida para su perfil. Está acción será registrada."
-        response.sendError(403)
-    }
     } //list
     def show_ajax() {
+        def moduloInstance
         if (params.id) {
-            def numeroInstance = Modulo.get(params.id)
-            if (!numeroInstance) {
+            moduloInstance = Modulo.get(params.id)
+            if (!moduloInstance) {
                 notFound_ajax()
                 return
             }
-            return [numeroInstance: numeroInstance]
+            return [numeroInstance: moduloInstance]
         } else {
             notFound_ajax()
         }
@@ -199,9 +202,9 @@ class ModuloController {
             if (moduloInstance) {
                 try {
                     moduloInstance.delete(flush: true)
-                    render "OK_Eliminación del módulo exitosa."
+                    render "OK_Eliminación de Modulo exitosa."
                 } catch (e) {
-                    render "NO_No se pudo eliminar el módulo."
+                    render "NO_No se pudo eliminar Modulo."
                 }
             } else {
                 notFound_ajax()

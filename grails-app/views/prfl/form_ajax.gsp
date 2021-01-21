@@ -1,6 +1,6 @@
 <%@ page import="seguridad.Prfl" %>
 
-<script type="text/javascript" src="${resource(dir: 'js', file: 'ui.js')}"></script>
+%{--<script type="text/javascript" src="${resource(dir: 'js', file: 'ui.js')}"></script>--}%
 <g:if test="${!prflInstance}">
     <elm:notFound elem="Prfl" genero="o"/>
 </g:if>

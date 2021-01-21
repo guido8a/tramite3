@@ -472,11 +472,22 @@ class PersonaController {
     def saveAccesos_ajax() {
         println "asig acc " + params
         params.asignadoPor = session.usuario
+        def usuario = Persona.get(params."usuario.id")
+        params.usuario = usuario
+
+        def fi = new Date().parse("dd-MM-yyyy", params.accsFechaInicial)
+        def ff = new Date().parse("dd-MM-yyyy HH:mm:ss", params.accsFechaFinal + " 23:55:00")
+
+        params.accsFechaInicial = fi
+        params.accsFechaFinal = ff
+
         def accs = new Accs(params)
+
         if (!accs.save(flush: true)) {
             render "NO_" + g.renderErrors(bean: accs)
         } else {
-            accs.accsFechaFinal = new Date().parse("dd-MM-yyyy HH:mm", accs.accsFechaFinal.format("dd-MM-yyyy") + " 23:55")
+
+            accs.accsFechaFinal = ff
             if (params.nuevoTriangulo) {
 
                 def pers = Sesn.findAllByUsuario(accs.usuario).perfil
@@ -493,22 +504,23 @@ class PersonaController {
                 if (perfil) {
                     def asignado = Persona.get(params.nuevoTriangulo)
                     if (accs.accsObservaciones != null) {
-                        accs.accsObservaciones += "; Nuevo receptor: ${asignado.login} del ${accs.accsFechaInicial.format('dd-MM-yyyy')} al ${accs.accsFechaFinal.format('dd-MM-yyyy')}"
+                        accs.accsObservaciones += "; Nuevo receptor: ${asignado.login} del ${fi.format('dd-MM-yyyy')} al ${ff.format('dd-MM-yyyy')}"
 
                     } else {
-                        accs.accsObservaciones = "Nuevo receptor: ${asignado.login} del ${accs.accsFechaInicial.format('dd-MM-yyyy')} al ${accs.accsFechaFinal.format('dd-MM-yyyy')}"
+                        accs.accsObservaciones = "Nuevo receptor: ${asignado.login} del ${fi.format('dd-MM-yyyy')} al ${ff.format('dd-MM-yyyy')}"
                     }
                     def sesion = new Sesn()
                     sesion.perfil = perfil
                     sesion.usuario = asignado
-                    sesion.fechaInicio = accs.accsFechaInicial
-                    sesion.fechaFin = accs.accsFechaFinal
+//                    sesion.fechaInicio = accs.accsFechaInicial
+                    sesion.fechaInicio = fi
+                    sesion.fechaFin =
                     sesion.save(flush: true)
                     def sesion2 = new Sesn()
                     sesion2.perfil = perfil
                     def usuarioOriginal = Persona.get(session.usuario.id)
                     sesion2.usuario = usuarioOriginal
-                    sesion2.fechaInicio = accs.accsFechaFinal
+                    sesion2.fechaInicio = ff.format("dd-MM-yyyy")
                     sesion2.fechaFin = null
                     sesion2.save(flush: true)
                     Prpf.findAllByPerfil(perfil).each { pr ->
@@ -516,8 +528,8 @@ class PersonaController {
                         permUsu.persona = asignado
                         permUsu.permisoTramite = pr.permiso
                         permUsu.asignadoPor = session.usuario
-                        permUsu.fechaInicio = accs.accsFechaInicial
-                        permUsu.fechaFin = accs.accsFechaFinal
+                        permUsu.fechaInicio = fi
+                        permUsu.fechaFin = ff
                         permUsu.acceso = accs
                         if (!permUsu.save(flush: true)) {
                             println "error save perm nuevo triangulo " + permUsu.errors
@@ -529,7 +541,7 @@ class PersonaController {
                     alerta.accion = ""
                     alerta.controlador = ""
                     alerta.fechaCreacion = new Date()
-                    alerta.mensaje = "El usuario ${session.usuario.login} te ha asignado como ${perfil} del ${accs.accsFechaInicial.format('dd-MM-yyyy')} al ${accs.accsFechaFinal.format('dd-MM-yyyy')} con motivo de su ausentismo"
+                    alerta.mensaje = "El usuario ${session.usuario.login} te ha asignado como ${perfil} del ${fi.format('dd-MM-yyyy')} al $ff.format('dd-MM-yyyy')} con motivo de su ausentismo"
                     alerta.save(flush: true)
                 } else {
                     println "wtf no hay perfil " + params
@@ -543,7 +555,7 @@ class PersonaController {
                     alerta.accion = ""
                     alerta.controlador = ""
                     alerta.fechaCreacion = new Date()
-                    alerta.mensaje = "El usuario ${usu.login} ha registrado un ausentismo del ${accs.accsFechaInicial.format('dd-MM-yyyy')} al ${accs.accsFechaFinal.format('dd-MM-yyyy')}. Por favor reasigne los tramites de dicho usuario durante las fechas mencionadas anteriormente."
+                    alerta.mensaje = "El usuario ${usu.login} ha registrado un ausentismo del ${fi.format('dd-MM-yyyy')} al ${ff.format('dd-MM-yyyy')}. Por favor reasigne los tramites de dicho usuario durante las fechas mencionadas anteriormente."
                     alerta.save(flush: true)
                 }
 
