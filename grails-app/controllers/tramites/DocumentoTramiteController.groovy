@@ -70,9 +70,12 @@ class DocumentoTramiteController {
 
     def borrarDoc() {
 
+
+
         if (request.getMethod() == "POST") {
 
             def doc = DocumentoTramite.get(params.id)
+            def anio = doc.fecha.format("yyyy")
             def departamento = doc.tramite.deDepartamento
             if (!departamento) {
                 departamento = doc.tramite.de.departamento
@@ -80,7 +83,9 @@ class DocumentoTramiteController {
             if (doc.tramite.estadoTramite.codigo == "E001" || doc.tramite.estadoTramite.codigo == "E002") {
                 def band = true
                 try {
-                    def path = servletContext.getRealPath("/") + "anexos/${departamento.codigo}/" + doc.tramite.codigo + "/" + doc.path
+//                    def path = servletContext.getRealPath("/") + "anexos/${departamento.codigo}/" + doc.tramite.codigo + "/" + doc.path
+                    def path = "/var/tramites/anexos/${departamento.codigo}/" + anio + "/" + doc.tramite.codigo + "/" + doc.path
+
                     def file = new File(path)
                     file.delete()
                 } catch (e) {
@@ -120,7 +125,9 @@ class DocumentoTramiteController {
             }
             def anio = doc.fecha.format("yyyy")
             try {
-                def path = servletContext.getRealPath("/") + "anexos/${departamento.codigo}/${anio}/" + doc.tramite.codigo + "/" + doc.path
+//                def path = servletContext.getRealPath("/") + "anexos/${departamento.codigo}/${anio}/" + doc.tramite.codigo + "/" + doc.path
+                def path = "/var/tramites/anexos/${departamento.codigo}/${anio}/" + doc.tramite.codigo + "/" + doc.path
+
                 def file = new File(path)
                 def b = file.getBytes()
                 session.key = doc?.path.size() + doc.descripcion?.encodeAsMD5()?.substring(0, 10)
@@ -145,7 +152,8 @@ class DocumentoTramiteController {
         }
         if (session.key == (doc.path.size() + doc.descripcion?.encodeAsMD5().substring(0, 10))) {
             session.key = null
-            def path = servletContext.getRealPath("/") + "anexos/${departamento.codigo}/${anio}/" + doc.tramite.codigo + "/" + doc.path
+//            def path = servletContext.getRealPath("/") + "anexos/${departamento.codigo}/${anio}/" + doc.tramite.codigo + "/" + doc.path
+            def path = "/var/tramites/anexos/${departamento.codigo}/${anio}/" + doc.tramite.codigo + "/" + doc.path
             def tipo = doc.path.split("\\.")
             tipo = tipo[1]
             switch (tipo) {
@@ -191,7 +199,8 @@ class DocumentoTramiteController {
     def uploadSvt() {
         def tramite = Tramite.get(params.id)
         def anio = new Date().format("yyyy")
-        def path = servletContext.getRealPath("/") + "anexos/${session.departamento.codigo}/" + anio + "/" + tramite.codigo + "/"
+//        def path = servletContext.getRealPath("/") + "anexos/${session.departamento.codigo}/" + anio + "/" + tramite.codigo + "/"
+        def path = "/var/tramites/anexos/${session.departamento.codigo}/" + anio + "/" + tramite.codigo + "/"
         //web-app/archivos
         new File(path).mkdirs()
         def f = request.getFile('file')  //archivo = name del input type file
@@ -360,7 +369,10 @@ class DocumentoTramiteController {
         println "UPLOAD: params: $params"
         println "params.file:" + params.file
         def tramite = Tramite.get(params.id)
-        def path = servletContext.getRealPath("/") + "anexos/" + tramite.id + "/"    //web-app/archivos
+        def anio = new Date().format("yyyy")
+//        def path = servletContext.getRealPath("/") + "anexos/" + tramite.id + "/"    //web-app/archivos
+        def path = "/var/tramites/anexos/${session.departamento.codigo}/" + anio + "/" + tramite.codigo + "/"
+
         new File(path).mkdirs()
 
         def f = request.getFile('file')  //archivo = name del input type file
