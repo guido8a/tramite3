@@ -1,4 +1,4 @@
-<%@ page import="happy.tramites.Departamento" %>
+<%@ page import="tramites.Departamento" %>
 
 <g:if test="${!tramite}">
     <elm:notFound elem="Trámite" genero="o"/>

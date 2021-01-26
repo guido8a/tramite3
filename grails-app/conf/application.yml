@@ -141,7 +141,8 @@ environments:
             dbCreate: none
             url: jdbc:postgresql://127.0.0.1:5432/tramite
             username: postgres
-            password: 'steinsgate'
+#            password: 'steinsgate'
+            password: 'postgres'
             properties:
                 jmxEnabled: true
                 initialSize: 5

@@ -3,6 +3,7 @@
 <head>
     <meta name="layout" content="main2">
     <title>Redactar trámite</title>
+    <ckeditor:resources/>
 
 %{--    <script src="https://ckeditor.com/apps/ckfinder/3.5.0/ckfinder.js"></script>--}%
 
@@ -187,13 +188,13 @@
     </div>
     <elm:headerTramite tramite="${tramite}"/>
 
-%{--    <div class="card">--}%
-%{--        <textarea id="editorTramite" class="editor" rows="100" cols="80">${tramite.texto}</textarea>--}%
-%{--    </div>--}%
-
-    <div id="editor">
-        <p>This is some sample content.</p>
+    <div class="card">
+        <textarea id="editorTramite" class="editor" rows="100" cols="80">${tramite.texto}</textarea>
     </div>
+
+%{--    <div id="editor">--}%
+%{--        <p>This is some sample content.</p>--}%
+%{--    </div>--}%
 
 </div>
 
@@ -201,6 +202,7 @@
 
 <script type="text/javascript">
 
+/*
     ClassicEditor.create( document.querySelector( '#editor' ), {
         // toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'imageUpload' ],
         // plugins: ["CKFinder"],
@@ -236,6 +238,7 @@
             ]
         }
     } );
+*/
 
     $.switcher('input[type=checkbox]');
 
@@ -470,29 +473,29 @@
         %{--    });--}%
         %{--}--}%
 
-        %{--CKEDITOR.replace( 'editorTramite', {--}%
-        %{--    height: "600px",--}%
-        %{--    // customConfig: 'config.js',--}%
-        %{--    filebrowserBrowseUrl    : '${createLink(controller: "tramiteImagenes", action: "browser")}',--}%
-        %{--    filebrowserUploadUrl    : '${createLink(controller: "tramiteImagenes", action: "uploader")}',--}%
-        %{--    // extraPlugins: 'imageuploader',--}%
-        %{--    toolbar                 : [--}%
-        %{--        ['Font', 'FontSize', 'Scayt', '-', 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'],--}%
-        %{--        ['Find', 'Replace', '-', 'SelectAll'],--}%
-        %{--        ['Table', 'HorizontalRule', 'PageBreak'],--}%
-        %{--        ['Image'/*, 'Timestamp'*/, '-', 'TextColor', 'BGColor', '-', 'About'],--}%
-        %{--        '/',--}%
-        %{--        ['Bold', 'Italic', 'Underline', /*'Strike', */'Subscript', 'Superscript'/*, '-', 'RemoveFormat'*/],--}%
-        %{--        ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-']--}%
-        %{--    ]--}%
-        %{--});--}%
+        CKEDITOR.replace( 'editorTramite', {
+            height: "600px",
+            // customConfig: 'config.js',
+            filebrowserBrowseUrl    : '${createLink(controller: "tramiteImagenes", action: "browser")}',
+            filebrowserUploadUrl    : '${createLink(controller: "tramiteImagenes", action: "uploader")}',
+            // extraPlugins: 'imageuploader',
+            toolbar                 : [
+                ['Font', 'FontSize', 'Scayt', '-', 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'],
+                ['Find', 'Replace', '-', 'SelectAll'],
+                ['Table', 'HorizontalRule', 'PageBreak'],
+                ['Image'/*, 'Timestamp'*/, '-', 'TextColor', 'BGColor', '-', 'About'],
+                '/',
+                ['Bold', 'Italic', 'Underline', /*'Strike', */'Subscript', 'Superscript'/*, '-', 'RemoveFormat'*/],
+                ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-']
+            ]
+        });
 
-        // CKEDITOR.on('instanceReady', function (ev) {
-        //     // Prevent drag-and-drop.
-        //     ev.editor.document.on('drop', function (ev) {
-        //         ev.data.preventDefault(true);
-        //     });
-        // });
+        CKEDITOR.on('instanceReady', function (ev) {
+            // Prevent drag-and-drop.
+            ev.editor.document.on('drop', function (ev) {
+                ev.data.preventDefault(true);
+            });
+        });
     });
 </script>
 </body>

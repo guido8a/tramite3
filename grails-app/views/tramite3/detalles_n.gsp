@@ -1,4 +1,4 @@
-<%@ page import="happy.tramites.PersonaDocumentoTramite; happy.tramites.DocumentoTramite; happy.seguridad.Persona" %>
+<%@ page import="tramites.PersonaDocumentoTramite; tramites.DocumentoTramite; seguridad.Persona" %>
 
 <style type="text/css">
 .claseMin {
@@ -18,8 +18,8 @@
 
 </style>
 
-<g:set var="recibe" value="${happy.tramites.RolPersonaTramite.get(3)}"/>
-<g:set var="trmtpara" value="${happy.tramites.RolPersonaTramite.get(1)}"/>
+<g:set var="recibe" value="${tramites.RolPersonaTramite.get(3)}"/>
+<g:set var="trmtpara" value="${tramites.RolPersonaTramite.get(1)}"/>
 
 <div style="max-height: 500px; overflow-y: auto; overflow-x: hidden;font-size: 11px">
     <g:if test="${tp}">
@@ -57,7 +57,7 @@
 
 
                 <div class="col-xs-6 claseMin">
-                    <g:each in="${happy.tramites.PersonaDocumentoTramite.findAllByTramiteAndRolPersonaTramiteNotInList(tp, rolesNo, [sort: 'rolPersonaTramite'])}" var="pdt" status="j">
+                    <g:each in="${tramites.PersonaDocumentoTramite.findAllByTramiteAndRolPersonaTramiteNotInList(tp, rolesNo, [sort: 'rolPersonaTramite'])}" var="pdt" status="j">
                     %{--${pdt?.estado?.descripcion}--}%
                     %{--${pdt?.id}--}%
                     %{--${pdt?.estado?.codigo}--}%
@@ -207,7 +207,7 @@
 
                 <div class="row" style="margin-top: 0px">
                     <div class="col-xs-11 paraTam alert alert-info negrilla">
-                        <g:each in="${happy.tramites.PersonaDocumentoTramite.findAllByTramiteAndRolPersonaTramiteNotInList(t, rolesNo, [sort: 'rolPersonaTramite'])}" var="pdt" status="j">
+                        <g:each in="${tramites.PersonaDocumentoTramite.findAllByTramiteAndRolPersonaTramiteNotInList(t, rolesNo, [sort: 'rolPersonaTramite'])}" var="pdt" status="j">
                             <g:set var="fecha" value=""></g:set>
                             <g:set var="estado" value=""></g:set>
                             <g:if test="${pdt?.estado?.codigo == 'E006'}">
@@ -251,7 +251,7 @@
                             <b><span style="${pdt?.estado?.codigo == 'E006' || pdt?.estado?.codigo == 'E005' ? 'color:red' : 'color:green'}"><i class="fa ${pdt?.estado?.codigo == 'E006' || pdt?.estado?.codigo == 'E005' ? 'fa-close' : 'fa-check'}"></i> ${estado}</span>
                             </b> el ${fecha} <br>
 
-                            <g:set var="recibidoVar2" value="${happy.tramites.PersonaDocumentoTramite.findByTramiteAndRolPersonaTramite(pdt?.tramite, recibe)?.personaNombre}"/>
+                            <g:set var="recibidoVar2" value="${tramites.PersonaDocumentoTramite.findByTramiteAndRolPersonaTramite(pdt?.tramite, recibe)?.personaNombre}"/>
 
                             <g:if test="${recibidoVar2 && tramite.estadoTramite.codigo == 'E004'}">
                                 <div class="col-xs-2"></div>
@@ -377,7 +377,7 @@
                     </div>
 
                     <div class="col-xs-6 claseMin">
-                        <g:each in="${happy.tramites.PersonaDocumentoTramite.findAllByTramiteAndRolPersonaTramiteNotInList(t, rolesNo, [sort: 'rolPersonaTramite'])}" var="pdt" status="j">
+                        <g:each in="${tramites.PersonaDocumentoTramite.findAllByTramiteAndRolPersonaTramiteNotInList(t, rolesNo, [sort: 'rolPersonaTramite'])}" var="pdt" status="j">
                         %{--${pdt.estado.descripcion}${pdt.id}${pdt.estado?.codigo}--}%
                             <g:set var="fecha" value=""></g:set>
                             <g:set var="estado" value=""></g:set>
@@ -427,8 +427,7 @@
                                 <span style="${pdt?.estado?.codigo == 'E006' || pdt?.estado?.codigo == 'E005' ? 'color:red' : ''}">${estado}</span>
                             </b> el ${fecha} <br>
 
-                        %{--<g:set var="recibidoVar" value="${happy.tramites.PersonaDocumentoTramite.findByAllTramiteAndRolPersonaTramite(pdt?.tramite, recibe)?.personaNombre}"/>--}%
-                            <g:set var="recibidoVar" value="${happy.tramites.PersonaDocumentoTramite.findByTramiteAndRolPersonaTramiteAndDepartamentoPersona(pdt?.tramite,
+                            <g:set var="recibidoVar" value="${tramites.PersonaDocumentoTramite.findByTramiteAndRolPersonaTramiteAndDepartamentoPersona(pdt?.tramite,
                                     recibe, pdt?.departamento)?.personaNombre}"/>
 
                             <g:if test="${recibidoVar && tramite.estadoTramite.codigo == 'E004'}">
@@ -516,7 +515,7 @@
                 <g:if test="${t.anexo == 1}">
                     <g:if test="${t.personaPuedeLeerAnexo(session.usuario)}">
                         <div class="row" style="margin-bottom: 10px;margin-left: 2px">
-                            <g:each in="${happy.tramites.DocumentoTramite.findAllByTramite(t)}" var="anexo" status="k">
+                            <g:each in="${tramites.DocumentoTramite.findAllByTramite(t)}" var="anexo" status="k">
                                 <span style='color: #327BBA'>Archivo:</span>
                                 ${anexo.path}
                                 <a href='#' class='btn btn-success bajar' style='margin-right: 15px' title="Descargar Archivo" iden="${anexo.id}">

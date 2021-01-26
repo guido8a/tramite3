@@ -1,4 +1,4 @@
-<%@ page import="happy.tramites.DocumentoTramite; happy.tramites.RolPersonaTramite; happy.tramites.PersonaDocumentoTramite" %>
+<%@ page import="tramites.DocumentoTramite; tramites.RolPersonaTramite; tramites.PersonaDocumentoTramite" %>
 
 
     <g:each in="${tramites}" var="tramite">
@@ -12,7 +12,7 @@
                 <g:set var="copias" value="${tramite.getCopias()}"/>
 
                 <g:set var="esImprimir" value="${false}"/>
-                <g:if test="${(happy.tramites.PersonaDocumentoTramite.findAllByPersonaAndTramite(session.usuario, tramite).findAll {
+                <g:if test="${(tramites.PersonaDocumentoTramite.findAllByPersonaAndTramite(session.usuario, tramite).findAll {
                     it.rolPersonaTramite.codigo == 'I005'
                 }).size() > 0}">
                     <g:set var="esImprimir" value="${true}"/>

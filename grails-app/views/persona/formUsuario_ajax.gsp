@@ -1,4 +1,4 @@
-<%@ page import="happy.seguridad.Persona" %>
+<%@ page import="seguridad.Persona" %>
 
 <script type="text/javascript" src="${resource(dir: 'js', file: 'ui.js')}"></script>
 

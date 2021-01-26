@@ -13,7 +13,7 @@
                     Departamento
                 </label>
                 <div class="col-md-6">
-                    <g:select id="departamento" name="departamento.id" from="${happy.tramites.Departamento.list()}" optionKey="id" value="${numeroInstance?.departamento?.id}" class="many-to-one form-control" noSelection="['null': '']"/>
+                    <g:select id="departamento" name="departamento.id" from="${tramites.Departamento.list()}" optionKey="id" value="${numeroInstance?.departamento?.id}" class="many-to-one form-control" noSelection="['null': '']"/>
                 </div>
                 
             </span>
@@ -25,7 +25,7 @@
                     Tipo Documento
                 </label>
                 <div class="col-md-6">
-                    <g:select id="tipoDocumento" name="tipoDocumento.id" from="${happy.tramites.TipoDocumento.list()}" optionKey="id" value="${numeroInstance?.tipoDocumento?.id}" class="many-to-one form-control" noSelection="['null': '']"/>
+                    <g:select id="tipoDocumento" name="tipoDocumento.id" from="${tramites.TipoDocumento.list()}" optionKey="id" value="${numeroInstance?.tipoDocumento?.id}" class="many-to-one form-control" noSelection="['null': '']"/>
                 </div>
                 
             </span>

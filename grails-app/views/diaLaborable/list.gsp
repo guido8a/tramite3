@@ -1,5 +1,5 @@
 
-<%@ page import="happy.utilitarios.DiaLaborable" %>
+<%@ page import="utilitarios.DiaLaborable" %>
 <!doctype html>
 <html>
     <head>

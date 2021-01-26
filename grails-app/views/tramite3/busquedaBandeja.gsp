@@ -5,7 +5,7 @@
   Time: 12:23 PM
 --%>
 
-<%@ page import="happy.tramites.DocumentoTramite; happy.tramites.Tramite" %>
+<%@ page import="tramites.DocumentoTramite; tramites.Tramite" %>
 <script type="text/javascript" src="${resource(dir: 'js', file: 'ui.js')}"></script>
 
 <div style="height: 450px" class="container-celdas">

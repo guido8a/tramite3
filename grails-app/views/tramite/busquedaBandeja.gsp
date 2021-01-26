@@ -1,4 +1,4 @@
-<%@ page import="happy.tramites.DocumentoTramite" %>
+<%@ page import="tramites.DocumentoTramite" %>
 <%--
   Created by IntelliJ IDEA.
   User: fabricio

@@ -29,7 +29,7 @@ table {
                         <g:if test="${tramite?.tramite?.tipoTramite?.codigo == 'C'}">
                             <i class="fa fa-eye-slash"></i>
                         </g:if>
-                        <g:if test="${tramite?.tramite?.anexo == 1 && happy.tramites.DocumentoTramite?.countByTramite(tramite.tramite) > 0}">
+                        <g:if test="${tramite?.tramite?.anexo == 1 && tramites.DocumentoTramite?.countByTramite(tramite.tramite) > 0}">
                             <i class="fa fa-paperclip"></i>
                         </g:if>
                         ${tramite?.tramite?.codigo}

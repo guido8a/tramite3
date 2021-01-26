@@ -1,4 +1,4 @@
-<%@ page import="happy.seguridad.Persona" %>
+<%@ page import="seguridad.Persona" %>
 
 <g:if test="${tramites > 0}">
     <p style="font-size: larger;">

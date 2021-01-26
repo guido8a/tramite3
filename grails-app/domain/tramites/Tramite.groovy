@@ -4,7 +4,6 @@ import audita.Auditable
 import seguridad.Persona
 import utilitarios.Parametros
 
-//import happy.utilitarios.DiasLaborablesService
 
 class Tramite implements Auditable{
     static auditable = true

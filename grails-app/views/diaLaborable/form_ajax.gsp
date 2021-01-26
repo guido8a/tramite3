@@ -1,5 +1,5 @@
 
-<%@ page import="happy.utilitarios.DiaLaborable" %>
+<%@ page import="utilitarios.DiaLaborable" %>
 
 <div id="create-DiaLaborable" class="span" role="main">
     <g:form class="form-horizontal" name="frmSave-DiaLaborable" action="save">

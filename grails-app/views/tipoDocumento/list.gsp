@@ -1,5 +1,4 @@
 
-%{--<%@ page import="happy.tramites.TipoDocumento" %>--}%
 <!DOCTYPE html>
 <html>
     <head>

@@ -1,4 +1,4 @@
-<%@ page import="happy.tramites.DocumentoTramite; happy.tramites.RolPersonaTramite; happy.tramites.PersonaDocumentoTramite" %>
+<%@ page import="tramites.DocumentoTramite; tramites.RolPersonaTramite; tramites.PersonaDocumentoTramite" %>
 %{--<script type="text/javascript" src="${resource(dir: 'js', file: 'ui.js')}"></script>--}%
 
 %{--<script type="text/javascript" src="${resource(dir: 'js/plugins/lzm.context/js', file: 'lzm.context-0.5.js')}"></script>--}%

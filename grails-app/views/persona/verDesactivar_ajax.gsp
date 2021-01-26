@@ -1,4 +1,4 @@
-<%@ page import="happy.seguridad.Persona" %>
+<%@ page import="seguridad.Persona" %>
 
 <p>¿Está seguro que desea desactivar a <strong>${persona.nombre} ${persona.apellido}</strong>?</p>
 <g:if test="${tramites > 0}">

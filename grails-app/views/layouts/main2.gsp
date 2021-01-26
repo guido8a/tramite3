@@ -58,7 +58,7 @@
     <asset:javascript src="/jquery/date.js"/>
 %{--    <asset:javascript src="/ckeditor/ckeditor.js"/>--}%
 %{--    <asset:javascript src="/ckeditor5/build/ckeditor.js"/>--}%
-    <asset:javascript src="/ckeditor5-build-classic/ckeditor.js"/>
+%{--    <asset:javascript src="/ckeditor5-build-classic/ckeditor.js"/>--}%
     <asset:javascript src="/apli/jquery.switcher.min.js"/>
 
 %{--    <!-- Custom styles -->--}%

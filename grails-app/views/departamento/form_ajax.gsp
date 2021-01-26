@@ -1,7 +1,5 @@
 <%@ page import="tramites.Departamento" %>
-%{--<%@ page import="org.omg.CORBA.NO_IMPLEMENT; happy.tramites.Departamento" %>--}%
 
-%{--<script type="text/javascript" src="${resource(dir: 'js', file: 'ui.js')}"></script>--}%
 <g:if test="${!departamentoInstance}">
     <elm:notFound elem="Departamento" genero="o"/>
 </g:if>

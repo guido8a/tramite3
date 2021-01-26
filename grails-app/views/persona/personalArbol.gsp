@@ -5,7 +5,7 @@
   Time: 12:39 PM
 --%>
 
-<%@ page import="happy.seguridad.Prfl; happy.seguridad.Sesn" contentType="text/html;charset=UTF-8" %>
+<%@ page import="seguridad.Prfl; seguridad.Sesn" contentType="text/html;charset=UTF-8" %>
 <html>
     <head>
         <title>Configuración personal</title>

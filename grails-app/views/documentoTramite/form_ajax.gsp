@@ -1,4 +1,4 @@
-<%@ page import="happy.tramites.DocumentoTramite" %>
+<%@ page import="tramites.DocumentoTramite" %>
 
 <script type="text/javascript" src="${resource(dir: 'js', file: 'ui.js')}"></script>
 <g:if test="${!documentoTramiteInstance}">
@@ -14,7 +14,7 @@
                     Tramite
                 </label>
                 <div class="col-md-6">
-                    <g:select id="tramite" name="tramite.id" from="${happy.tramites.Tramite.list()}" optionKey="id" value="${documentoTramiteInstance?.tramite?.id}" class="many-to-one form-control" noSelection="['null': '']"/>
+                    <g:select id="tramite" name="tramite.id" from="${tramites.Tramite.list()}" optionKey="id" value="${documentoTramiteInstance?.tramite?.id}" class="many-to-one form-control" noSelection="['null': '']"/>
                 </div>
                 
             </span>
@@ -26,7 +26,7 @@
                     Anexo
                 </label>
                 <div class="col-md-6">
-                    <g:select id="anexo" name="anexo.id" from="${happy.tramites.Tramite.list()}" optionKey="id" value="${documentoTramiteInstance?.anexo?.id}" class="many-to-one form-control" noSelection="['null': '']"/>
+                    <g:select id="anexo" name="anexo.id" from="${tramites.Tramite.list()}" optionKey="id" value="${documentoTramiteInstance?.anexo?.id}" class="many-to-one form-control" noSelection="['null': '']"/>
                 </div>
                 
             </span>

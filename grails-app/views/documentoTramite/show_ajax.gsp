@@ -1,5 +1,5 @@
 
-<%@ page import="happy.tramites.DocumentoTramite" %>
+<%@ page import="tramites.DocumentoTramite" %>
 
 <g:if test="${!documentoTramiteInstance}">
     <elm:notFound elem="DocumentoTramite" genero="o" />

@@ -1,5 +1,5 @@
 
-<%@ page import="happy.utilitarios.DiaLaborable" %>
+<%@ page import="utilitarios.DiaLaborable" %>
 
 <div id="show-diaLaborable" class="span5" role="main">
 
