@@ -151,7 +151,6 @@ class TramiteImagenesController {
 //        def path = servletContext.getRealPath("/") + folderUsuario + "/"
 //        def path = servletContext.getRealPath("/")
         def path = "/var/tramites/images/"
-        def c = new File(path, )
         new File(path).mkdirs()
 
         def files = []
@@ -159,13 +158,14 @@ class TramiteImagenesController {
         def dir = new File(path)
         dir.eachFileRecurse(FileType.FILES) { file ->
             def img = ImageIO.read(file)
+//            println("file " + file)
             if (img) {
                 files.add([
 //                        dir : folderUsuario,
                         dir : path,
                         file: file.name,
                         w   : img?.getWidth(),
-                        h   : img?.getHeight()
+                        h   : img?.getHeight(),
                 ])
             }
         }
@@ -184,18 +184,19 @@ class TramiteImagenesController {
     }
 
     def getImage() {
-        byte[] imageInBytes = im()
+//        println("params " + params)
+        byte[] imageInBytes = im(params.id, params.format)
         response.with{
             setHeader('Content-length', imageInBytes.length.toString())
-            contentType = 'image/jpg' // or the appropriate image content type
+            contentType = "image/${params.format}" // or the appropriate image content type
             outputStream << imageInBytes
             outputStream.flush()
         }
     }
 
-    byte[] im() {
+    byte[] im(nombre,ext) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream()
-        ImageIO.write(ImageIO.read(new File('/var/tramites/images/ima3.jpg')), "jpg", baos)
+        ImageIO.write(ImageIO.read(new File('/var/tramites/images/' + nombre + "." + ext)), ext.toString(), baos)
         baos.toByteArray()
     }
 

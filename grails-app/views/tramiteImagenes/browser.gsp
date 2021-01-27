@@ -5,9 +5,6 @@
         <meta name="layout" content="noMenu">
         <title>Imágenes disponibles</title>
 
-%{--        <script type="text/javascript" src="${resource(dir: 'js/plugins/MagnificPopup', file: 'MagnificPopup.js')}"></script>--}%
-%{--        <link href="${resource(dir: 'js/plugins/MagnificPopup', file: 'MagnificPopup.css')}" rel="stylesheet">--}%
-
         <style type="text/css">
         .thumbnail {
             width  : 185px;
@@ -51,31 +48,20 @@
                 <g:each in="${files}" var="file" status="i">
                     <div class="col-sm-3 ${i}">
                         <div class="thumbnail">
-                            <a href="#" class="btn btn-danger btn-xs btn-delete pull-right" title="Eliminar" data-file="${file.file}" data-i="${i}" style="margin-bottom: 5px">
+                            <a href="#" class="btn btn-success btn-sm btn-add" style="margin-bottom: 5px">
+                                <i class="fa fa-check"></i> Seleccionar
+                            </a>
+                            <a href="#" class="btn btn-danger btn-sm btn-delete pull-right" title="Eliminar" data-file="${file.file}" data-i="${i}" style="margin-bottom: 5px">
                                 <i class="fa fa-trash"></i>
                             </a>
 %{--                            <a class="img" href="${resource(dir: file.dir, file: file.file)}">--}%
 %{--                                <img src="${resource(dir: file.dir, file: file.file)}"/>--}%
 %{--                            </a>--}%
 
-%{--                            <asset:image src="${resource(dir: file.dir, file: file.file)}"/>--}%
-%{--                            ${javax.imageio.ImageIO.read(new File('/var/tramites/images/ima3.jpg'))}--}%
-
-%{--                            <g:img dir="${file.dir}" file="${file.file}" width="40" height="40"/>--}%
-%{--${file.dir}--}%
-%{--${file.file}--}%
-%{--                            <g:img uri="/var/tramites/images/ima3.jpg"  width="40" height="40"/>--}%
-
-                            <img src="${createLink(controller: 'tramiteImagenes', action: 'getImage')}" />
+                            <img src="${createLink(controller: 'tramiteImagenes', action: 'getImage', id: file.file)}"/>
 
                             <div class="caption">
                                 <p>${file.file}</p>
-
-                                <div class="text-center">
-                                    <a href="#" class="btn btn-success btn-sm btn-add">
-                                        <i class="fa fa-check"></i> Seleccionar
-                                    </a>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -147,23 +133,21 @@
                     var pos = Math.floor((Math.random() * effects.length) + 1);
                     var effect = effects[pos];
 
-                    var msg = "<i class='fa fa-trash-o fa-6x pull-left text-danger text-shadow'></i>" +
+                    var msg = "<i class='fa fa-trash fa-4x pull-left text-danger text-shadow'></i>" +
                               "<p>¿Está seguro que desea eliminar esta imagen del servidor?</p>" +
-                              "<p><b>Esta acción no se puede deshacer.</b></p>" +
-                              "<p><b><i>Una vez eliminada la imagen no podrá recuperarla.</i></b></p>";
-
+                              "<p><b>Esta acción no se puede deshacer. Una vez eliminada la imagen no podrá ser recuperada.</b></p>";
                     bootbox.dialog({
                         title   : "Alerta",
                         message : msg,
                         buttons : {
                             cancelar : {
-                                label     : "Cancelar",
+                                label     : "<i class='fa fa-times'></i> Cancelar",
                                 className : "btn-primary",
                                 callback  : function () {
                                 }
                             },
                             eliminar : {
-                                label     : "<i class='fa fa-trash-o'></i> Eliminar",
+                                label     : "<i class='fa fa-trash'></i> Eliminar",
                                 className : "btn-danger",
                                 callback  : function () {
                                     openLoader("Eliminando");
