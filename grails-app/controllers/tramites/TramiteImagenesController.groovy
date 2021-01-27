@@ -184,7 +184,7 @@ class TramiteImagenesController {
     }
 
     def getImage() {
-//        println("params " + params)
+        println("params " + params)
         byte[] imageInBytes = im(params.id, params.format)
         response.with{
             setHeader('Content-length', imageInBytes.length.toString())
