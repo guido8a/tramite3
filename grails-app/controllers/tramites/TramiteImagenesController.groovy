@@ -1,5 +1,6 @@
 package tramites
 
+import grails.converters.JSON
 import groovy.io.FileType
 import seguridad.Persona
 import org.apache.commons.lang.WordUtils
@@ -150,6 +151,7 @@ class TramiteImagenesController {
 //        def path = servletContext.getRealPath("/") + folderUsuario + "/"
 //        def path = servletContext.getRealPath("/")
         def path = "/var/tramites/images/"
+        def c = new File(path, )
         new File(path).mkdirs()
 
         def files = []
@@ -159,7 +161,8 @@ class TramiteImagenesController {
             def img = ImageIO.read(file)
             if (img) {
                 files.add([
-                        dir : folderUsuario,
+//                        dir : folderUsuario,
+                        dir : path,
                         file: file.name,
                         w   : img?.getWidth(),
                         h   : img?.getHeight()
@@ -180,42 +183,20 @@ class TramiteImagenesController {
         render "OK_Archivo eliminado exitosamente"
     }
 
-    def subir_ajax () {
-        println("params " + params)
-        def path = "/var/tramites/images/"
-        def f = request.getFile('upload')
-
-        def fileName = f.getOriginalFilename() //nombre original del archivo
-        def ext
-        def parts = fileName.split("\\.")
-        fileName = ""
-        parts.eachWithIndex { obj, i ->
-            if (i < parts.size() - 1) {
-                fileName += obj
-            } else {
-                ext = obj
-            }
+    def getImage() {
+        byte[] imageInBytes = im()
+        response.with{
+            setHeader('Content-length', imageInBytes.length.toString())
+            contentType = 'image/jpg' // or the appropriate image content type
+            outputStream << imageInBytes
+            outputStream.flush()
         }
+    }
 
-        def nombre = fileName + "." + ext
-        def pathFile = path + nombre
-        def fn = fileName
-        def src = new File(pathFile)
-
-        def i = 1
-        while (src.exists()) {
-            nombre = fn + "_" + i + "." + ext
-            pathFile = path + nombre
-            src = new File(pathFile)
-            i++
-        }
-        try {
-            f.transferTo(new File(pathFile)) // guarda el archivo subido al nuevo path
-        } catch (e) {
-            println "error " + e
-        }
-
-        return true
+    byte[] im() {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream()
+        ImageIO.write(ImageIO.read(new File('/var/tramites/images/ima3.jpg')), "jpg", baos)
+        baos.toByteArray()
     }
 
 }

@@ -45,18 +45,28 @@
     </head>
 
     <body>
-        <a href="#" id="btnClose" class="btn btn-info" style="margin-bottom: 15px;">Cerrar ventana</a>
-%{--        <g:if test="${files.size() > 0}">--}%
+        <a href="#" id="btnClose" class="btn btn-info" style="margin-bottom: 15px;"><i class="fa fa-times"></i> Cerrar ventana</a>
+        <g:if test="${files.size() > 0}">
             <div class="row">
                 <g:each in="${files}" var="file" status="i">
                     <div class="col-sm-3 ${i}">
                         <div class="thumbnail">
                             <a href="#" class="btn btn-danger btn-xs btn-delete pull-right" title="Eliminar" data-file="${file.file}" data-i="${i}" style="margin-bottom: 5px">
-                                <i class="fa fa-trash-o"></i>
+                                <i class="fa fa-trash"></i>
                             </a>
-                            <a class="img" href="${resource(dir: file.dir, file: file.file)}">
-                                <img src="${resource(dir: file.dir, file: file.file)}"/>
-                            </a>
+%{--                            <a class="img" href="${resource(dir: file.dir, file: file.file)}">--}%
+%{--                                <img src="${resource(dir: file.dir, file: file.file)}"/>--}%
+%{--                            </a>--}%
+
+%{--                            <asset:image src="${resource(dir: file.dir, file: file.file)}"/>--}%
+%{--                            ${javax.imageio.ImageIO.read(new File('/var/tramites/images/ima3.jpg'))}--}%
+
+%{--                            <g:img dir="${file.dir}" file="${file.file}" width="40" height="40"/>--}%
+%{--${file.dir}--}%
+%{--${file.file}--}%
+%{--                            <g:img uri="/var/tramites/images/ima3.jpg"  width="40" height="40"/>--}%
+
+                            <img src="${createLink(controller: 'tramiteImagenes', action: 'getImage')}" />
 
                             <div class="caption">
                                 <p>${file.file}</p>
@@ -71,18 +81,18 @@
                     </div>
                 </g:each>
             </div>
-%{--        </g:if>--}%
-%{--        <g:else>--}%
-%{--            <div class="alert alert-info">--}%
+        </g:if>
+        <g:else>
+            <div class="alert alert-info">
 
-%{--                <span class="fa-stack fa-lg">--}%
-%{--                    <i class="fa fa-picture-o fa-stack-1x text-muted"></i>--}%
-%{--                    <i class="fa fa-folder-o fa-stack-2x text-muted"></i>--}%
-%{--                </span>--}%
+                <span class="fa-stack fa-lg">
+                    <i class="fa fa-picture-o fa-stack-1x text-muted"></i>
+                    <i class="fa fa-folder-o fa-stack-2x text-muted"></i>
+                </span>
 
-%{--                No tiene imágenes cargadas en el servidor.--}%
-%{--            </div>--}%
-%{--        </g:else>--}%
+                No tiene imágenes cargadas en el servidor. Use la opción "Upload" para cargar imágenes.
+            </div>
+        </g:else>
 
         <script type="text/javascript">
             $(function () {
