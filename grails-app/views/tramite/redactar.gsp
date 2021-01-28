@@ -258,8 +258,6 @@
         var b = cargarLoader("Guardando...");
         var texto = CKEDITOR.instances.editorTramite.getData();
 
-        console.log(texto.split("getImage/")[1]);
-
         $.ajax({
             type     : "POST",
             url      : '${createLink(controller:"tramite", action: "saveTramite")}',

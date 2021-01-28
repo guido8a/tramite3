@@ -173,8 +173,11 @@ class EnviarService {
         }
         content += "<div class='hoja'>\n"
         content +=  new Elementos2TagLib().headerTramite(tramite: tramite, pdf: true)
-//        content += text
-        content += '<p><img alt="" src="/var/tramites/images/gatos_6.jpg" style="height:395px; width:400px" /></p>'
+
+        def nuevoTexto = text.replaceAll("tramiteImagenes/getImage", "var/tramites/images")
+
+        content += nuevoTexto
+//        content += '<p><img alt="" src="/var/tramites/images/gatos_6.jpg" style="height:395px; width:400px" /></p>'
         content += "</div>\n"
         content += "</body>\n"
         content += "</html>"
