@@ -9,6 +9,8 @@ import java.io.*;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 import org.w3c.dom.Document;
 
+import bitacora3.Elementos2TagLib
+
 
 class EnviarService {
 
@@ -29,7 +31,8 @@ class EnviarService {
         def parametros = Parametros.list()
         if (parametros.size() == 0) {
             println "NO HAY PARAMETROS!!!!!!"
-            mensaje = "/happy/images/"
+//            mensaje = "/happy/images/"
+            mensaje = "/var/tramites/images/"
         } else if (parametros.size() > 1) {
             println "HAY ${parametros.size()} REGISTROS DE PARAMETROS!!!!"
             mensaje = parametros.first().imagenes
@@ -169,8 +172,9 @@ class EnviarService {
                     "</div>"
         }
         content += "<div class='hoja'>\n"
-//        content += new ElementosTagLib().headerTramite(tramite: tramite, pdf: true)
-        content += text
+        content +=  new Elementos2TagLib().headerTramite(tramite: tramite, pdf: true)
+//        content += text
+        content += '<p><img alt="" src="/var/tramites/images/gatos_6.jpg" style="height:395px; width:400px" /></p>'
         content += "</div>\n"
         content += "</body>\n"
         content += "</html>"

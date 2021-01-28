@@ -1,15 +1,20 @@
+
+import seguridad.Persona
+import tramites.Departamento
+import tramites.OrigenTramite
+import tramites.PermisoTramite
+import tramites.PermisoUsuario
+import tramites.PersonaDocumentoTramite
+import tramites.RolPersonaTramite
+import tramites.TipoDocumento
+import tramites.TipoDocumentoDepartamento
+import tramites.Tramite
 import org.grails.core.artefact.DomainClassArtefactHandler
 import org.springframework.beans.SimpleTypeConverter
 import org.springframework.context.MessageSourceResolvable
 import org.springframework.web.servlet.support.RequestContextUtils
-import seguridad.Persona
-import tramites.PersonaDocumentoTramite
-import tramites.RolPersonaTramite
-import tramites.TipoDocumento
 
-import java.text.DecimalFormatSymbols
-
-class ElementosTagLib {
+class ElementosTagLib2 {
 
     static namespace = "elm"
 
@@ -69,15 +74,18 @@ class ElementosTagLib {
      * pone el favicon
      */
     def favicon = { attrs ->
-        def html = "<link rel=\"shortcut icon\" href=\"${assetPath(src: 'favicon.ico')}\" type=\"image/x-icon\">"
-        html += "<link rel=\"apple-touch-icon\" href=\"${assetPath(src: 'apple-touch-icon.png')}\">"
-        html += "<link rel=\"apple-touch-icon\" sizes=\"114x114\" href=\"${assetPath(src: 'apple-touch-icon-retina.png')}\">"
+//        def html = "     <link rel=\"shortcut icon\" href=\"${resource(dir: 'images/ico', file: 'emoticon_smile.png')}\">\n" +
+//                "        <link rel=\"apple-touch-icon-precomposed\" sizes=\"144x144\" href=\"${resource(dir: 'images/ico', file: 'janus_144.png')}\">\n" +
+//                "        <link rel=\"apple-touch-icon-precomposed\" sizes=\"114x114\" href=\"${resource(dir: 'images/ico', file: 'janus_114.png')}\">\n" +
+//                "        <link rel=\"apple-touch-icon-precomposed\" sizes=\"72x72\" href=\"${resource(dir: 'images/ico', file: 'janus_72.png')}\">\n" +
+//                "        <link rel=\"apple-touch-icon-precomposed\" href=\"${resource(dir: 'images/ico', file: 'janus_57.png')}\">"
+        def html = "     <link rel=\"shortcut icon\" href=\"${resource(dir: 'images/ico', file: 'gadpp.png')}\">"
         out << html
     }
 
     def bootstrapCss = { attrs ->
         def html = "<link href=\"${resource(dir: 'bootstrap-3.1.1/css', file: 'bootstrap.css')}\" rel=\"stylesheet\">"
-        html += "<link href=\"${resource(dir: 'bootstrap-3.1.1/css', file: 'bootstrap-theme.min.css')}\" rel=\"stylesheet\">"
+        html += "<link href=\"${resource(dir: 'bootstrap-3.1.1/css', file: 'bootstrap-theme-spacelab.css')}\" rel=\"stylesheet\">"
         out << html
     }
 
@@ -135,15 +143,22 @@ class ElementosTagLib {
     def comboTipoDoc = { attrs ->
         def persona = Persona.get(session.usuario.id)
         def depar = persona.departamento
+
+//        def tipos = TipoDocumentoDepartamento.findAllByDepartamentoAndEstado(depar, 1).tipo
+//        tipos.sort { it.descripcion }
         def tipos = session.usuario.tiposDocumento
 
         if (!attrs.id) {
             attrs.id = attrs.name
         }
 
+//        if (!attrs.tramite || !attrs.tramite.padre) {
+//            tipos.remove(TipoDocumento.findByCodigo("SUM"))
+//        } else {
         if (attrs.esRespuesta?.toInteger() == 1) {
             tipos.remove(TipoDocumento.findByCodigo("DEX"))
         }
+//        }
 
         if (attrs.tipo && (attrs.tipo.toLowerCase() == "pers" || attrs.tipo.toLowerCase() == "personal")) {
             tipos.remove(TipoDocumento.findByCodigo("DEX"))
@@ -152,6 +167,7 @@ class ElementosTagLib {
         if (!session.usuario.puedeTramitar) {
             tipos.remove(TipoDocumento.findByCodigo("OFI"))
         }
+
 
         def params = [id         : attrs.id,
                       name       : attrs.name,
@@ -179,9 +195,15 @@ class ElementosTagLib {
         def html
         def persona = Persona.get(session.usuario.id)
         def esTriangulo = session.usuario.esTriangulo
+
+//        println "persona " + persona
+//        println "persona.id " + persona.id
+//        println "esTriangulo " + esTriangulo
+
         def disp, disponibles = []
         def depar = ["depar", "departamento", "dpto", "ofi", "oficina"]
         def esDepartamento = (attrs.tipo && (depar.contains(attrs.tipo.toLowerCase())))
+//        println "esDepartamento: " + esDepartamento
         def disp2 = []
         def todos = []
         def users = []
@@ -191,34 +213,53 @@ class ElementosTagLib {
         def arreglo = []
         def arreglo2 = []
 
+//        println "AQUI"
+
         if (attrs.tipoDoc.codigo == "DEX") {
             if (esDepartamento) {
                 todos = [[id: persona.departamento.id * -1, label: persona.departamento.descripcion, obj: persona.departamento]]
             }
         } else {
             if (session.usuario.puedeTramitar) {
+//                println "1"
                 disp = Departamento.list([sort: 'descripcion'])
             } else {
+//                println "2"
                 disp = [persona.departamento]
             }
+//            println "DISP::: " + disp
             disp.each { dep ->
 //                println "dep.id: " + dep.id + "    persona.dep: " + persona.departamento.id + "     " + (dep.id == persona.departamento.id)
                 if (dep.id == persona.departamento.id) {
                     def usuarios = Persona.findAllByDepartamento(dep, [sort: 'nombre'])
                     usuarios.each { usu ->
                         if ((((!esTriangulo && usu.id != persona.id) || (esTriangulo && usu.id != persona.id) || (esTriangulo && usu.id == persona.id))) && usu.estaActivo && usu.puedeRecibirOff) {
+//                            users += it
                             disponibles.add([id     : usu.id,
                                              label  : usu.toString(),
                                              obj    : usu,
                                              externo: "interno"])
                         }
                     }
+//                    for (int i = users.size() - 1; i > -1; i--) {
+//                        if (users[i].estaActivo && users[i].puedeRecibir) {
+//                            disponibles.add([id: users[i].id, label: users[i].toString(), obj: users[i]])
+//                        } else {
+//                            users.remove(i)
+//                        }
+//                    }
+//                    disponibles = disponibles.reverse(
                 }
             }
 
             disp.each { dep ->
+//                println "DEP:: " + dep
+//                println "dep.triangulos: " + dep.triangulos
+//                println "dep.triangulos: " + dep.triangulos.size()
                 if (dep.triangulos.size() > 0) {
-
+//                    println "dep.id " + dep.id + "    " + persona.departamento.id
+//                    println "esDep " + esDepartamento
+//                    println "IF " + (dep.id.toLong() != persona.departamento.id.toLong() || (dep.id.toLong() == persona.departamento.id.toLong() && !esDepartamento))
                     if (dep.id.toLong() != persona.departamento.id.toLong() || (dep.id.toLong() == persona.departamento.id.toLong() && !esDepartamento)) {
                         disp2.add([id     : dep.id * -1,
                                    label  : dep.descripcion,
@@ -249,6 +290,7 @@ class ElementosTagLib {
         def para = PersonaDocumentoTramite.findAllByTramiteAndRolPersonaTramite(tramite, rolPara)
         def cc = PersonaDocumentoTramite.findAllByTramiteAndRolPersonaTramite(tramite, rolCC)
 
+//
 //        println("tramite " + tramite?.id)
 //        println "copiasf " + cc
 
@@ -304,6 +346,9 @@ class ElementosTagLib {
             html += "                <div class=\"col-xs-10  col-buen-height\">"
             html += "                    ${tramite.codigo}"
             html += "                </div>"
+//            html += "                <div class=\"col-xs-4 negrilla\" style=\"padding-left: 0px;margin-top: 2px\">"
+//            html += "                    No. <span style=\"font-weight: 500; margin-left: 40px\">${tramite.codigo}</span>"
+//            html += "                </div>"
             html += "            </div>"
             //para
             if (para || tramite.paraExterno) {
@@ -329,6 +374,18 @@ class ElementosTagLib {
                 html += "                </div>"
             }
 //            //copias
+//            if(cc){
+//                html += "                <div class=\"row row-low-margin-top\">"
+//                html += "                    <div class=\"col-xs-1  negrilla negrilla-puntos\">"
+//                html += "                        CC:"
+//                html += "                    </div>"
+//                html += ""
+//                html += "                    <div class=\"col-xs-10  col-buen-height\">"
+//                html += strCopia
+//                html += "                    </div>"
+//                html += "                </div>"
+//            }
+            //de
             html += "            <div class=\"row row-low-margin-top\">"
             html += "                <div class=\"col-xs-1  negrilla negrilla-puntos\">"
             html += "                    De:"
@@ -338,18 +395,21 @@ class ElementosTagLib {
                 html += "                    ${tramite.paraExterno} (ext.)"
             } else {
                 if (tramite?.tipoDocumento?.codigo == 'OFI') {
-                    if (tramite.de) {
-                        html += "                    ${tramite?.de?.departamento.descripcion}"
+                    if(tramite.de){
+                        html += "                    ${tramite.de.departamento.descripcion}"
                     } else {
                         html += "                    ${tramite.deDepartamento.descripcion}"
                     }
                 } else {
-                    if (tramite.de) {
-                        html += "                    ${tramite?.de?.departamento.descripcion}"
+                    //cambiado el 21-07-2015
+//                    html += "                    ${tramite.de.departamento.descripcion} - (${tramite.de.nombre} ${tramite.de.apellido})"
+                    if(tramite.de) {
+                        html += "                    ${tramite.de.departamento.descripcion}"
                     } else {
                         html += "                    ${tramite.deDepartamento.descripcion}"
                     }
                 }
+
             }
             html += "                </div>"
             html += "            </div>"
@@ -396,8 +456,6 @@ class ElementosTagLib {
             html += "            </div>"
             html += "        </div>"
         } else {
-//            DecimalFormatSymbols decimalSymbols = DecimalFormatSymbols.getInstance();
-//        decimalSymbols.setDecimalSeparator('.');
             //tipo documento
             if (tramite?.tipoDocumento?.codigo != 'OFI') {
 
@@ -407,29 +465,23 @@ class ElementosTagLib {
 //                println("cadena " + nuevaCadena + " " + tramite.codigo)
 
                 html = "<div class=\"titulo-azul titulo-horizontal\">"
-                html += tramite.tipoDocumento?.descripcion + "-" + nuevaCadena
+//                html += tramite.tipoDocumento?.descripcion + "-" + nuevaCadena
+                html += tramite.tipoDocumento?.descripcion
                 html += "</div>"
-                html += "<table class='tramiteHeader'>"
+                html += "<table class='tramiteHeader' width='100%'>"
                 //no. documento
 //                html += "<tr>"
 //                html += "<th>No.</th>"
 //                html += "<td>${tramite.codigo}</td>"
 //                html += "</tr>"
+
                 //de
                 html += "<tr>"
-                html += "<th>DE:</th>"
-                if (tramite.tipoDocumento.codigo == "DEX") {
-                    html += "<td>${tramite.paraExterno.toUpperCase()} (ext.)</td>"
-                } else {
-                    //cambiado el 21-07-2015
-//                    html += "<td>${tramite.de.departamento.descripcion} - (${tramite.de.nombre} ${tramite.de.apellido})</td>"
-                    if(tramite.de) {
-                        html += "<td>${tramite.de.departamento.descripcion.toUpperCase()}</td>"
-                    } else {
-                        html += "<td>${tramite.deDepartamento.descripcion.toUpperCase()}</td>"
-                    }
-                }
+                html += "<th>N°:</th>"
+                html += "<td><strong>${tramite.codigo}</strong></td>"
                 html += "</tr>"
+
+
                 //para
                 if (para || tramite.paraExterno) {
                     html += "<tr style='vertical-align: top'>"
@@ -459,6 +511,23 @@ class ElementosTagLib {
                     html += "</td>"
                     html += "</tr>"
                 }
+
+                //de
+                html += "<tr>"
+                html += "<th>DE:</th>"
+                if (tramite.tipoDocumento.codigo == "DEX") {
+                    html += "<td>${tramite.paraExterno.toUpperCase()} (ext.)</td>"
+                } else {
+                    //cambiado el 21-07-2015
+//                    html += "<td>${tramite.de.departamento.descripcion} - (${tramite.de.nombre} ${tramite.de.apellido})</td>"
+                    if(tramite.de) {
+                        html += "<td>${tramite.de.departamento.descripcion.toUpperCase()}</td>"
+                    } else {
+                        html += "<td>${tramite.deDepartamento.descripcion.toUpperCase()}</td>"
+                    }
+                }
+                html += "</tr>"
+
                 //copias
 //                if(cc){
 //                    html += "<tr style=\"vertical-align: top\">"
@@ -485,7 +554,8 @@ class ElementosTagLib {
                 html += "<tr>"
                 html += "<th>FECHA:</th>"
                 html += "<td>"
-                html += util.fechaConFormatoMayusculas(fecha: tramite.fechaCreacion, ciudad: "QUITO").toUpperCase()
+//                html += util.fechaConFormatoMayusculas(fecha: tramite.fechaCreacion, ciudad: "QUITO").toUpperCase()
+                html += util.fechaConFormatoMayusculas(fecha: tramite.fechaCreacion)
                 html += "</td>"
                 html += "</tr>"
                 //asunto
@@ -543,41 +613,7 @@ class ElementosTagLib {
         out << html
     }
 
-    /**
-     * pone un contenedor vertical u horizontal
-     * Ejemplo de como usar en asignacion/asignacionProyectov2
-     * @param tipo es el tipo de container, puede ser vertica u horizontal
-     * @param border indica si el container debe tener borde
-     * @param style cualqueir estilo para el container
-     * @param linea indica si debe llevar o no linea bajo el título
-     * @param color es el color del título
-     * @param titulo un String con el título del container
-     */
 
-    def container = { attrs, body ->
-        def tipo = attrs.tipo
-        def clase = ""
-        def titulo = ""
-
-        if (tipo == "vertical") {
-            clase = "vertical-container ${attrs.border ? 'bordered ui-corner-all' : ''}"
-            titulo = '<div class="css-vertical-text" style="color:' + attrs.color + '">' + attrs.titulo + '</div>'
-            if (!attrs.linea) {
-                titulo += '<div class="linea"></div>'
-            }
-        } else {
-            clase = "horizontal-container ${attrs.border ? 'bordered ui-corner-all' : ''}"
-            titulo = '<div class="titulo-azul"  style="color:' + attrs.color + '">' + attrs.titulo + '</div>'
-        }
-
-        def html = ""
-        html += '<div class="' + clase + '" style="' + attrs.style + ';padding-bottom: 10px">'
-        html += titulo
-        out << html << body() + "</div>"
-    }
-
-
-/*
     def headerTramite2 = { attrs ->
         def tramite = attrs.tramite
 
@@ -781,7 +817,6 @@ class ElementosTagLib {
         }
         out << html
     }
-*/
 
     /**
      * crea un datepicker
@@ -824,7 +859,7 @@ class ElementosTagLib {
      *}*      daysOfWeekDisabled  lista de números para deshabilitar ciertos días: 0:domingo, 1:lunes, 2:martes, 3:miercoles, 4:jueves, 5:viernes, 6:sabado
      *      img             imagen del calendario. clase de glyphicons o font awsome
      **/
-    def  datepicker = { attrs ->
+    def datepicker = { attrs ->
         def name = attrs.name
         def nameInput = name + "_input"
         def nameHiddenDay = name + "_day"
@@ -968,100 +1003,101 @@ class ElementosTagLib {
      *      daysOfWeekDisabled  lista de números para deshabilitar ciertos días: 0:domingo, 1:lunes, 2:martes, 3:miercoles, 4:jueves, 5:viernes, 6:sabado
      *      img             imagen del calendario. clase de glyphicons o font awsome
      **/
-//    def datetimepicker = { attrs ->
-//        def name = attrs.name
-//        def nameInput = name + "_input"
-//        def nameHiddenDay = name + "_day"
-//        def nameHiddenMonth = name + "_month"
-//        def nameHiddenYear = name + "_year"
-//        def id = nameInput
-//        if (attrs.id) {
-//            id = attrs.id
-//        }
-//        def readonly = attrs.readonly ?: true
-//        def value = attrs.value
-//
-//        def clase = attrs["class"]
-//
-//        def format = attrs.format ?: "dd-mm-yyyy"
-//
-//        def startDate = attrs.minDate ?: false
-//        def endDate = attrs.maxDate ?: false
-//
-//        def orientation = attrs.orientation ?: "top auto"
-//
-//        def autoclose = attrs.autoclose ?: true
-//        def todayHighlight = attrs.todayHighlight ?: true
-//
-//        def beforeShowDay = attrs.beforeShowDay ?: false
-//        def onChangeDate = attrs.onChangeDate ?: false
-//
-//        def daysOfWeekDisabled = attrs.daysOfWeekDisabled ?: false
-//
-//        def img = attrs.img ?: "fa fa-calendar"
-//
-//        if (value instanceof Date) {
-//            value = value.format(format)
-//        }
-//        if (!value) {
-//            value = ""
-//        }
-//
-//        def br = "\n"
-//
-//        def textfield = "<input type='text' name='${nameInput}' id='${id}' " + (readonly ? "readonly=''" : "") + " value='${value}' class='${clase}' />"
-//        def hiddenDay = "<input type='hidden' name='${nameHiddenDay}' id='${nameHiddenDay}'/>"
-//        def hiddenMonth = "<input type='hidden' name='${nameHiddenMonth}' id='${nameHiddenMonth}'/>"
-//        def hiddenYear = "<input type='hidden' name='${nameHiddenYear}' id='${nameHiddenYear}'/>"
-//        def hidden = "<input type='hidden' name='${name}' id='${name}' value='date.struct'/>"
-//
-//        def div = ""
-//        div += hiddenDay + br
-//        div += hiddenMonth + br
-//        div += hiddenYear + br
-//        div += hidden + br
-//        div += "<div class='input-group'>" + br
-//        div += textfield + br
-//        div += "<span class=\"input-group-addon\"><i class=\"${img}\"></i></span>" + br
-//        div += "</div>" + br
-//
-//        def js = "<script type=\"text/javascript\">" + br
-//        js += '$("#' + id + '").datepicker({' + br
-//        if (startDate) {
-//            js += "startDate: '${startDate}'," + br
-//        }
-//        if (endDate) {
-//            js += "endDate: '${endDate}'," + br
-//        }
-//        if (daysOfWeekDisabled) {
-//            js += "daysOfWeekDisabled: '${daysOfWeekDisabled}'," + br
-//        }
-//        if (beforeShowDay) {
-////            js += "beforeShowDay: function() { ${beforeShowDay}() }," + br
-//            js += "beforeShowDay: ${beforeShowDay}," + br
-//        }
-//        js += 'language: "es",' + br
-//        js += "format: '${format}'," + br
-//        js += "orientation: '${orientation}'," + br
-//        js += "autoclose: ${autoclose}," + br
-//        js += "todayHighlight: ${todayHighlight}" + br
-//        js += "}).on('changeDate', function(e) {" + br
-//        js += "var fecha = e.date;" + br
-//        js += "if(fecha) {" + br
-//        js += '$("#' + nameHiddenDay + '").val(fecha.getDate());' + br
-//        js += '$("#' + nameHiddenMonth + '").val(fecha.getMonth() + 1);' + br
-//        js += '$("#' + nameHiddenYear + '").val(fecha.getFullYear());' + br
-//        js += '$(e.currentTarget).parents(".grupo").removeClass("has-error").find("label.help-block").hide();' + br
-//        js += "}" + br
-//        if (onChangeDate) {
-//            js += onChangeDate + "();"
-//        }
-//        js += "});" + br
-//        js += "</script>" + br
-//
-//        out << div
-//        out << js
-//    }
+    def datetimepicker = { attrs ->
+        def name = attrs.name
+        def nameInput = name + "_input"
+        def nameHiddenDay = name + "_day"
+        def nameHiddenMonth = name + "_month"
+        def nameHiddenYear = name + "_year"
+        def id = nameInput
+        if (attrs.id) {
+            id = attrs.id
+        }
+        def readonly = attrs.readonly ?: true
+        def value = attrs.value
+
+        def clase = attrs["class"]
+
+        def format = attrs.format ?: "dd-mm-yyyy"
+
+        def startDate = attrs.minDate ?: false
+        def endDate = attrs.maxDate ?: false
+
+        def orientation = attrs.orientation ?: "top auto"
+
+        def autoclose = attrs.autoclose ?: true
+        def todayHighlight = attrs.todayHighlight ?: true
+
+        def beforeShowDay = attrs.beforeShowDay ?: false
+        def onChangeDate = attrs.onChangeDate ?: false
+
+        def daysOfWeekDisabled = attrs.daysOfWeekDisabled ?: false
+
+        def img = attrs.img ?: "fa fa-calendar"
+
+        if (value instanceof Date) {
+            value = value.format(format)
+        }
+        if (!value) {
+            value = ""
+        }
+
+        def br = "\n"
+
+        def textfield = "<input type='text' name='${nameInput}' id='${id}' " + (readonly ? "readonly=''" : "") +
+                " value='${value}' class='${clase}' />"
+        def hiddenDay = "<input type='hidden' name='${nameHiddenDay}' id='${nameHiddenDay}'/>"
+        def hiddenMonth = "<input type='hidden' name='${nameHiddenMonth}' id='${nameHiddenMonth}'/>"
+        def hiddenYear = "<input type='hidden' name='${nameHiddenYear}' id='${nameHiddenYear}'/>"
+        def hidden = "<input type='hidden' name='${name}' id='${name}' value='date.struct'/>"
+
+        def div = ""
+        div += hiddenDay + br
+        div += hiddenMonth + br
+        div += hiddenYear + br
+        div += hidden + br
+        div += "<div class='input-group'>" + br
+        div += textfield + br
+        div += "<span class=\"input-group-addon\"><i class=\"${img}\"></i></span>" + br
+        div += "</div>" + br
+
+        def js = "<script type=\"text/javascript\">" + br
+        js += '$("#' + id + '").datepicker({' + br
+        if (startDate) {
+            js += "startDate: '${startDate}'," + br
+        }
+        if (endDate) {
+            js += "endDate: '${endDate}'," + br
+        }
+        if (daysOfWeekDisabled) {
+            js += "daysOfWeekDisabled: '${daysOfWeekDisabled}'," + br
+        }
+        if (beforeShowDay) {
+//            js += "beforeShowDay: function() { ${beforeShowDay}() }," + br
+            js += "beforeShowDay: ${beforeShowDay}," + br
+        }
+        js += 'language: "es",' + br
+        js += "format: '${format}'," + br
+        js += "orientation: '${orientation}'," + br
+        js += "autoclose: ${autoclose}," + br
+        js += "todayHighlight: ${todayHighlight}" + br
+        js += "}).on('changeDate', function(e) {" + br
+        js += "var fecha = e.date;" + br
+        js += "if(fecha) {" + br
+        js += '$("#' + nameHiddenDay + '").val(fecha.getDate());' + br
+        js += '$("#' + nameHiddenMonth + '").val(fecha.getMonth() + 1);' + br
+        js += '$("#' + nameHiddenYear + '").val(fecha.getFullYear());' + br
+        js += '$(e.currentTarget).parents(".grupo").removeClass("has-error").find("label.help-block").hide();' + br
+        js += "}" + br
+        if (onChangeDate) {
+            js += onChangeDate + "();"
+        }
+        js += "});" + br
+        js += "</script>" + br
+
+        out << div
+        out << js
+    }
 
     /**
      * hace la paginacion para una lista
@@ -1487,290 +1523,6 @@ class ElementosTagLib {
         if (selected) {
             writer << 'selected="selected" '
         }
-    }
-
-    /**
-     * crea el div para el flash message
-     */
-    def message = { attrs, body ->
-        def contenido = body()
-
-        def close = true
-        if (attrs.close && (attrs.close == "false" || attrs.close == "0" || attrs.close == false || attrs.close == 0 || attrs.close.toLowerCase() == "n" || attrs.close.toLowerCase() == "no")) {
-            close = false
-        }
-
-        if (!contenido) {
-            if (attrs.contenido) {
-                contenido = attrs.contenido
-            }
-        }
-
-        if (contenido) {
-            def finHtml = "</p></div>"
-
-            def icono = ""
-            def clase = attrs.clase ?: ""
-
-            if (attrs.icon) {
-                icono = attrs.icon
-            } else {
-                switch (attrs.tipo?.toLowerCase()) {
-                    case "error":
-                        icono = "fa fa-times"
-                        clase += " alert-danger"
-                        break;
-                    case "success":
-                        icono = "fa fa-check"
-                        clase += " alert-success"
-                        break;
-                    case "notfound":
-                        icono = "icon-ghost"
-                        clase += " alert-info"
-                        break;
-                    case "warning":
-                        icono = "fa fa-exclamation-triangle"
-                        clase += " alert-warning"
-                        break;
-                    case "info":
-                        icono = "fa fa-info-circle"
-                        clase += " alert-info"
-                        break;
-                    case "bug":
-                        icono = "fa fa-bug"
-                        clase += " alert-warning"
-                        break;
-                    default:
-                        clase += " alert-info"
-                }
-            }
-            def html = "<div class=\"alert alert-dismissable ${clase}\">"
-            if (close) {
-                html += "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>"
-            }
-            html += "<p style='margin-bottom:15px;'>"
-            html += "<i class=\"${icono} fa-2x pull-left iconMargin text-shadow\"></i> "
-            out << html << contenido << finHtml
-        } else {
-            out << ""
-        }
-    }
-
-
-
-    def datetimepicker = { attrs ->
-        def str = ""
-        def clase = attrs.remove("class")
-        def name = attrs.remove("name")
-        def id = attrs.id ? attrs.remove("id") : name
-        if (id.contains(".")) {
-            id = id.replaceAll("\\.", "_")
-        }
-
-        def value = attrs.remove("value")
-        if (value.toString() == 'none') {
-            value = null
-        } else if (!value) {
-            value = null
-        }
-
-        def format = attrs.format ? attrs.remove("format") : "dd-MM-yyyy"
-        def formatJs = format
-        formatJs = formatJs.replaceAll("M", "m")
-        formatJs = formatJs.replaceAll("yyyy", "yy")
-
-        def timeFormat = attrs.timeFormat ? attrs.remove("format") : "HH:mm"
-
-        def dateTimeFormat = format + " " + timeFormat
-
-        str += "<input type='text'  autocomplete='off' class='datetimepicker " + clase + "' name='" + name + "' id='" + id + "' value='" + g.formatDate(date: value, format: dateTimeFormat) + "'"
-        str += renderAttributes(attrs)
-        str += "/>"
-
-        def js = "<script type='text/javascript'>"
-        js += '$(function() {'
-        js += '$("#' + id + '").datetimepicker({'
-        js += 'dateFormat: "' + formatJs + '",'
-//        js += 'locale: es,'
-        js += 'changeMonth: true,'
-        js += 'changeYear: true'
-        if (attrs.onClose) {
-            js += ','
-            js += 'onClose: ' + attrs.onClose
-        }
-        if (attrs.onSelect) {
-            js += ','
-            js += 'onSelect: ' + attrs.onSelect
-        }
-        if (attrs.yearRange) {
-            js += ','
-//            println attrs.yearRange
-            js += 'yearRange: "' + attrs.yearRange + '"'
-        }
-        if (attrs.minDate) {
-            js += ","
-            js += "minDate:" + attrs.minDate
-        }
-        if (attrs.maxDate) {
-            js += ","
-            js += "maxDate:" + attrs.maxDate
-        }
-        /* **************** hasta aqui lo de date....ahora lo de time ******************************* */
-        if (attrs.controlType) {
-            js += ","
-            js += "controlType: '${attrs.controlType}'"
-        }
-        js += ","
-        js += "timeFormat: '${timeFormat}',"
-        js += "timeText: 'Hora',"
-        js += "hourText: 'Horas',"
-        js += "minuteText: 'Minutos',"
-        js += "secondText: 'Segundos',"
-        js += "currentText: 'Hoy',"
-        js += "closeText: 'Aceptar'"
-        if (attrs.showTime) {
-            js += ","
-            js += "showTime:" + attrs.showTime
-        }
-        if (attrs.minHour) {
-            js += ","
-            js += "hourMin:" + attrs.minHour
-        }
-        if (attrs.minMin) {
-            js += ","
-            js += "minuteMin:" + attrs.minMin
-        }
-        if (attrs.minSec) {
-            js += ","
-            js += "secondMin:" + attrs.minSec
-        }
-        if (attrs.maxHour) {
-            js += ","
-            js += "hourMax:" + attrs.maxHour
-        }
-        if (attrs.maxMin) {
-            js += ","
-            js += "minuteMax:" + attrs.maxMin
-        }
-        if (attrs.maxSec) {
-            js += ","
-            js += "secondMax:" + attrs.maxSec
-        }
-
-        if (attrs.hourGrid) {
-            js += ","
-            js += "hourGrid:" + attrs.hourGrid
-        }
-
-        if (attrs.minuteGrid) {
-            js += ","
-            js += "minuteGrid:" + attrs.minuteGrid
-        }
-
-        if (attrs.secondGrid) {
-            js += ","
-            js += "secondGrid:" + attrs.secondGrid
-        }
-
-        if (attrs.stepHour) {
-            js += ","
-            js += "stepHour:" + attrs.stepHour
-        }
-
-        if (attrs.stepMinute) {
-            js += ","
-            js += "stepMinute:" + attrs.stepMinute
-        }
-
-        if (attrs.stepSecond) {
-            js += ","
-            js += "stepSecond:" + attrs.stepSecond
-        }
-
-        js += '});'
-        js += '});'
-        js += "</script>"
-//       println "js "+js
-        out << str
-        out << js
-    }
-
-/**
- * crea un modal, al modal hay que agregarle el modal-body y el modal-footer
- */
-    def modal = { attrs, body ->
-        def id = attrs.id
-        def html = '<div class="modal fade ' + attrs.clase + ' " id="' + id + '" tabindex="-1" role="dialog" aria-labelledby="myModalLabel' + attrs.id + '" aria-hidden="true" style="' + attrs.style + '">'
-        html += '<div class="modal-dialog">\n' +
-                '    <div class="modal-content">\n' +
-                '      <div class="modal-header">'
-        html += ' <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
-        html += ' <h4 class="modal-title" id="myModalLabel-' + attrs.id + '">' + attrs.titulo + '</h4></div>'
-        out << html << body() << '</div></div></div>'
-    }
-
-    def poneHtml = { attrs ->
-//        println "funcion: ${attrs.funcion}"
-        def html = attrs.textoHtml
-        out << html
-    }
-
-    /**
-     * pone un field segun el standar rapido rapido
-     */
-    def fieldRapido = { attrs, body ->
-        def html = ""
-        def claseField = (attrs.claseField ? attrs.claseField : 'col-md-3')
-        def claseLabel = (attrs.claseLabel ? attrs.claseLabel : 'col-md-2')
-        html += '<div class="form-group keeptogether">'
-        html += '<span class="grupo">'
-        html += '<label class="' + claseLabel + ' control-label">'
-        html += attrs.label
-        html += '</label>'
-        html += '<div class="' + claseField + '">'
-        html += body()
-        html += '</div>'
-        html += '</span>'
-        html += '</div>'
-        out << html
-    }
-
-
-
-
-
-    /**
-     * Imprime el número del aval o de la solicidud con el formato '003'
-     * @param aval (opcional) el id del aval
-     * @param solicitud (opcional) el id de la solicitud
-     */
-    def imprimeNumero = { attrs ->
-//        println("imprimeNumero " + attrs)
-        def aval = null
-        def sol = null
-        if (attrs.aval) {
-            aval = Aval.get(attrs.aval)
-        }
-        if (attrs.solicitud) {
-            sol = SolicitudAval.get(attrs.solicitud)
-        }
-        def num = null
-        def uno = 1
-        def output = ""
-        if (aval) {
-            num = aval.numeroAval.toString()
-        }
-        if (sol) {
-            num = sol.numero.toString()
-        }
-
-        num = num.toString().padLeft(3, '0')
-//        println("num1 " + num)
-        if (!num || num == "null") {
-            num = "000"
-        }
-        output += num
-        out << output
     }
 
 }

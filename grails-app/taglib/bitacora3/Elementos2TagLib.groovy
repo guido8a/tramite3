@@ -1,3 +1,5 @@
+package bitacora3
+
 import org.grails.core.artefact.DomainClassArtefactHandler
 import org.springframework.beans.SimpleTypeConverter
 import org.springframework.context.MessageSourceResolvable
@@ -9,7 +11,7 @@ import tramites.TipoDocumento
 
 import java.text.DecimalFormatSymbols
 
-class ElementosTagLib {
+class Elementos2TagLib {
 
     static namespace = "elm"
 
@@ -397,7 +399,8 @@ class ElementosTagLib {
             html += "        </div>"
         } else {
 //            DecimalFormatSymbols decimalSymbols = DecimalFormatSymbols.getInstance();
-//        decimalSymbols.setDecimalSeparator('.');
+//            decimalSymbols.setDecimalSeparator(".");
+
             //tipo documento
             if (tramite?.tipoDocumento?.codigo != 'OFI') {
 
