@@ -104,9 +104,15 @@
             <i class="fa fa-edit"></i> Crear Trámite Principal
         </g:link>
 
-        <a class="btn btn-info twitter-share-button"
-           href="https://twitter.com/intent/tweet?text=Hello%20world">
-            Tweet</a>
+%{--        <a class="btn btn-info twitter-share-button"--}%
+%{--           href="https://twitter.com/intent/tweet?text=Hello%20world">--}%
+%{--            Tweet--}%
+%{--        </a>--}%
+
+%{--        <a class="twitter-share-button" href="https://twitter.com/intent/tweet" target="_newwin">--}%
+%{--            Tweet</a>--}%
+
+%{--        <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>--}%
     </div>
 
     <div style="float: right">
@@ -212,24 +218,50 @@
     </div><!-- /.modal-dialog -->
 </div>
 
-<script> window.twttr = (function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0],
-        t = window.twttr || {};
-    if (d.getElementById(id)) return t;
-    js = d.createElement(s);
-    js.id = id;
-    js.src = "https://platform.twitter.com/widgets.js";
-    fjs.parentNode.insertBefore(js, fjs);
+%{--<script> window.twttr = (function(d, s, id) {--}%
+%{--    var js, fjs = d.getElementsByTagName(s)[0],--}%
+%{--        t = window.twttr || {};--}%
+%{--    if (d.getElementById(id)) return t;--}%
+%{--    js = d.createElement(s);--}%
+%{--    js.id = id;--}%
+%{--    js.src = "https://platform.twitter.com/widgets.js";--}%
+%{--    fjs.parentNode.insertBefore(js, fjs);--}%
 
-    t._e = [];
-    t.ready = function(f) {
-        t._e.push(f);
-    };
+%{--    t._e = [];--}%
+%{--    t.ready = function(f) {--}%
+%{--        t._e.push(f);--}%
+%{--    };--}%
 
-    return t;
-}(document, "script", "twitter-wjs"));</script>
+%{--    return t;--}%
+%{--}(document, "script", "twitter-wjs"));</script>--}%
+
 
 <script type="text/javascript">
+
+    // jQuery('a[target^="_newwin"]').click(function(e) {
+    //     e.preventDefault();
+    //     var width = 500;
+    //     var height = 300;
+    //     window.open(this.href , 'newwindow', 'width=' + width + ', height=' + height + ', top=' + ((window.innerHeight - height) / 2) + ', left=' + ((window.innerWidth - width) / 2));
+    // });
+    //
+    // var url = "";
+    // var getQuote = function(data) {
+    //     var twit_attr = 'https://twitter.com/intent/tweet?text=' + data.quoteText + ' -- ' + data.quoteAuthor;
+    //     $("#quote").text(data.quoteText);
+    //     if (data.quoteAuthor === '') {
+    //         data.quoteAuthor = 'Unknown';
+    //     }
+    //     $("#author").text('Author: ' + data.quoteAuthor);
+    //     $(".twitter-share-button").attr('href', twit_attr);
+    // };
+    // $(document).ready(function() {
+    //     $.getJSON(url, getQuote, 'jsonp');
+    // });
+    // $("#par").click(function() {
+    //     $.getJSON(url, getQuote, 'jsonp');
+    // });
+
 
 
 

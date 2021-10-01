@@ -19,6 +19,7 @@ class Departamento implements Auditable{
     Integer remoto = 0 //1-> remoto 0-> no
 
     String objectguid = ""
+    Empresa empresa
 
 
     static mapping = {
@@ -40,6 +41,7 @@ class Departamento implements Auditable{
             externo column: 'dptoextr'
             objectguid column: 'dptoobid'
             remoto column: 'dptormto'
+            empresa column: 'empr__id'
 
         }
     }
@@ -53,6 +55,7 @@ class Departamento implements Auditable{
         estado(blank: true, nullable: true, size: 1..1)
         remoto(blank: true, nullable: true, size: 1..1)
         objectguid(blank: true, nullable: true, size: 1..128)
+        empresa(blank: false, nullable: false)
     }
 
     String toString() {
