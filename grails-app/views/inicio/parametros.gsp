@@ -116,6 +116,17 @@
 
                         </div>
                     </li>
+
+                    <li>
+                        <i class="fa-li fa fa-building text-success"></i>
+                        <g:link data-info="categoria" class="over text-success" controller="empresa" action="list">Empresa</g:link> sirve para
+                        administrar las empresas ingresadas en el sistema
+
+                        <div class="descripcion hidden">
+                            <h4>Empresa</h4>
+                            <p>Administración de la información de las empresas</p>
+                        </div>
+                    </li>
                 </ul>
             </div>
         </div>

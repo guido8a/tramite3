@@ -3,6 +3,7 @@ package seguridad
 import audita.Auditable
 import org.apache.commons.lang.WordUtils
 import tramites.Departamento
+import tramites.Empresa
 import tramites.PermisoTramite
 import tramites.TipoDocumento
 import tramites.TipoDocumentoDepartamento
@@ -32,6 +33,9 @@ class Persona implements Auditable{
 //    String codigo
     String connect
     String estado
+    Empresa empresa
+
+
     static hasMany = [perfiles: Sesn]
 
     Departamento departamentoDesde
@@ -76,6 +80,7 @@ class Persona implements Auditable{
             connect column: 'prsncnec'
             estado column: 'prsnetdo'
             departamentoDesde column: 'dptodsde'
+            empresa column: 'empr__id'
         }
     }
     static constraints = {
@@ -103,6 +108,7 @@ class Persona implements Auditable{
         connect(nullable: true, blank: true, size: 1..512)
         estado(nullable: true, blank: true, size: 1..1)
         departamentoDesde(nullable: true, blank: true)
+        empresa(nullable: false, blank: false)
     }
 
     def vaciarPermisos() {

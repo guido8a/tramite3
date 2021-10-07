@@ -268,6 +268,8 @@ class DepartamentoController {
     }
 
     def makeTreeNode(params) {
+        def usuario = Persona.get(session.usuario.id)
+        def empresa = usuario.empresa
         def actv = params.actv == 'true'
 //        println "mkTree: $params, activos: $actv"
         def id = params.id
@@ -284,7 +286,7 @@ class DepartamentoController {
         if (id == "#") {
             //root
 //            def hh = Departamento.countByPadreIsNull([sort: "descripcion"])
-            def hh = Departamento.countByPadreIsNull()
+            def hh = Departamento.countByPadreIsNullAndEmpresa(empresa)
             if (hh > 0) {
                 clase = "hasChildren jstree-closed"
                 if (session.usuario.puedeDirector || session.usuario.puedeAdmin) {
@@ -304,9 +306,9 @@ class DepartamentoController {
 
             if (session.usuario.puedeDirector || session.usuario.puedeAdmin) {
                 if(actv) {
-                    hijos = Departamento.findAllByPadreIsNullAndActivo(1,[sort: "descripcion"])
+                    hijos = Departamento.findAllByPadreIsNullAndActivoAndEmpresa(1,empresa,[sort: "descripcion"])
                 } else {
-                    hijos = Departamento.findAllByPadreIsNull([sort: "descripcion"])
+                    hijos = Departamento.findAllByPadreIsNullAndEmpresa(empresa,[sort: "descripcion"])
                 }
             } else if (session.usuario.puedeJefe) {
                 hijos = [session.usuario.departamento]
@@ -320,7 +322,7 @@ class DepartamentoController {
             if (padre) {
                 hijos = []
                 if(actv) {
-                    hijos += Persona.findAllByDepartamentoAndActivo(padre, 1, [sort: params.sort, order: params.order])
+                    hijos += Persona.findAllByDepartamentoAndActivoAndEmpresa(padre, 1, empresa, [sort: params.sort, order: params.order])
                     hijos += Departamento.findAllByPadreAndActivo(padre, 1, [sort: "descripcion"])
                 } else {
                     hijos += Persona.findAllByDepartamento(padre, [sort: params.sort, order: params.order])
@@ -465,6 +467,10 @@ class DepartamentoController {
     } //show para cargar con ajax en un dialog
 
     def form_ajax() {
+        def usuario = Persona.get(session.usuario.id)
+        def empresa
+
+
         def departamentoInstance = new Departamento(params)
         def pxtTodos = []
         if (params.id) {
@@ -519,9 +525,13 @@ class DepartamentoController {
             pxtTodos = pxtPara
             pxtTodos += pxtCopia
             pxtTodos += pxtImprimir
+
+            empresa = departamentoInstance.empresa
+        }else{
+            empresa = usuario.empresa
         }
 
-        return [departamentoInstance: departamentoInstance, tramites: pxtTodos.size()]
+        return [departamentoInstance: departamentoInstance, tramites: pxtTodos.size(), empresa: empresa]
     } //form para cargar con ajax en un dialog
 
     def tipoDoc_ajax() {
@@ -612,6 +622,8 @@ class DepartamentoController {
     }
 
     def save_ajax() {
+        def usuario = Persona.get(session.usuario.id)
+        def empresa = usuario.empresa
 
         params.codigo = params.codigo.toString().trim().toUpperCase()
 
@@ -632,8 +644,13 @@ class DepartamentoController {
                 notFound_ajax()
                 return
             }
-        } //update
+        }else{
+            departamentoInstance.empresa = empresa
+        } //updateelse
+
+
         departamentoInstance.properties = params
+
         if (!departamentoInstance.save(flush: true)) {
             def msg = "NO_No se pudo ${params.id ? 'actualizar' : 'crear'} Departamento."
             msg += renderErrors(bean: departamentoInstance)

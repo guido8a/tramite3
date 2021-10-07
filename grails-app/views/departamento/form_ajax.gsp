@@ -14,13 +14,12 @@
                 </label>
 
                 <div class="col-md-6">
-                    <g:select id="padre" name="padre.id" from="${tramites.Departamento.findAllByIdNotEqual(departamentoInstance.id, [sort: 'descripcion'])}"
+                    <g:select id="padre" name="padre.id" from="${tramites.Departamento.findAllByIdNotEqualAndEmpresaAndActivo(departamentoInstance.id, empresa, 1,[sort: 'descripcion'])}"
                               optionKey="id" optionValue="descripcion" noSelection="['': '']"
                               value="${departamentoInstance?.padre?.id}" class="many-to-one form-control" style="width: 440px;"/>
                 </div>
             </span>
         </div>
-    %{--</g:if>--}%
 
         <div class="form-group ${hasErrors(bean: departamentoInstance, field: 'codigo', 'error')} required">
             <span class="grupo">
@@ -119,7 +118,7 @@
 
                 <div class="col-md-6">
                     <g:textArea name="direccion" cols="80" rows="3" maxlength="255" class="form-control"
-                                value="${departamentoInstance?.direccion}" style="width: 440px;"/>
+                                value="${departamentoInstance?.direccion}" style="width: 440px; resize: none"/>
                 </div>
 
             </span>

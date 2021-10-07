@@ -107,7 +107,8 @@
                 Cargando los departamentos
             </p>
             <p>
-                <img src="${resource(dir: 'images/spinners', file: 'loading_new.GIF')}" alt='Cargando...'/>
+%{--                <img src="${resource(dir: 'images/spinners', file: 'loading_new.GIF')}" alt='Cargando...'/>--}%
+                <asset:image src="apli/spinner32.gif" style="padding: 40px;"/>
             </p>
             <p>
                 Por favor espere
