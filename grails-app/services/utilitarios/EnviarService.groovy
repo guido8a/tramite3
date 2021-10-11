@@ -25,7 +25,7 @@ class EnviarService {
      */
     def crearPdf(Tramite tramite, Persona usuario, String enviar, String type, String realPath, String mensaje) {
 //        println "crearPdf ${usuario.login} ${tramite.codigo} ${tramite.texto?.size()}b -> ${new Date().format('dd HH:mm')}"
-
+        def dirBase = ""
         def conMembrete = tramite.conMembrete ?: "0"
 
         def parametros = Parametros.list()
@@ -80,6 +80,13 @@ class EnviarService {
         def marginTop = "4.5cm"
         if (conMembrete == "1") {
             marginTop = "2.5cm"
+        }
+
+        /* ************** todo: poner dirBase en tabla prmt *************** */
+        if (grails.util.Environment.getCurrent().name == 'development') {
+            dirBase = '/tramiteImagenes/getImage'
+        } else {
+            dirBase = '/tramite/tramiteImagenes/getImage'
         }
 
         def content = "<!DOCTYPE HTML>\n<html>\n"
@@ -174,7 +181,8 @@ class EnviarService {
         content += "<div class='hoja'>\n"
         content +=  new Elementos2TagLib().headerTramite(tramite: tramite, pdf: true)
 
-        def nuevoTexto = text.replaceAll("tramiteImagenes/getImage", "var/tramites/images")
+//        def nuevoTexto = text.replaceAll("/tramiteImagenes/getImage", "/var/tramites/images")
+        def nuevoTexto = text.replaceAll(dirBase, "/var/tramites/images")
 
         content += nuevoTexto
 //        content += '<p><img alt="" src="/var/tramites/images/gatos_6.jpg" style="height:395px; width:400px" /></p>'
