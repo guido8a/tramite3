@@ -1,9 +1,13 @@
 package tramites
 
 import seguridad.Persona
+import seguridad.Prfl
+import seguridad.Sesn
 
 
 class EmpresaController {
+
+    def dbConnectionService
 
     def list(){
         params.max = 15
@@ -47,7 +51,7 @@ class EmpresaController {
         }
 
         if(ruc){
-          render "er"
+            render "er"
         }else{
             if(params.id){
                 empresa = Empresa.get(params.id)
@@ -83,9 +87,9 @@ class EmpresaController {
         }
 
         if(ruc){
-           render false
+            render false
         }else{
-           render true
+            render true
         }
     }//validador unique
 
@@ -102,4 +106,73 @@ class EmpresaController {
         }
     }
 
+    def administradores(){
+        def empresa = Empresa.get(params.id)
+        return[empresa: empresa]
+    }
+
+    def tablaUsuarios_ajax(){
+        //        println "tablaUsuarios_ajax: $params"
+
+        def empresa = Empresa.get(params.empresa)
+
+        def tipo
+        def estado
+        def perfil
+
+        switch(params.tipo) {
+            case '0':
+                tipo = 'usrologn'
+                break;
+            case '1':
+                tipo = 'usronmbr'
+                break;
+            case '2':
+                tipo = 'usroapll'
+                break;
+        }
+
+        switch(params.estado) {
+            case '0':
+                estado = ''
+                break;
+            case '1':
+                estado = ' and usroetdo = 1 '
+                break;
+            case '2':
+                estado = ' and usroetdo = 0 '
+                break;
+        }
+
+
+        if(params.perfil == '0'){
+            perfil = ''
+        }else{
+            perfil = "and usroprfl ilike '%${params.perfil}%' "
+        }
+
+
+        def cn = dbConnectionService.getConnection()
+        def sql = "select * from usuarios(${empresa?.id}) where ${tipo} ilike '%${params.texto}%' ${estado} ${perfil} order by usroapll limit 30"
+        def usuarios = cn.rows(sql.toString())
+
+//        println("sql " + sql)
+
+        return[usuarios: usuarios]
+    }
+
+    def perfiles() {
+        def empresa = Empresa.get(params.empresa)
+        def usu = Persona.get(params.id)
+        def perfilesUsu = Sesn.findAllByUsuario(usu)
+        def pers = []
+        perfilesUsu.each {
+            if (it.estaActivo) {
+                pers.add(it.perfil.id)
+            }
+        }
+        def permisosUsu = PermisoUsuario.findAllByPersona(usu).permisoTramite.id
+        def perfiles = Prfl.findAllByIdNotEqual(15, [sort: 'nombre'])
+        return [usuario: usu, perfilesUsu: pers, permisosUsu: permisosUsu, perfiles: perfiles, empresa: empresa]
+    }
 }

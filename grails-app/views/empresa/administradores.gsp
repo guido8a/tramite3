@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: fabricio
-  Date: 25/11/20
-  Time: 9:19
+  Date: 07/10/21
+  Time: 11:11
 --%>
 
 <!DOCTYPE html>
@@ -18,13 +18,14 @@
 
 <!-- botones -->
 <div class="btn-toolbar toolbar" style="margin-top: 5px">
-    <g:if test="${parametros[0]?.validaLDAP == 0}">
-        <div class="btn-group">
-            <g:link action="form" class="btn btn-info btnCrear">
-                <i class="fa fa-file"></i> Nueva persona
-            </g:link>
-        </div>
-    </g:if>
+    <div class="btn-group">
+        <g:link class="btn btn-default" controller="empresa" action="list"><i class="fa fa-arrow-left"></i> Regresar</g:link>
+    </div>
+    <div class="btn-group">
+        <g:link action="form" class="btn btn-info btnCrear">
+            <i class="fa fa-file"></i> Nueva persona
+        </g:link>
+    </div>
 </div>
 
 <div class="btn-toolbar toolbar">
@@ -96,7 +97,7 @@
         var a = cargarLoader("Cargando...");
         $.ajax({
             type:'POST',
-            url:'${createLink(controller: 'persona', action: 'tablaUsuarios_ajax')}',
+            url:'${createLink(controller: 'empresa', action: 'tablaUsuarios_ajax')}',
             data:{
                 tipo: tipo,
                 texto: texto,
@@ -136,7 +137,7 @@
             action : function () {
                 $.ajax({
                     type    : "POST",
-                    url     : "${createLink(action:'show_ajax')}",
+                    url     : "${createLink(controller: 'persona', action:'show_ajax')}",
                     data    : {
                         id : id
                     },
@@ -171,7 +172,7 @@
             label           : 'Perfiles',
             icon            : "fa fa-cogs",
             separator_after : true,
-            url             : "${createLink(action: 'config')}/" + id
+            url             : "${createLink(controller: 'empresa', action: 'perfiles')}?id=" + id + "&empresa=" + '${empresa?.id}'
         };
 
         var eliminar = {
@@ -215,7 +216,7 @@
                         openLoader("Eliminando");
                         $.ajax({
                             type    : "POST",
-                            url     : '${createLink(action:'delete_ajax')}',
+                            url     : '${createLink(controller: 'persona', action:'delete_ajax')}',
                             data    : {
                                 id : itemId
                             },
@@ -238,16 +239,7 @@
     function createEditRow(id, tipo) {
         var title = id ? "Editar " : "Crear ";
         var data = id ? {id : id} : {};
-
-        var url = "";
-        switch (tipo) {
-            case "persona":
-                url = "${createLink(action:'form_ajax')}";
-                break;
-            case "usuario":
-                url = "${createLink(action:'formUsuario_ajax')}";
-                break;
-        }
+        var url = "${createLink(controller: 'persona', action:'form_ajax')}";
 
         $.ajax({
             type    : "POST",
@@ -292,7 +284,7 @@
             openLoader("Grabando");
             $.ajax({
                 type    : "POST",
-                url     : '${createLink(action:'save_ajax')}',
+                url     : '${createLink(controller: 'persona', action:'save_ajax')}',
                 data    : $form.serialize(),
                 success : function (msg) {
                     var parts = msg.split("_");

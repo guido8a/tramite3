@@ -1,12 +1,11 @@
 <%--
   Created by IntelliJ IDEA.
   User: fabricio
-  Date: 25/11/20
-  Time: 10:56
+  Date: 07/10/21
+  Time: 11:52
 --%>
 
-
-<div style="width: 100%;height: 600px;overflow: auto; margin-top: -10px;margin-bottom: 20px;">
+<div style="width: 100%;height: 600px;overflow: auto; margin-top: -20px;margin-bottom: 20px;">
     <table class="table table-condensed table-bordered">
         <tbody>
         <g:each in="${usuarios}" var="usuario">

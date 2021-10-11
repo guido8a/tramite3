@@ -3,6 +3,7 @@ package seguridad
 import groovy.json.JsonBuilder
 import alertas.Alerta
 import tramites.Departamento
+import tramites.Empresa
 import tramites.PermisoTramite
 import tramites.PermisoUsuario
 import tramites.PersonaDocumentoTramite
@@ -1573,12 +1574,17 @@ class PersonaController {
 
     def usuarios (){
         def parametros = Parametros.findAll()
+        def usuario = Persona.get(session.usuario.id)
+        def empresa = usuario.empresa
 
-        return[parametros: parametros]
+        return[parametros: parametros, empresa: empresa]
     }
 
     def tablaUsuarios_ajax(){
 //        println "tablaUsuarios_ajax: $params"
+
+
+        def empresa = Empresa.get(params.empresa)
 
         def tipo
         def estado
@@ -1617,7 +1623,7 @@ class PersonaController {
 
 
         def cn = dbConnectionService.getConnection()
-        def sql = "select * from usuarios() where ${tipo} ilike '%${params.texto}%' ${estado} ${perfil} order by usroapll limit 30"
+        def sql = "select * from usuarios(${empresa?.id}) where ${tipo} ilike '%${params.texto}%' ${estado} ${perfil} order by usroapll limit 30"
         def usuarios = cn.rows(sql.toString())
 
 //        println("sql " + sql)

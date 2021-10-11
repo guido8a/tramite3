@@ -213,6 +213,15 @@
                         createEditRow(id);
                     }
                 },
+                admin : {
+                    label            : "Administradores",
+                    icon             : "fa fa-user",
+                    separator_before : true,
+                    action           : function ($element) {
+                        var id = $element.data("id");
+                        location.href="${createLink(controller: 'empresa', action: 'administradores')}/" + id;
+                    }
+                },
                 eliminar : {
                     label            : "Eliminar",
                     icon             : "fa fa-trash",
