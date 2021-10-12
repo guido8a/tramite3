@@ -1,5 +1,7 @@
 package utilitarios
 
+import seguridad.Persona
+
 class ParametrosController {
 
     def index() {
@@ -28,15 +30,22 @@ class ParametrosController {
     }
 
     def list() {
+        def usuario = Persona.get(session.usuario.id)
+        def empresa = usuario.empresa
         if(session.usuario.puedeAdmin) {
-            params.max = Math.min(params.max ? params.max.toInteger() : 10, 100)
-            def parametrosInstanceList = getLista(params, false)
-            def parametrosInstanceCount = getLista(params, true).size()
-            if(parametrosInstanceList.size() == 0 && params.offset && params.max) {
-                params.offset = params.offset - params.max
-            }
-            parametrosInstanceList = getLista(params, false)
-            return [parametrosInstanceList: parametrosInstanceList, parametrosInstanceCount: parametrosInstanceCount, params: params]
+//            params.max = Math.min(params.max ? params.max.toInteger() : 10, 100)
+//            def parametrosInstanceList = getLista(params, false)
+//            def parametrosInstanceCount = getLista(params, true).size()
+//            if(parametrosInstanceList.size() == 0 && params.offset && params.max) {
+//                params.offset = params.offset - params.max
+//            }
+//            parametrosInstanceList = getLista(params, false)
+
+//            return [parametrosInstanceList: parametrosInstanceList, parametrosInstanceCount: parametrosInstanceCount, params: params]
+
+            def parametros = Parametros.findAllByEmpresa(empresa)
+
+            return [parametrosInstanceList: parametros]
 
         }else{
             flash.message="Está tratando de ingresar a un pantalla restringida para su perfil. Está acción será reportada"

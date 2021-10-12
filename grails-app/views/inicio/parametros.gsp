@@ -16,6 +16,8 @@
 
 <body>
 
+<elm:flashMessage tipo="${flash.tipo}" clase="${flash.clase}">${flash.message}</elm:flashMessage>
+
 <div class="row">
     <div class="col-md-7">
 

@@ -48,7 +48,7 @@
             </tbody>
         </table>
 
-        <elm:pagination total="${parametrosInstanceCount}" params="${params}"/>
+%{--        <elm:pagination total="${parametrosInstanceCount}" params="${params}"/>--}%
 
         <script type="text/javascript">
             var id = null;

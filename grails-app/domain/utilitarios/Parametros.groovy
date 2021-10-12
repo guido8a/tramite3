@@ -10,19 +10,19 @@ class Parametros implements Auditable {
     Integer horaFin
     Integer minutoFin
 
-    String ipLDAP
-    String ouPrincipal
-    String textoCn
-    String passAdm
+    String ipLDAP = 'ip'
+    String ouPrincipal = 'ou'
+    String textoCn = 'cn'
+    String passAdm = 'pass'
 
-    String imagenes
+    String imagenes = '/var/tramites/images/'
 
     String institucion
-    Integer bloqueo
-    Integer validaLDAP
-    String telefono
-    String departamentos
-    Integer remoto
+    Integer bloqueo = 2
+    Integer validaLDAP = 0
+    String telefono = '1234567'
+    String departamentos = 'dpto'
+    Integer remoto = 10
     Integer cambioDpto = 1   /* si usuario se cambio de dpto no puede enviar trmt, 0 no si puede */
     Empresa empresa
 

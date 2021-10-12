@@ -56,6 +56,7 @@ class DiaLaborableController {
                     minutoFin   : 30
             ])
 
+            parametros.institucion = empresa.nombre
             parametros.empresa = empresa
 
             if (!parametros.save(flush: true)) {
@@ -239,7 +240,10 @@ class DiaLaborableController {
                         horaFin     : 16,
                         minutoFin   : 30
                 ])
+
+                parametros.institucion = empresa.nombre
                 parametros.empresa = empresa
+
                 if (!parametros.save(flush: true)) {
                     println "error al guardar los parametros de inicio de calendario: " + parametros.errors
                 }
@@ -365,6 +369,7 @@ class DiaLaborableController {
             ])
 
             parametros.empresa = empresa
+            parametros.institucion = empresa.nombre
 
             if (!parametros.save(flush: true)) {
                 println "error al guardar params: " + parametros.errors
@@ -544,6 +549,4 @@ class DiaLaborableController {
             redirect(action: "list")
         }
     } //delete
-
-
 }
