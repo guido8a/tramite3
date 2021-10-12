@@ -1,6 +1,7 @@
 package utilitarios
 
 import audita.Auditable
+import tramites.Empresa
 
 class Parametros implements Auditable {
     Integer horaInicio
@@ -23,6 +24,7 @@ class Parametros implements Auditable {
     String departamentos
     Integer remoto
     Integer cambioDpto = 1   /* si usuario se cambio de dpto no puede enviar trmt, 0 no si puede */
+    Empresa empresa
 
     static mapping = {
         table 'prmt'
@@ -47,6 +49,7 @@ class Parametros implements Auditable {
             departamentos column: 'prmtdpto'
             remoto column: 'prmtrmto'
             cambioDpto column: 'prmtcbdp'
+            empresa column: 'empr__id'
         }
     }
     static constraints = {
@@ -68,6 +71,7 @@ class Parametros implements Auditable {
         departamentos(blank: true, nullable: true, size: 1..127,attributes: [title: 'Siglas de departamentos para asociar trámites'] )
         remoto(blank: false, nullable: false)
         cambioDpto(blank: false, nullable: false)
+        empresa(blank: false, nullable: false)
     }
 
     def getInicioJornada() {

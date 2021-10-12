@@ -42,7 +42,7 @@
         <g:select name="perfil" from="${seguridad.Prfl.list([sort: 'nombre'])}" optionKey="descripcion" optionValue="descripcion"
                   class="form-control input-sm" noSelection="[0: 'Todos']" />
     </div>
-    <div class="col-md-2">
+    <div class="col-md-2 hidden">
         <label>Estado</label>
         <g:select name="estado" from="${[0: 'Todos', 1: 'Activo', 2 : 'Inactivo']}" optionKey="key" optionValue="value" class="form-control input-sm"/>
     </div>
@@ -176,7 +176,7 @@
         };
 
         var eliminar = {
-            label            : 'Eliminar Persona',
+            label            : 'Eliminar',
             icon             : "fa fa-trash",
             separator_before : true,
             action           : function (e) {

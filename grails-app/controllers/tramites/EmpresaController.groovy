@@ -132,17 +132,17 @@ class EmpresaController {
                 break;
         }
 
-        switch(params.estado) {
-            case '0':
-                estado = ''
-                break;
-            case '1':
+//        switch(params.estado) {
+//            case '0':
+//                estado = ''
+//                break;
+//            case '1':
                 estado = ' and usroetdo = 1 '
-                break;
-            case '2':
-                estado = ' and usroetdo = 0 '
-                break;
-        }
+//                break;
+//            case '2':
+//                estado = ' and usroetdo = 0 '
+//                break;
+//        }
 
 
         if(params.perfil == '0'){
@@ -172,7 +172,7 @@ class EmpresaController {
             }
         }
         def permisosUsu = PermisoUsuario.findAllByPersona(usu).permisoTramite.id
-        def perfiles = Prfl.findAllByIdNotEqual(15, [sort: 'nombre'])
+        def perfiles = Prfl.get(1)
         return [usuario: usu, perfilesUsu: pers, permisosUsu: permisosUsu, perfiles: perfiles, empresa: empresa]
     }
 }

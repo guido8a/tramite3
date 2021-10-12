@@ -74,7 +74,8 @@
 
 <body>
 
-<g:set var="parametros" value="${utilitarios.Parametros.list().first()}"/>
+%{--<g:set var="parametros" value="${utilitarios.Parametros.list().first()}"/>--}%
+<g:set var="parametros" value="${utilitarios.Parametros.findByEmpresa(empresa)}"/>
 
 <!-- botones -->
 <div class="btn-toolbar toolbar">

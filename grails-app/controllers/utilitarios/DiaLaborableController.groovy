@@ -1,6 +1,7 @@
 package utilitarios
 
 import groovy.json.JsonBuilder
+import seguridad.Persona
 import tramites.Anio
 import tramites.Numero
 import org.springframework.dao.DataIntegrityViolationException
@@ -41,20 +42,29 @@ class DiaLaborableController {
     }
 
     def saveCalendario() {
-        def parametros = Parametros.list()
-        if (parametros.size() == 0) {
+        def usuario = Persona.get(session.usuario.id)
+        def empresa = usuario.empresa
+
+//        def parametros = Parametros.list()
+        def parametros = Parametros.findByEmpresa(empresa)
+//        if (parametros.size() == 0) {
+        if (!parametros) {
             parametros = new Parametros([
                     horaInicio  : 8,
                     minutoInicio: 00,
                     horaFin     : 16,
                     minutoFin   : 30
             ])
+
+            parametros.empresa = empresa
+
             if (!parametros.save(flush: true)) {
-                println "error al guardar params: " + parametros.errors
+                println "error al guardar los parametros desde saveCalendario: " + parametros.errors
             }
-        } else {
-            parametros = parametros.first()
         }
+//        else {
+//            parametros = parametros.first()
+//        }
 
         def errores = 0
         params.dia.each { dia ->
@@ -124,6 +134,8 @@ class DiaLaborableController {
     }
 
     def desactivar() {
+        def usuario = Persona.get(session.usuario.id)
+        def empresa = usuario.empresa
         // ******************************** DESACTIVA EL ANIO **************************************************** //
         def anio = Anio.get(params.id)
         def anioRedirect = anio.numero
@@ -134,7 +146,7 @@ class DiaLaborableController {
             // ******************************** CREA EL ANIO SIGUIENTE **************************************************** //
             def intAnioNext = (anio.numero.toInteger() + 1).toString()
             anioRedirect = intAnioNext
-            def anioNext = Anio.findAllByNumero(intAnioNext, [sort: "id"])
+            def anioNext = Anio.findAllByNumeroAndEmpresa(intAnioNext, empresa, [sort: "id"])
             if (anioNext.size() > 1) {
                 println "Hay mas de un registro de año ${intAnioNext}!!!! ${anioNext}"
                 anioNext = anioNext.first()
@@ -149,6 +161,9 @@ class DiaLaborableController {
                         numero: intAnioNext,
                         estado: 1
                 ])
+
+                anioNext.empresa = empresa
+
                 if (!anioNext.save(flush: true)) {
                     println "erores: " + anioNext.errors
                 }
@@ -210,28 +225,36 @@ class DiaLaborableController {
     }
 
     def calendario() {
+        def usuario = Persona.get(session.usuario.id)
+        def empresa = usuario.empresa
+
         if (session.usuario.puedeAdmin) {
-            def parametros = Parametros.list()
-            if (parametros.size() == 0) {
+//            def parametros = Parametros.list()
+            def parametros = Parametros.findByEmpresa(empresa)
+//            if (parametros.size() == 0) {
+            if (!parametros) {
                 parametros = new Parametros([
                         horaInicio  : 8,
                         minutoInicio: 00,
                         horaFin     : 16,
                         minutoFin   : 30
                 ])
+                parametros.empresa = empresa
                 if (!parametros.save(flush: true)) {
-                    println "error al guardar params: " + parametros.errors
+                    println "error al guardar los parametros de inicio de calendario: " + parametros.errors
                 }
-            } else {
-                parametros = parametros.first()
             }
+//            else {
+//                parametros = parametros.first()
+//            }
 
             if (!params.anio) {
                 params.anio = new Date().format('yyyy').toInteger()
             }
 
 //            println "AQUI"
-            def anio = Anio.findAllByNumeroAndEstado(params.anio, 1, [sort: "id"])
+//            def anio = Anio.findAllByNumeroAndEstado(params.anio, 1, [sort: "id"])
+            def anio = Anio.findAllByNumeroAndEstadoAndEmpresa(params.anio, 1, empresa, [sort: "id"])
 //            println "ANIO::: " + anio
             if (anio.size() > 1) {
                 flash.message = "Se encontraron ${anio.size()} registros para el año ${params.anio}. Por favor póngase en contacto con el administrador."
@@ -239,10 +262,10 @@ class DiaLaborableController {
                 return
             } else if (anio.size() == 0) {
                 def numAnio = params.anio.toInteger()
-                def anioDesactivar = Anio.findByNumero(numAnio)
+                def anioDesactivar = Anio.findByNumeroAndEmpresa(numAnio, empresa)
                 while (!anioDesactivar) {
                     numAnio -= 1
-                    anioDesactivar = Anio.findByNumero(numAnio)
+                    anioDesactivar = Anio.findByNumeroAndEmpresa(numAnio, empresa)
                 }
                 flash.message = "<p>No se encontraron registros para el año ${params.anio}. Por favor póngase en contacto con el administrador, " +
                         "o haga click en el siguiente botón para inicializarlo.</p><br/>" +
@@ -291,7 +314,7 @@ class DiaLaborableController {
 
             def meses = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
 
-            return [anio: anio, dias: dias, meses: meses, params: params]
+            return [anio: anio, dias: dias, meses: meses, params: params, empresa: empresa]
         } else {
             flash.message = "Está tratando de ingresar a un pantalla restringida para su perfil. Está acción será reportada"
             response.sendError(403)
@@ -299,9 +322,13 @@ class DiaLaborableController {
     }
 
     def inicializar() {
+        def usuario = Persona.get(session.usuario.id)
+        def empresa = usuario.empresa
+
+
         params.anio = params.anio ?: new Date().format("yyyy")
 
-        def anio = Anio.findAllByNumero(params.anio)
+        def anio = Anio.findAllByNumeroAndEmpresa(params.anio, empresa)
 
         if (anio.size() > 1) {
             flash.message = "Se encontraron ${anio.size()} registros para el año ${params.anio}. Por favor póngase en contacto con el administrador."
@@ -315,26 +342,38 @@ class DiaLaborableController {
                     numero: params.anio,
                     estado: 1
             ])
+
+           anio.empresa = empresa
+
         }
+
         if (!anio.save(flush: true)) {
             flash.message = "Ha ocurrido un error al crear el año ${params.anio}. Por favor póngase en contacto con el administrador.<br/>" + g.renderErrors(bean: anio)
             redirect(action: "error")
             return
         }
-        def parametros = Parametros.list()
-        if (parametros.size() == 0) {
+
+
+//        def parametros = Parametros.list()
+        def parametros = Parametros.findByEmpresa(empresa)
+        if (!parametros) {
             parametros = new Parametros([
                     horaInicio  : 8,
                     minutoInicio: 00,
                     horaFin     : 16,
                     minutoFin   : 30
             ])
+
+            parametros.empresa = empresa
+
             if (!parametros.save(flush: true)) {
                 println "error al guardar params: " + parametros.errors
             }
-        } else {
-            parametros = parametros.first()
         }
+//        else {
+//            parametros = parametros.first()
+//        }
+
         def meses = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
         def enero01 = new Date().parse("dd-MM-yyyy", "01-01-" + params.anio)
         def diciembre31 = new Date().parse("dd-MM-yyyy", "31-12-" + params.anio) + 22   /** incluye bloqueo remoto +10 **/
