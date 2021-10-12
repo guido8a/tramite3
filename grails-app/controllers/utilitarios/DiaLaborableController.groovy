@@ -229,10 +229,17 @@ class DiaLaborableController {
         def usuario = Persona.get(session.usuario.id)
         def empresa = usuario.empresa
 
+        println("empresa " + empresa)
+
         if (session.usuario.puedeAdmin) {
 //            def parametros = Parametros.list()
             def parametros = Parametros.findByEmpresa(empresa)
 //            if (parametros.size() == 0) {
+
+
+            println("para " + parametros)
+
+
             if (!parametros) {
                 parametros = new Parametros([
                         horaInicio  : 8,
@@ -259,66 +266,83 @@ class DiaLaborableController {
 //            println "AQUI"
 //            def anio = Anio.findAllByNumeroAndEstado(params.anio, 1, [sort: "id"])
             def anio = Anio.findAllByNumeroAndEstadoAndEmpresa(params.anio, 1, empresa, [sort: "id"])
-//            println "ANIO::: " + anio
-            if (anio.size() > 1) {
-                flash.message = "Se encontraron ${anio.size()} registros para el año ${params.anio}. Por favor póngase en contacto con el administrador."
-                redirect(action: "error")
-                return
-            } else if (anio.size() == 0) {
-                def numAnio = params.anio.toInteger()
-                def anioDesactivar = Anio.findByNumeroAndEmpresa(numAnio, empresa)
-                while (!anioDesactivar) {
-                    numAnio -= 1
-                    anioDesactivar = Anio.findByNumeroAndEmpresa(numAnio, empresa)
-                }
-                flash.message = "<p>No se encontraron registros para el año ${params.anio}. Por favor póngase en contacto con el administrador, " +
-                        "o haga click en el siguiente botón para inicializarlo.</p><br/>" +
-                        "<p><a href='#' id='btnDesactivar' class='btn btn-danger'>" +
-                        "<i class=\"icon fa fa-power-off\"></i> Cerrar el año ${anioDesactivar.numero}" +
-                        "</a></p>"
-                params.anio = anioDesactivar.id
+            println "ANIO::: " + anio
 
-                redirect(action: "error", params: params)
-                return
-            }
-            anio = anio.first()
-
-            if (anio.estado == 0) {
-                flash.message = "El año ${params.anio} se encuentra desactivado. Por favor póngase en contacto con el administrador."
-                redirect(action: "error")
-                return
-            }
-
-            def dias = DiaLaborable.withCriteria {
-                eq("anio", anio)
-                order("fecha", "asc")
-            }
-
-            if (dias.size() < 365) {
-                if (DiaLaborable.countByAnio(anio) == 0) {
-                    def js = "<script type='text/javascript'>"
-                    js += '$(".btnInit").click(function() {' +
-                            'openLoader("Inicializando ' + anio.numero + '");' +
-                            '});'
-                    js += "</script>"
-                    flash.message = "<p>No se encontraron registros de días laborables. Para inicializar el calendario haga click en el botón Inicializar.</p>" +
-                            "<p>" +
-                            g.link(action: "inicializar", class: "btn btn-success btnInit", params: [anio: anio.numero]) {
-                                "<i class='fa fa-check'></i> Inicializar"
-                            } +
-                            "</p>" + js
+            if(anio){
+                if (anio.size() > 1) {
+                    flash.message = "Se encontraron ${anio.size()} registros para el año ${params.anio}. Por favor póngase en contacto con el administrador."
                     redirect(action: "error")
                     return
-                } else {
-                    flash.message = "No se encontraron registros para los días laborables del año ${params.anio}. Por favor póngase en contacto con el administrador."
+                } else if (anio.size() == 0) {
+                    def numAnio = params.anio.toInteger()
+                    def anioDesactivar = Anio.findByNumeroAndEmpresa(numAnio, empresa)
+                    while (!anioDesactivar) {
+                        numAnio -= 1
+                        anioDesactivar = Anio.findByNumeroAndEmpresa(numAnio, empresa)
+                    }
+                    flash.message = "<p>No se encontraron registros para el año ${params.anio}. Por favor póngase en contacto con el administrador, " +
+                            "o haga click en el siguiente botón para inicializarlo.</p><br/>" +
+                            "<p><a href='#' id='btnDesactivar' class='btn btn-danger'>" +
+                            "<i class=\"icon fa fa-power-off\"></i> Cerrar el año ${anioDesactivar.numero}" +
+                            "</a></p>"
+                    params.anio = anioDesactivar.id
+
+                    redirect(action: "error", params: params)
+                    return
+                }
+
+                anio = anio.first()
+
+                if (anio.estado == 0) {
+                    flash.message = "El año ${params.anio} se encuentra desactivado. Por favor póngase en contacto con el administrador."
                     redirect(action: "error")
                     return
                 }
+
+                def dias = DiaLaborable.withCriteria {
+                    eq("anio", anio)
+                    order("fecha", "asc")
+                }
+
+                if (dias.size() < 365) {
+                    if (DiaLaborable.countByAnio(anio) == 0) {
+                        def js = "<script type='text/javascript'>"
+                        js += '$(".btnInit").click(function() {' +
+                                'openLoader("Inicializando ' + anio.numero + '");' +
+                                '});'
+                        js += "</script>"
+                        flash.message = "<p>No se encontraron registros de días laborables. Para inicializar el calendario haga click en el botón Inicializar.</p>" +
+                                "<p>" +
+                                g.link(action: "inicializar", class: "btn btn-success btnInit", params: [anio: anio.numero]) {
+                                    "<i class='fa fa-check'></i> Inicializar"
+                                } +
+                                "</p>" + js
+                        redirect(action: "error")
+                        return
+                    } else {
+                        flash.message = "No se encontraron registros para los días laborables del año ${params.anio}. Por favor póngase en contacto con el administrador."
+                        redirect(action: "error")
+                        return
+                    }
+                }
+
+                def meses = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+
+                return [anio: anio, dias: dias, meses: meses, params: params, empresa: empresa]
+            }else{
+                def js = "<script type='text/javascript'>"
+                js += '$(".btnInit").click(function() {' +
+                        'openLoader("Inicializando");' +
+                        '});'
+                js += "</script>"
+                flash.message = "<p>No se encontraron registros de días laborables. Para inicializar el calendario haga click en el botón Inicializar.</p>" +
+                        "<p>" +
+                        g.link(action: "inicializar", class: "btn btn-success btnInit", params: [anio: anio.numero]) {
+                            "<i class='fa fa-check'></i> Inicializar"
+                        } +
+                        "</p>" + js
+                redirect(action: "error")
             }
-
-            def meses = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
-
-            return [anio: anio, dias: dias, meses: meses, params: params, empresa: empresa]
         } else {
             flash.message = "Está tratando de ingresar a un pantalla restringida para su perfil. Está acción será reportada"
             response.sendError(403)
