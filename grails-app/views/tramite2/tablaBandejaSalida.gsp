@@ -4,7 +4,7 @@
     <tr>
         <td colspan="10" class="info text-center">
             <h4 class="text-info">
-                <i class="fa icon-ghost fa-2x text-shadow"></i>
+                <i class="fa fa-exclamation-circle fa-2x text-shadow"></i>
                 No se encontraron
                 <g:if test="${busca}">
                     resultados para su búsqueda

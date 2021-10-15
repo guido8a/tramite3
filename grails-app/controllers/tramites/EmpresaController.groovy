@@ -12,20 +12,15 @@ class EmpresaController {
     def list(){
         params.max = 15
         def usuario = Persona.get(session.usuario.id)
-        def perfil = Prfl.get(15)
-        def sesion = Sesn.findByUsuarioAndPerfil(usuario, perfil)
-        println("sesion " + sesion)
-//        if(session.usuario.puedeAdmin) {
-        if(sesion) {
+        def perfilActual = Prfl.get(session.perfil.id)
+        def perfilAdminGeneral = Prfl.get(15)
+        if(perfilAdminGeneral == perfilActual) {
             def empresas = Empresa.list().sort{it.nombre}
             return [empresas: empresas, empresaInstanceCount: empresas.size(), params: params]
         }else{
-            flash.clase = "alert-error"
-            flash.message = "Está tratando de ingresar a un pantalla restringida para su perfil "
+            flash.clase = "alert-danger"
+            flash.message = "Está tratando de ingresar a una pantalla restringida para su perfil "
             redirect(controller: 'inicio', action: 'parametros')
-//            return
-//            flash.message="Está tratando de ingresar a un pantalla restringida para su perfil"
-//            response.sendError(403)
         }
     }
 

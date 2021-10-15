@@ -1,5 +1,7 @@
 package tramites
 
+import seguridad.Prfl
+
 
 class EstadoTramiteExternoController {
 
@@ -30,7 +32,9 @@ class EstadoTramiteExternoController {
     }
 
     def list() {
-        if (session.usuario.puedeAdmin) {
+        def perfilActual = Prfl.get(session.perfil.id)
+        def perfilAdminGeneral = Prfl.get(15)
+        if(perfilAdminGeneral == perfilActual) {
             params.max = Math.min(params.max ? params.max.toInteger() : 10, 100)
             def estadoTramiteExternoInstanceList = getLista(params, false)
             def estadoTramiteExternoInstanceCount = getLista(params, true).size()
@@ -39,9 +43,10 @@ class EstadoTramiteExternoController {
             }
             estadoTramiteExternoInstanceList = getLista(params, false)
             return [estadoTramiteExternoInstanceList: estadoTramiteExternoInstanceList, estadoTramiteExternoInstanceCount: estadoTramiteExternoInstanceCount, params: params]
-        } else {
-            flash.message = "Está tratando de ingresar a un pantalla restringida para su perfil. Está acción será registrada."
-            response.sendError(403)
+        }else{
+            flash.clase = "alert-danger"
+            flash.message = "Está tratando de ingresar a una pantalla restringida para su perfil "
+            redirect(controller: 'inicio', action: 'parametros')
         }
     } //list
 

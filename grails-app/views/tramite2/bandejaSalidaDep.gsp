@@ -1015,16 +1015,16 @@
                     message : 'Desea imprimir la guía de envio para los trámites seleccionados?',
                     buttons : {
                         cancelar : {
-                            label : 'Cancelar'
+                            label : '<i class="fa fa-times text-danger"></i> Cancelar'
                         },
                         no       : {
-                            label    : 'No Imprimir',
+                            label    : '<i class="fa fa-paper-plane text-success"></i> No Imprimir',
                             callback : function () {
                                 doEnviar(false, strIds);
                             }
                         },
                         si       : {
-                            label    : '<i class="fa fa-print"></i> Imprimir',
+                            label    : '<i class="fa fa-print text-warning"></i> Imprimir',
                             callback : function () {
                                 doEnviar(true, strIds);
                             }
