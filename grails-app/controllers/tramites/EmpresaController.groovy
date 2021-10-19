@@ -179,4 +179,16 @@ class EmpresaController {
         def perfiles = Prfl.get(1)
         return [usuario: usu, perfilesUsu: pers, permisosUsu: permisosUsu, perfiles: perfiles, empresa: empresa]
     }
+
+
+    def verificarArbol_ajax(){
+        def empresa = Empresa.get(params.id)
+        def departamentos = Departamento.findAllByEmpresaAndPadreIsNullAndActivo(empresa, 1)
+
+        if(departamentos){
+            render "no"
+        }else{
+            render "ok"
+        }
+    }
 }

@@ -14,9 +14,13 @@
                 </label>
 
                 <div class="col-md-6">
-                    <g:select id="padre" name="padre.id" from="${tramites.Departamento.findAllByIdNotEqualAndEmpresaAndActivo(departamentoInstance.id, empresa, 1,[sort: 'descripcion'])}"
-                              optionKey="id" optionValue="descripcion" noSelection="['': '']"
-                              value="${departamentoInstance?.padre?.id}" class="many-to-one form-control" style="width: 440px;"/>
+                    <g:if test="${band == 0}">
+                        <g:select id="padre" name="padre.id" from="${tramites.Departamento.findAllByIdNotEqualAndEmpresaAndActivo(departamentoInstance.id, empresa, 1,[sort: 'descripcion'])}"
+                                  optionKey="id" optionValue="descripcion" value="${departamentoInstance?.padre?.id}" class="many-to-one form-control required" style="width: 440px;"/>
+                    </g:if>
+                    <g:else>
+                        <g:textField name="padre.id" id="padre" value="${departamentoInstance?.padre?.id}" readonly="" class="many-to-one form-control" style="width: 440px;"/>
+                    </g:else>
                 </div>
             </span>
         </div>
@@ -64,8 +68,14 @@
                     Externo
                 </label>
                 <div class="col-md-3">
-                <g:select name="externo" from="${[1: 'SI', 0: 'NO']}" optionKey="key" optionValue="value"
-                              class="form-control" value="${departamentoInstance.externo}" style="width: 80px;"/>
+                    <g:if test="${band == 0}">
+                        <g:select name="externo" from="${[1: 'SI', 0: 'NO']}" optionKey="key" optionValue="value"
+                                  class="form-control"  value="${departamentoInstance.externo}" style="width: 80px;" />
+                    </g:if>
+                    <g:else>
+                        <g:select name="externo" from="${[0: 'NO']}" optionKey="key" optionValue="value"
+                                  class="form-control"  value="${departamentoInstance.externo}" style="width: 80px;" />
+                    </g:else>
                 </div>
                 *
             </span>
@@ -75,8 +85,15 @@
                     Remoto
                 </label>
                 <div class="col-md-3">
-                    <g:select name="remoto" from="${[1: 'SI', 0: 'NO']}" optionKey="key" optionValue="value"
-                              class="form-control" value="${departamentoInstance.remoto}"/>
+                    <g:if test="${band == 0}">
+                        <g:select name="remoto" from="${[1: 'SI', 0: 'NO']}" optionKey="key" optionValue="value"
+                                  class="form-control" value="${departamentoInstance.remoto}"/>
+                    </g:if>
+                    <g:else>
+                        <g:select name="remoto" from="${[0: 'NO']}" optionKey="key" optionValue="value"
+                                  class="form-control" value="${departamentoInstance.remoto}"/>
+                    </g:else>
+
                 </div>
                 <span style="margin-left: -320px">*</span>
             </span>

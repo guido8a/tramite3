@@ -89,9 +89,9 @@
                 </div>
             </div><!-- /input-group -->
             <div class="btn-group col-md-1" style="margin-top: 4px; width: 100px">
-%{--                <div class="input-group">--}%
-%{--                  Ocultar Inactivos  : <g:checkBox name="activos" value="${false}" />--}%
-%{--                </div><!-- /input-group -->--}%
+                %{--                <div class="input-group">--}%
+                %{--                  Ocultar Inactivos  : <g:checkBox name="activos" value="${false}" />--}%
+                %{--                </div><!-- /input-group -->--}%
             </div>
 
             <div class="btn-group pull-right ui-corner-all leyenda">
@@ -107,7 +107,7 @@
                 Cargando los departamentos
             </p>
             <p>
-%{--                <img src="${resource(dir: 'images/spinners', file: 'loading_new.GIF')}" alt='Cargando...'/>--}%
+                %{--                <img src="${resource(dir: 'images/spinners', file: 'loading_new.GIF')}" alt='Cargando...'/>--}%
                 <asset:image src="apli/spinner32.gif" style="padding: 40px;"/>
             </p>
             <p>
@@ -640,34 +640,34 @@
 
             if (nodeType == "root") {
                 var items = {
-                    crear    : {
-                        label  : "Nuevo departamento hijo",
-                        icon   : "fa fa-plus-circle text-success",
-                        action : function (obj) {
-                            createEditRow(nodeId, "Crear");
-                        }
-                    },
-                    imprimir : {
-                        label   : "Imprimir",
-                        icon    : "fa fa-print",
-                        action  : false,
-                        submenu : {
-                            si : {
-                                label  : "Con usuarios",
-                                icon   : "fa fa-user text-info",
-                                action : function () {
-                                    location.href = "${createLink(controller: 'departamentoExport', action: 'crearPdf')}/-1?usu=true&sort=${params.sort}";
-                                }
-                            },
-                            no : {
-                                label  : "Solo departamentos",
-                                icon   : "fa fa-home text-info",
-                                action : function () {
-                                    location.href = "${createLink(controller: 'departamentoExport', action: 'crearPdf')}/-1?usu=false&sort=${params.sort}";
-                                }
-                            }
-                        }
-                    }
+                    %{--crear    : {--}%
+                    %{--    label  : "Nuevo departamento hijo",--}%
+                    %{--    icon   : "fa fa-plus-circle text-success",--}%
+                    %{--    action : function (obj) {--}%
+                    %{--        createEditRow(nodeId, "Crear");--}%
+                    %{--    }--}%
+                    %{--},--}%
+                    %{--imprimir : {--}%
+                    %{--    label   : "Imprimir",--}%
+                    %{--    icon    : "fa fa-print",--}%
+                    %{--    action  : false,--}%
+                    %{--    submenu : {--}%
+                    %{--        si : {--}%
+                    %{--            label  : "Con usuarios",--}%
+                    %{--            icon   : "fa fa-user text-info",--}%
+                    %{--            action : function () {--}%
+                    %{--                location.href = "${createLink(controller: 'departamentoExport', action: 'crearPdf')}/-1?usu=true&sort=${params.sort}";--}%
+                    %{--            }--}%
+                    %{--        },--}%
+                    %{--        no : {--}%
+                    %{--            label  : "Solo departamentos",--}%
+                    %{--            icon   : "fa fa-home text-info",--}%
+                    %{--            action : function () {--}%
+                    %{--                location.href = "${createLink(controller: 'departamentoExport', action: 'crearPdf')}/-1?usu=false&sort=${params.sort}";--}%
+                    %{--            }--}%
+                    %{--        }--}%
+                    %{--    }--}%
+                    %{--}--}%
                 };
             }
             else if (nodeType.contains('padre') || nodeType.contains('hijo')) {

@@ -39,11 +39,11 @@
     <tbody>
     <g:each in="${empresas}" status="i" var="empresa">
         <tr data-id="${empresa.id}">
-         <td>${empresa?.ruc}</td>
-         <td>${empresa?.nombre}</td>
-         <td>${empresa?.sigla}</td>
-         <td>${empresa?.email}</td>
-         <td>${empresa?.telefono}</td>
+            <td>${empresa?.ruc}</td>
+            <td>${empresa?.nombre}</td>
+            <td>${empresa?.sigla}</td>
+            <td>${empresa?.email}</td>
+            <td>${empresa?.telefono}</td>
         </tr>
     </g:each>
     </tbody>
@@ -159,8 +159,90 @@
     } //createEdit
 
 
-    function verificarRuc(){
+    function inicializarArbol(id){
+        $.ajax({
+            type: 'POST',
+            url: '${createLink(controller: 'empresa', action: 'verificarArbol_ajax')}',
+            data:{
+                id: id
+            },
+            success: function (msg) {
+                if(msg == 'no'){
+                    bootbox.alert("<i class='fa fa-exclamation-circle fa-2x text-warning'></i> El árbol de estructura departamental ya se encuentra inicializado")
+                }else{
+                    createEditRowDpto(null, "Crear")
+                }
 
+            }
+        })
+    }
+
+    function createEditRowDpto(id, tipo) {
+        var data = tipo == "Crear" ? {padre : id, bb: 1} : {id : id, bb: 1};
+        var c =  cargarLoader("Cargando...");
+        $.ajax({
+            type    : "POST",
+            url     : "${createLink(controller: 'departamento', action:'form_ajax')}",
+            data    : data,
+            success : function (msg) {
+                c.modal('hide');
+                var b = bootbox.dialog({
+                    id      : "dlgCreateEdit",
+                    title   : tipo + " Departamento Inicial",
+                    message : msg,
+                    buttons : {
+                        cancelar : {
+                            label     : "Cancelar",
+                            className : "btn-primary",
+                            callback  : function () {
+                            }
+                        },
+                        guardar  : {
+                            id        : "btnSave",
+                            label     : "<i class='fa fa-save'></i> Guardar",
+                            className : "btn-success",
+                            callback  : function () {
+                                return submitFormDpto();
+                            } //callback
+                        } //guardar
+                    } //buttons
+                }); //dialog
+                setTimeout(function () {
+                    var $input = b.find(".form-control").not(".datepicker").first();
+                    var val = $input.val();
+                    $input.focus();
+                    $input.val("");
+                    $input.val(val);
+                }, 500);
+            } //success
+        }); //ajax
+    } //createEdit
+
+    function submitFormDpto() {
+        var $form = $("#frmDepartamento");
+        var $btn = $("#dlgCreateEdit").find("#btnSave");
+        if ($form.valid()) {
+            var cl2 = cargarLoader("Guardando...");
+            $btn.replaceWith(spinner);
+            $.ajax({
+                type    : "POST",
+                url     : $form.attr("action"),
+                data    : $form.serialize(),
+                success : function (msg) {
+                    cl2.modal("hide");
+                    var parts = msg.split("_");
+                    log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
+                    if (parts[0] == "OK") {
+                        location.reload(true);
+                    } else {
+                        spinner.replaceWith($btn);
+                        return false;
+                    }
+                }
+            });
+        } else {
+            return false;
+        } //else
     }
 
 
@@ -220,6 +302,15 @@
                     action           : function ($element) {
                         var id = $element.data("id");
                         location.href="${createLink(controller: 'empresa', action: 'administradores')}/" + id;
+                    }
+                },
+                dpto : {
+                    label            : "Inicializar árbol",
+                    icon             : "fa fa-tree",
+                    separator_before : true,
+                    action           : function ($element) {
+                        var id = $element.data("id");
+                        inicializarArbol(id);
                     }
                 },
                 eliminar : {

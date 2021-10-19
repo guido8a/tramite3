@@ -467,14 +467,28 @@ class DepartamentoController {
     } //show para cargar con ajax en un dialog
 
     def form_ajax() {
+
+
+        println("params fa " + params)
+
+
         def usuario = Persona.get(session.usuario.id)
         def empresa
+        def band = 0
 
 
         def departamentoInstance = new Departamento(params)
         def pxtTodos = []
         if (params.id) {
             departamentoInstance = Departamento.get(params.id)
+
+
+            if(departamentoInstance?.padre){
+                band = 0
+            }else{
+                band = 1
+            }
+
             if (!departamentoInstance) {
                 notFound_ajax()
                 return
@@ -529,9 +543,15 @@ class DepartamentoController {
             empresa = departamentoInstance.empresa
         }else{
             empresa = usuario.empresa
+
+            if(params.bb == '1'){
+                band = 1
+            }else{
+                band = 0
+            }
         }
 
-        return [departamentoInstance: departamentoInstance, tramites: pxtTodos.size(), empresa: empresa]
+        return [departamentoInstance: departamentoInstance, tramites: pxtTodos.size(), empresa: empresa, band: band]
     } //form para cargar con ajax en un dialog
 
     def tipoDoc_ajax() {
