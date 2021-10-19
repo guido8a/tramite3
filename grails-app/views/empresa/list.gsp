@@ -231,10 +231,13 @@
                 success : function (msg) {
                     cl2.modal("hide");
                     var parts = msg.split("_");
-                    log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
                     if (parts[0] == "OK") {
-                        location.reload(true);
+                        log("Departamento inicial creado correctamente","success");
+                        setTimeout(function () {
+                            location.reload(true);
+                        }, 1000);
                     } else {
+                        log("Error al crear el departamento inicial","error");
                         spinner.replaceWith($btn);
                         return false;
                     }
