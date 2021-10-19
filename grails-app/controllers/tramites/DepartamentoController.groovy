@@ -542,7 +542,12 @@ class DepartamentoController {
 
             empresa = departamentoInstance.empresa
         }else{
-            empresa = usuario.empresa
+
+            if(params.empresa){
+                empresa = Empresa.get(params.empresa)
+            }else{
+                empresa = usuario.empresa
+            }
 
             if(params.bb == '1'){
                 band = 1

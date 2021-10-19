@@ -170,15 +170,15 @@
                 if(msg == 'no'){
                     bootbox.alert("<i class='fa fa-exclamation-circle fa-2x text-warning'></i> El árbol de estructura departamental ya se encuentra inicializado")
                 }else{
-                    createEditRowDpto(null, "Crear")
+                    createEditRowDpto(null, "Crear", id)
                 }
 
             }
         })
     }
 
-    function createEditRowDpto(id, tipo) {
-        var data = tipo == "Crear" ? {padre : id, bb: 1} : {id : id, bb: 1};
+    function createEditRowDpto(id, tipo, empresa) {
+        var data = tipo == "Crear" ? {padre : id, bb: 1, empresa: empresa} : {id : id, bb: 1, empresa: empresa};
         var c =  cargarLoader("Cargando...");
         $.ajax({
             type    : "POST",
