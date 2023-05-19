@@ -259,7 +259,6 @@ class DepartamentoController {
     }
 
     def arbol() {
-//        println "params: $params"
         return [params: params]
     }
 
@@ -270,6 +269,7 @@ class DepartamentoController {
     def makeTreeNode(params) {
         def usuario = Persona.get(session.usuario.id)
         def empresa = usuario.empresa
+//        println("empresa " + empresa)
         def actv = params.actv == 'true'
 //        println "mkTree: $params, activos: $actv"
         def id = params.id

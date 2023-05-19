@@ -103,7 +103,7 @@
 </g:if>
 <g:if test="${tramite.padre}">
     <g:if test="${tramite.padre.personaPuedeLeer(session.usuario)}">
-        <div class="nota ui-corner-all" id="divInfo" style="height: 600px; overflow: auto">
+        <div class="nota ui-corner-all" id="divInfo" style="height: 600px; width: 355px; overflow: auto; resize: horizontal">
             <div class="text-info">
                 <div><div style="width: 30%; float: left">Documento:</div>
                     <div style="float: left; width: 65%; display: inline">${tramite.padre.codigo}</div>

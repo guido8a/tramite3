@@ -89,9 +89,7 @@
                 </div>
             </div><!-- /input-group -->
             <div class="btn-group col-md-1" style="margin-top: 4px; width: 100px">
-                %{--                <div class="input-group">--}%
-                %{--                  Ocultar Inactivos  : <g:checkBox name="activos" value="${false}" />--}%
-                %{--                </div><!-- /input-group -->--}%
+
             </div>
 
             <div class="btn-group pull-right ui-corner-all leyenda">
@@ -107,7 +105,6 @@
                 Cargando los departamentos
             </p>
             <p>
-                %{--                <img src="${resource(dir: 'images/spinners', file: 'loading_new.GIF')}" alt='Cargando...'/>--}%
                 <asset:image src="apli/spinner32.gif" style="padding: 40px;"/>
             </p>
             <p>
@@ -166,12 +163,12 @@
                     url     : $form.attr("action"),
                     data    : $form.serialize(),
                     success : function (msg) {
-                        cl1.modal("hide")
+                        cl1.modal("hide");
                         var parts = msg.split("_");
-                        if (parts[0] != "INFO") {
-                            log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
-                            if (parts[0] == "OK") {
-                                location.reload(true);
+                        if (parts[0] !== "INFO") {
+                            log(parts[1], parts[0] === "OK" ? "success" : "error"); // log(msg, type, title, hide)
+                            if (parts[0] === "OK") {
+                                location.reload();
                             } else {
                                 spinner.replaceWith($btn);
                                 return false;
@@ -196,7 +193,7 @@
                                             var resp = $sel.val();
                                             var dpto = $sel.data("dpto");
                                             var autoriza = $.trim($txt.val());
-                                            if (resp == 1 || resp == "1") {
+                                            if (resp === 1 || resp === "1") {
 //                                                    if (validaAutorizacion($txt)) {
                                                 openLoader("Cambiando");
                                                 $.ajax({
@@ -338,7 +335,7 @@
         } //createEditTipoDocumento
 
         function createEditRowPersona(id, tipo) {
-            var data = tipo == "Crear" ? {'departamento.id' : id} : {id : id};
+            var data = tipo === "Crear" ? {'departamento.id' : id} : {id : id};
             $.ajax({
                 type    : "POST",
                 url     : "${createLink(controller: 'persona', action:'form_ajax')}",
