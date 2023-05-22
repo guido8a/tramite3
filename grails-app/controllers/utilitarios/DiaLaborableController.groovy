@@ -228,12 +228,14 @@ class DiaLaborableController {
     def calendario() {
         def usuario = Persona.get(session.usuario.id)
         def empresa = usuario.empresa
+        println "empresa: $empresa"
 
         println("empresa " + empresa)
 
         if (session.usuario.puedeAdmin) {
 //            def parametros = Parametros.list()
             def parametros = Parametros.findByEmpresa(empresa)
+            println "parametros: $parametros"
 //            if (parametros.size() == 0) {
 
 
@@ -358,6 +360,8 @@ class DiaLaborableController {
 
         def anio = Anio.findAllByNumeroAndEmpresa(params.anio, empresa)
 
+        println "params: $params --> anio: $anio, empresa: $empresa"
+        
         if (anio.size() > 1) {
             flash.message = "Se encontraron ${anio.size()} registros para el año ${params.anio}. Por favor póngase en contacto con el administrador."
             redirect(action: "error")
@@ -375,12 +379,17 @@ class DiaLaborableController {
 
         }
 
+        println "....1"
+        
         if (!anio.save(flush: true)) {
-            flash.message = "Ha ocurrido un error al crear el año ${params.anio}. Por favor póngase en contacto con el administrador.<br/>" + g.renderErrors(bean: anio)
+            flash.message = "Ha ocurrido un error al crear el año ${params.anio}. Por favor póngase en contacto " +
+                    "con el administrador.<br/>" + g.renderErrors(bean: anio)
+            println "error año: ${anio.errors}"
             redirect(action: "error")
             return
         }
 
+        println "....2"
 
 //        def parametros = Parametros.list()
         def parametros = Parametros.findByEmpresa(empresa)
