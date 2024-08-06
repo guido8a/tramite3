@@ -1600,6 +1600,9 @@ class PersonaController {
             case '2':
                 tipo = 'usroapll'
                 break;
+            case '3':
+                tipo = 'dptodscr'
+                break;
         }
 
         switch(params.estado) {
@@ -1624,6 +1627,7 @@ class PersonaController {
 
         def cn = dbConnectionService.getConnection()
         def sql = "select * from usuarios(${empresa?.id}) where ${tipo} ilike '%${params.texto}%' ${estado} ${perfil} order by usroapll limit 30"
+        println "sql --> $sql"
         def usuarios = cn.rows(sql.toString())
 
 //        println("sql " + sql)
