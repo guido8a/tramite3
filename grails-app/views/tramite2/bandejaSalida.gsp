@@ -586,6 +586,29 @@
             }
         }; //ver
 
+        /* completar todo **/
+        var firmar = {
+            label  : "Firma electrónica",
+            icon   : "fa fa-lock",
+            action : function () {
+                $.ajax({
+                    type    : 'POST',
+                    url     : '${createLink(controller: 'tramite3', action: 'verificarEstado')}',
+                    data    : {
+                        id : id
+                    },
+                    success : function (msg) {
+                        if (msg == "ok"){
+                            var timestamp = new Date().getTime();
+                            location.href = "${createLink(controller:'tramiteExport',action:'crearPdf')}?id=" + id + "&type=download" + "&enviar=1" + "&timestamp=" + timestamp}
+
+                        else
+                            bootbox.alert("El documento esta anulado, por favor refresque su bandeja de salida.")
+                    }
+                });
+            }
+        }; //firmar
+
         var detalles = {
             label  : "Detalles",
             icon   : "fa fa-search",
@@ -906,6 +929,7 @@
         items.header.label = "Acciones";
         if (!esSumilla) {
             items.ver = ver;
+            items.firmar = firmar;
         }
         <g:if test="${session.usuario.getPuedeVer()}">
         items.detalles = detalles;
