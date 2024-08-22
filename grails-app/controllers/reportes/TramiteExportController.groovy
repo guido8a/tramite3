@@ -201,9 +201,9 @@ class TramiteExportController{
         def tramite = Tramite.get(params.id.toLong())
         def usuario = Persona.get(session.usuario.id)
 //        def realPath = servletContext.getRealPath("/")
-        def realPath = "/var/tramites/images/"
+        def realPath = "/var/tramites/"
 //        def mensaje = message(code: 'pathImages').toString()
-        def mensaje = "/var/tramites/images/"
+        def mensaje = "/var/tramites/"
 
 
         if (params.editorTramite) {

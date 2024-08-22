@@ -39,7 +39,7 @@ class EnviarService {
         } else {
             mensaje = parametros.first().imagenes
         }
-        def leyenda = "GAD de la provincia de Pichincha"
+        def leyenda = "GAD de la provincia de Los Ríos"
         def aux = Parametros.list([sort: "id", order: "asc"])
         if (aux.size() == 1) {
             leyenda = aux.first().institucion
@@ -52,7 +52,7 @@ class EnviarService {
 
         def pathImages = realPath + "images/"
         def path = pathImages
-        def membrete = pathImages + "logo_gadpp.png"
+        def membrete = pathImages + "logo_reportes.png"
 
         new File(path).mkdirs()
 
@@ -153,6 +153,7 @@ class EnviarService {
                 "    font-size   : 14pt;\n" +
                 "    font-weight : bold;\n" +
                 "}\n" +
+                "img {position: relative; top: 30px;}" +
                 "th {\n" +
                 "   padding-right: 10px;\n" +
                 "}\n"
@@ -164,7 +165,7 @@ class EnviarService {
             content += "<table border='0'>"
             content += "<tr>"
             content += "<td width='15%'>"
-            content += "<img alt='' src='${membrete}' height='65' width='100'/>"
+            content += "<img alt='' src='${membrete}' height='100' width='100' margin-top='15px'/>"
             content += "</td>"
             content += "<td width='85%' style='text-align:center'>"
             content += leyenda
@@ -174,8 +175,8 @@ class EnviarService {
             content += "</div>"
 
             content += "<div class='footer'>" +
-                    "Manuel Larrea N13-45 y Antonio Ante • Teléfonos troncal: (593-2) 2527077 • 2549163 • " +
-                    "<strong>www.pichincha.gob.ec</strong>" +
+                    "Av. Universitaria (4ta) y Clemente Baquerizo (calle 35) #0401 • Telf. (593-5) 3701625 • " +
+                    "<strong>www.losrios.gob.ec</strong><br/>Los Ríos - Ecuador" +
                     "</div>"
         }
         content += "<div class='hoja'>\n"
