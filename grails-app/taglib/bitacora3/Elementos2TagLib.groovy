@@ -53,7 +53,7 @@ class Elementos2TagLib {
                 html += "<i class=\"${attrs.icon} fa-2x pull-left iconMargin\"></i> "
             } else {
                 if (attrs.tipo?.toLowerCase() == 'error') {
-                    html += "<i class=\"fa fa-warning fa-2x pull-left iconMargin\"></i> "
+                    html += "<i class=\"fa fa-exclamation-triangle fa-2x pull-left iconMargin\"></i> "
                 } else if (attrs.tipo?.toLowerCase() == 'success') {
                     html += "<i class=\"fa fa-check-square fa-2x pull-left iconMargin\"></i> "
                 } else if (attrs.tipo?.toLowerCase() == 'notfound') {
