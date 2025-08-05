@@ -2,8 +2,10 @@ import seguridad.Prms
 
 class MenuTagLib {
     static namespace = "mn"
+    def dbConnectionService
 
     def menu_old = { attrs ->
+
         def items = [:]
         def usuario = session.usuario
         def perfil = session.perfil
@@ -14,6 +16,9 @@ class MenuTagLib {
             attrs.title = "Bitácora"
         }
         if (usuario) {
+
+
+
             def acciones = seguridad.Prms.findAllByPerfil(perfil).accion.sort { it.modulo.orden }
 
             acciones.each { ac ->
@@ -111,6 +116,8 @@ class MenuTagLib {
     } //menu
 
     def menu = { attrs ->
+        def cn = dbConnectionService.getConnection()
+        def sql = ''
         def txt = ""
         def inicio = "${createLink(controller:'login', action: 'login')}"
         def items = [:]
@@ -126,34 +133,54 @@ class MenuTagLib {
         }
 //        attrs.title = attrs.title.toUpperCase()
         if (usuario) {
-            def acciones = Prms.findAllByPerfil(perfil).accion.sort { it.modulo.orden }
 
-            acciones.each { ac ->
-                if(ac.modulo.nombre != "noAsignado"){
-                    if (ac.tipo.id == 1) {
-                        if (!items[ac.modulo.nombre]) {
-                            items.put(ac.modulo.nombre, [ac.accnDescripcion, g.createLink(controller: ac.control.ctrlNombre, action: ac.accnNombre)])
-                        } else {
-                            items[ac.modulo.nombre].add(ac.accnDescripcion)
-                            items[ac.modulo.nombre].add(g.createLink(controller: ac.control.ctrlNombre, action: ac.accnNombre))
-                        }
-                    }
+            sql = "select accn.accn__id, tpac__id, accnnmbr, accndscr, ctrlnmbr, mdlonmbr " +
+                    "from prms, accn, ctrl, mdlo " +
+                    "where prfl__id = ${perfil.id} and accn.accn__id = prms.accn__id and " +
+                    "ctrl.ctrl__id = accn.ctrl__id and ctrlnmbr != 'No Asignado' and " +
+                    "mdlo.mdlo__id = accn.mdlo__id and tpac__id = 1 " +
+                    "order by mdloordn, accndscr"
+            println "sqlMenu: $sql"
+
+            cn.eachRow(sql.toString()) { d ->
+                if (!items[d.mdlonmbr]) {
+                    items.put(d.mdlonmbr, [d.accndscr, g.createLink(controller: d.ctrlnmbr, action: d.accnnmbr)])
+                } else {
+                    items[d.mdlonmbr].add(d.accndscr)
+                    items[d.mdlonmbr].add(g.createLink(controller: d.ctrlnmbr, action: d.accnnmbr))
                 }
             }
-            items.each { item ->
-                for (int i = 0; i < item.value.size(); i += 2) {
-                    for (int j = 2; j < item.value.size() - 1; j += 2) {
-                        def val = item.value[i].trim().compareTo(item.value[j].trim())
-                        if (val > 0 && i < j) {
-                            def tmp = [item.value[j], item.value[j + 1]]
-                            item.value[j] = item.value[i]
-                            item.value[j + 1] = item.value[i + 1]
-                            item.value[i] = tmp[0]
-                            item.value[i + 1] = tmp[1]
-                        }
-                    }
-                }
-            }
+
+
+
+//            def acciones = Prms.findAllByPerfil(perfil).accion.sort { it.modulo.orden }
+//
+//            acciones.each { ac ->
+//                if(ac.modulo.nombre != "noAsignado"){
+//                    if (ac.tipo.id == 1) {
+//                        if (!items[ac.modulo.nombre]) {
+//                            items.put(ac.modulo.nombre, [ac.accnDescripcion, g.createLink(controller: ac.control.ctrlNombre, action: ac.accnNombre)])
+//                        } else {
+//                            items[ac.modulo.nombre].add(ac.accnDescripcion)
+//                            items[ac.modulo.nombre].add(g.createLink(controller: ac.control.ctrlNombre, action: ac.accnNombre))
+//                        }
+//                    }
+//                }
+//            }
+//            items.each { item ->
+//                for (int i = 0; i < item.value.size(); i += 2) {
+//                    for (int j = 2; j < item.value.size() - 1; j += 2) {
+//                        def val = item.value[i].trim().compareTo(item.value[j].trim())
+//                        if (val > 0 && i < j) {
+//                            def tmp = [item.value[j], item.value[j + 1]]
+//                            item.value[j] = item.value[i]
+//                            item.value[j + 1] = item.value[i + 1]
+//                            item.value[i] = tmp[0]
+//                            item.value[i + 1] = tmp[1]
+//                        }
+//                    }
+//                }
+//            }
         } else {
             items = ["Inicio": ["Abandonar el Sistema", inicio]]
         }
