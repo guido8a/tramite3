@@ -916,18 +916,14 @@ class Tramite3Controller{
         println "crear copia: estado: ${para?.estado?.descripcion}, usuario: ${session.usuario.id}, trámite: ${tramite.codigo}"
         if (!para) {
             render "ok"
-            return
         } else {
             if (para.estado?.codigo != "E006") {
                 render "ok"
-                return
             } else {
                 render "error"
-                return
             }
         }
     }
-
 
     def recibirTramite() {
 //        println "recibir tramite - tramite3 " + params

@@ -594,16 +594,50 @@
                 $.ajax({
                     type    : 'POST',
                     url     : '${createLink(controller: 'tramite3', action: 'verificarEstado')}',
+                    async: true,
                     data    : {
                         id : id
                     },
                     success : function (msg) {
-                        if (msg == "ok"){
+                        if (msg === "ok") {
                             var timestamp = new Date().getTime();
-                            location.href = "${createLink(controller:'tramiteExport',action:'crearPdf')}?id=" + id + "&type=download" + "&enviar=1" + "&timestamp=" + timestamp}
-
-                        else
+                            $.ajax({
+                                type: 'POST',
+                                url: '${createLink(controller: 'tramiteExport', action: 'crearYGuardarPdf')}',
+                                data: {
+                                    id: id,
+                                    type: "download",
+                                    enviar: 1,
+                                    timestamp: timestamp
+                                },
+                                success: function (msg) {
+                                    if (msg === "ok") {
+                                        $.ajax({
+                                            type: 'POST',
+                                            url: '${createLink(controller: 'firmapdf', action: 'firmarTramite')}',
+                                            async: true,
+                                            data: {
+                                                id: id,
+                                                persona: '${persona?.id}'
+                                            },
+                                            success: function (msg) {
+                                                if (msg === "ok") {
+                                                    bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-check-circle text-success' style='font-size: 20px'></i> Documento firmado correctamente </strong>")
+                                                } else {
+                                                    bootbox.alert("Error al firmar el documento")
+                                                }
+                                            }
+                                        });
+                                    } else {
+                                        bootbox.alert("Error al crear el documento")
+                                    }
+                                }
+                            });
+                            %{--location.href = "${createLink(controller:'tramiteExport',action:'crearYGuardarPdf')}?id=" + id + "&type=download" + "&enviar=1" + "&timestamp=" + timestamp}--}%
+                        }
+                        else{
                             bootbox.alert("El documento esta anulado, por favor refresque su bandeja de salida.")
+                        }
                     }
                 });
             }

@@ -250,11 +250,79 @@ class TramiteExportController{
 
     }
 
+
+    def crearYGuardarPdf() {
+//        println("params editor " + params)
+        def tramite = Tramite.get(params.id.toLong())
+        def usuario = Persona.get(session.usuario.id)
+        def realPath = "/var/tramites/"
+        def mensaje = "/var/tramites/"
+        def filePath = '/var/tramites/' + tramite.id + ".pdf"
+
+        def src = new File(filePath)
+        def existe = src.exists()
+
+        if(existe){
+            render"ok"
+        }else{
+            if (params.editorTramite) {
+                def paratr = tramite.para
+                def copiastr = tramite.copias
+                def enviado = false
+                (copiastr + paratr).each {c->
+                    if(c?.estado?.codigo == "E003") {
+                        enviado = true
+                    }
+                }
+                if(!enviado) {
+                    tramite.texto = (params.editorTramite).replaceAll("\\n", "")
+                    tramite.fechaModificacion = new Date()
+                    if (tramite.save(flush: true)) {
+                        def para = tramite.para
+                        if (params.para) {
+                            if (params.para.toLong() > 0) {
+                                para.persona = Persona.get(params.para.toLong())
+                            } else {
+                                para.departamento = Departamento.get(params.para.toLong() * -1)
+                            }
+                            if (para.save(flush: true)) {
+                                println("ok")
+                            } else {
+                                println "NO_Ha ocurrido un error al guardar el destinatario: " + para.errors
+                            }
+                        }
+                    } else {
+                        println "NO_Ha ocurrido un error al guardar el trámite: " + tramite.errors
+                    }
+                }
+            }
+
+            def baos = enviarService.crearPdf(tramite, usuario, params.enviar.toString(), params.type.toString(), realPath.toString(), mensaje)
+
+
+            File outputFile = new File(filePath);
+            FileOutputStream fos = null;
+            fos = new FileOutputStream(outputFile);
+            baos.writeTo(fos)
+
+            render "ok"
+
+//        byte[] b = baos.toByteArray();
+//        response.setContentType("application/pdf")
+//        response.setHeader("Content-disposition", "attachment; filename=tramite")
+//        response.setContentLength(b.length)
+//        response.getOutputStream().write(b)
+        }
+
+
+
+    }
+
+
     def verPdf() {
         def tramite = Tramite.get(params.id)
         def usuarioEnvia = tramite.deId
         def realPath = servletContext.getRealPath("/") + "tramites/" + tramite.codigo + ".pdf"
-
     }
 
 
