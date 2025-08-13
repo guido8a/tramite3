@@ -575,12 +575,15 @@
                         id : id
                     },
                     success : function (msg) {
-                        if (msg == "ok"){
-                            var timestamp = new Date().getTime();
-                            location.href = "${createLink(controller:'tramiteExport',action:'crearPdf')}?id=" + id + "&type=download" + "&enviar=1" + "&timestamp=" + timestamp}
+                        if (msg === "ok") {
+                            // var timestamp = new Date().getTime();
+                            %{--location.href = "${createLink(controller:'tramiteExport',action:'crearPdf')}?id=" + id + "&type=download" + "&enviar=1" + "&timestamp=" + timestamp}--}%
 
-                        else
+                            cargarPdf(id);
+                        }
+                        else{
                             bootbox.alert("El documento esta anulado, por favor refresque su bandeja de salida.")
+                        }
                     }
                 });
             }
@@ -588,8 +591,9 @@
 
         /* completar todo **/
         var firmar = {
-            label  : "Firma electrónica",
+            label  : "Firma electrónica" + '<strong id="divLabelFirma" style="color: #00aa00"></strong>',
             icon   : "fa fa-lock",
+            onload: comprobarArchivoFirmado(id),
             action : function () {
                 $.ajax({
                     type    : 'POST',
@@ -1137,7 +1141,55 @@
             cargarBandeja();
             return false;
         });
+
+
     });
+
+    function cargarPdf(id) {
+        $.ajax({
+            type    : "POST",
+            url     : "${createLink(controller: 'tramite2', action:'verPdf_ajax')}",
+            data    : {
+                id:id
+            },
+            success : function (msg) {
+                var di = bootbox.dialog({
+                    id      : "dlgVerPdfTramite",
+                    title   : "PDF del trámite",
+                    message : msg,
+                    buttons : {
+                        cancelar : {
+                            label     : "<i class='fa fa-times'></i> Cerrar",
+                            className : "btn-primary",
+                            callback  : function () {
+
+                            }
+                        }
+                    } //buttons
+                }); //dialog
+            } //success
+        }); //ajax
+    } //createEdit
+
+
+    function comprobarArchivoFirmado(id) {
+        $.ajax({
+            type: 'POST',
+            url: '${createLink(controller: 'tramite2', action: 'verificarPdfExiste_ajax')}',
+            data: {
+                id: id
+            },
+            success: function (msg) {
+                if (msg === "ok") {
+                  $("#divLabelFirma").html(" FIRMADO")
+                } else {
+                  $("#divLabelFirma").html("")
+                }
+            }
+        });
+    }
+
+
 </script>
 </body>
 </html>

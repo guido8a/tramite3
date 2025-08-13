@@ -689,6 +689,7 @@ class Tramite2Controller {
         return [persona: persona, revisar: revisar, bloqueo: bloqueo, esEditor: session.usuario.puedeEditor]
     }
 
+
     def tablaBandejaSalida() {
 
         def persona = Persona.get(session.usuario.id)
@@ -2099,4 +2100,77 @@ class Tramite2Controller {
         def tramite = Tramite.get(params.id)
         return[tramite:tramite]
     }
+
+    def downloadFile() {
+        def tramite = Tramite.get(params.id)
+
+        def pathSinFirma = "/var/tramites/" + tramite?.id + ".pdf"
+        def path = "/var/tramites/" + tramite?.id + "_firmado.pdf"
+
+
+        def file = new File(path)
+
+        if (file.exists()) {
+            def b = file.getBytes()
+            def ext = 'pdf'
+
+            response.setContentType(ext == 'pdf' ? "application/pdf" : "image/" + ext)
+            response.setHeader("Content-disposition", "attachment; filename=" + tramite?.id)
+            response.setContentLength(b.length)
+            response.getOutputStream().write(b)
+        } else {
+
+            def fileSF = new File(pathSinFirma)
+
+            if(fileSF.exists()){
+                def b = fileSF.getBytes()
+                def ext = 'pdf'
+
+                response.setContentType(ext == 'pdf' ? "application/pdf" : "image/" + ext)
+                response.setHeader("Content-disposition", "attachment; filename=" + tramite?.id)
+                response.setContentLength(b.length)
+                response.getOutputStream().write(b)
+            }else{
+                crearPdf(params.id)
+            }
+        }
+    }
+
+    def verPdf_ajax(){
+        def tramite = Tramite.get(params.id)
+        return [tramite: tramite]
+    }
+
+    def crearPdf(id) {
+
+        def tramite = Tramite.get(id)
+        def usuario = Persona.get(session.usuario.id)
+        def realPath = "/var/tramites/"
+        def mensaje = "/var/tramites/"
+
+        def baos = enviarService.crearPdf(tramite, usuario, '1', 'download', realPath.toString(), mensaje)
+
+        byte[] b = baos.toByteArray();
+        response.setContentType("application/pdf")
+        response.setHeader("Content-disposition", "attachment; filename=tramite_${tramite?.id}")
+        response.setContentLength(b.length)
+        response.getOutputStream().write(b)
+
+        return
+    }
+
+    def verificarPdfExiste_ajax(){
+        def tramite = Tramite.get(params.id)
+        def path = "/var/tramites/" + tramite?.id + "_firmado.pdf"
+        def file = new File(path)
+
+        if(file.exists()){
+            println("ok")
+            render "ok"
+        }else{
+            println("no")
+            render "no"
+        }
+    }
+
 }
