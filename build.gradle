@@ -48,7 +48,7 @@ dependencies {
     compile "org.grails.plugins:gsp"
     compile fileTree(dir: 'lib', include: '*.jar')  //con esto se usan todos los jar de /lib
 
-    compile group: 'com.itextpdf', name: 'itextpdf', version: '5.5.13'
+//    compile group: 'com.itextpdf', name: 'itextpdf', version: '5.5.13'
 //    compile "org.grails.plugins:qr-code:0.1.4"
     compile 'org.grails.plugins:qrcode:0.9'
     compile 'org.grails.plugins:ckeditor:4.5.9.0'
