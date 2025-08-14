@@ -647,6 +647,27 @@
             }
         }; //firmar
 
+        var verificar = {
+            label  : "Verificar firma",
+            icon   : "fa fa-check",
+            action : function () {
+                $.ajax({
+                    type    : 'POST',
+                    url     : '${createLink(controller: 'firmapdf', action: 'verificarFirma_ajax')}',
+                    data    : {
+                        id : id
+                    },
+                    success : function (msg) {
+                        if(msg === 'ok'){
+                            bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-check-circle text-success' style='font-size: 20px'></i> Verificado correctamente </strong>")
+                        }else{
+                            bootbox.alert("No existe un documento firmado")
+                        }
+                    }
+                });
+            }
+        }; //detalles
+
         var detalles = {
             label  : "Detalles",
             icon   : "fa fa-search",
@@ -968,6 +989,7 @@
         if (!esSumilla) {
             items.ver = ver;
             items.firmar = firmar;
+            items.verificar = verificar;
         }
         <g:if test="${session.usuario.getPuedeVer()}">
         items.detalles = detalles;

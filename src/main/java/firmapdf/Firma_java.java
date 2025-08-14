@@ -6,8 +6,12 @@ import com.itextpdf.kernel.events.PdfDocumentEvent;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.*;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
+import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfStamper;
+import com.itextpdf.text.pdf.security.ExternalDigest;
+import com.itextpdf.text.pdf.security.ExternalSignature;
+import com.itextpdf.text.pdf.security.MakeSignature;
 import com.lowagie.text.Document;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Table;
@@ -54,8 +58,8 @@ public class Firma_java {
 //    };
 
     public void sign(String src, String dest, Certificate[] chain, PrivateKey pk, String digestAlgorithm,
-                     String provider, PdfSigner.CryptoStandard signatureType, String reason, String location)
-            throws GeneralSecurityException, IOException {
+                     String provider, PdfSigner.CryptoStandard signatureType, String reason, String location, String nombreFirma)
+            throws GeneralSecurityException, IOException, DocumentException  {
         PdfReader reader = new PdfReader(src);
         PdfDocument doc = new PdfDocument(reader);
         int num_pags = doc.getNumberOfPages();
@@ -74,43 +78,45 @@ public class Firma_java {
         appearance2.setPageRect(rect); // x, y, width, height for the signature field
         appearance2.setPageNumber(num_pags);
         appearance2.setReason(reason);
+        appearance2.setLayer2Text(nombreFirma);
+//        appearance2.setRenderingMode(PdfSignatureAppearance.RenderingMode.NAME_AND_DESCRIPTION);
+        appearance2.setRenderingMode(PdfSignatureAppearance.RenderingMode.DESCRIPTION);
 
         IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm, provider);
         IExternalDigest digest = new BouncyCastleDigest();
 
         stampingProperties.useAppendMode();
 
-//        System.out.println("digest:" + digest + " pks: " + pks + " chain:" + chain + "Pdf: " + PdfSigner.CryptoStandard.CMS);
+        System.out.println("digest:" + digest + " pks: " + pks + " chain:" + chain + "Pdf: " + PdfSigner.CryptoStandard.CMS);
         signer2.signDetached(digest, pks, chain, null, null, null, 8096, PdfSigner.CryptoStandard.CMS);
 
+
     }
-
-
 
     /* firmar sobre un documento firmado. Puedens er N firmas adicionales */
     /* usar chatGPT con:  itext 7, como firmo un documento ya firmado     */
-    public void otra_firma(String src, String dest, Certificate[] chain, PrivateKey pk, String digestAlgorithm,
-                           String provider, PdfSigner.CryptoStandard signatureType, String razon, String texto)
-            throws GeneralSecurityException, IOException {
-
-        // Cargar el documento PDF que ya está firmado
-        PdfReader reader = new PdfReader(src);
-        // Especificar que se deben conservar las firmas existentes
-        PdfSigner signer = new PdfSigner(reader, new FileOutputStream(dest), new StampingProperties().useAppendMode());
-
-        // Configurar la apariencia de la nueva firma
-        Rectangle rect = new Rectangle(100, 80, 200, 100); // Diferente ubicación para la segunda firma
-        PdfSignatureAppearance appearance = signer.getSignatureAppearance();
-        appearance.setPageRect(rect).setPageNumber(1);
-
-        // Configuración adicional de la apariencia (opcional)
-        appearance.setReason(razon).setLocation(texto);
-
-        // Firma el documento nuevamente
-        IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm, provider);
-        IExternalDigest digest = new BouncyCastleDigest();
-        signer.signDetached(digest, pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
-    }
+//    public void otra_firma(String src, String dest, Certificate[] chain, PrivateKey pk, String digestAlgorithm,
+//                           String provider, PdfSigner.CryptoStandard signatureType, String razon, String texto)
+//            throws GeneralSecurityException, IOException {
+//
+//        // Cargar el documento PDF que ya está firmado
+//        PdfReader reader = new PdfReader(src);
+//        // Especificar que se deben conservar las firmas existentes
+//        PdfSigner signer = new PdfSigner(reader, new FileOutputStream(dest), new StampingProperties().useAppendMode());
+//
+//        // Configurar la apariencia de la nueva firma
+//        Rectangle rect = new Rectangle(100, 80, 200, 100); // Diferente ubicación para la segunda firma
+//        PdfSignatureAppearance appearance = signer.getSignatureAppearance();
+//        appearance.setPageRect(rect).setPageNumber(1);
+//
+//        // Configuración adicional de la apariencia (opcional)
+//        appearance.setReason(razon).setLocation(texto);
+//
+//        // Firma el documento nuevamente
+//        IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm, provider);
+//        IExternalDigest digest = new BouncyCastleDigest();
+//        signer.signDetached(digest, pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+//    }
 
 
 
