@@ -61,19 +61,21 @@ public class Firma_java {
                      String provider, PdfSigner.CryptoStandard signatureType, String reason, String location, String nombreFirma)
             throws GeneralSecurityException, IOException, DocumentException  {
         PdfReader reader = new PdfReader(src);
+        PdfReader reader2 = new PdfReader(src);
+        PdfReader reader3 = new PdfReader(src);
         PdfDocument doc = new PdfDocument(reader);
         int num_pags = doc.getNumberOfPages();
 
         StampingProperties stampingProperties = new StampingProperties();
 
-        PdfSigner signer = new PdfSigner(reader, new FileOutputStream(dest), new StampingProperties());
+        PdfSigner signer = new PdfSigner(reader2, new FileOutputStream(dest), new StampingProperties());
 
         Rectangle rect = new Rectangle(100, 100, 400, 100);
 
         signer.setFieldName("firma");
         rect = new Rectangle(100, 92, 400, 100);  /* mover para no sobreponer el rect */
 
-        PdfSigner signer2 = new PdfSigner(reader, new FileOutputStream(dest), new StampingProperties());
+        PdfSigner signer2 = new PdfSigner(reader3, new FileOutputStream(dest), new StampingProperties());
         PdfSignatureAppearance appearance2 = signer2.getSignatureAppearance();
         appearance2.setPageRect(rect); // x, y, width, height for the signature field
         appearance2.setPageNumber(num_pags);

@@ -9,7 +9,9 @@ import com.itextpdf.signatures.SignatureUtil;
 import com.itextpdf.signatures.PdfPKCS7;
 
 import java.io.IOException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class ExtraeFirma {
@@ -78,15 +80,17 @@ public class ExtraeFirma {
             boolean genuineAndWasNotModified = false;
 
 
-            try {
-                PdfPKCS7 signature1 = signatureUtil.verifySignature(signatureFieldName);
-                if (signature1 != null) {
-                    genuineAndWasNotModified = signature1.verify();
-                }
-            } catch (Exception ignored) {
-                // ignoring exceptions,
-                // we are only interested in signatures that are passing the check successfully
-            }
+
+
+//            try {
+//                PdfPKCS7 signature1 = signatureUtil.verifySignature(signatureFieldName);
+//                if (signature1 != null) {
+//                    genuineAndWasNotModified = signature1.verify();
+//                }
+//            } catch (Exception ignored) {
+//                // ignoring exceptions,
+//                // we are only interested in signatures that are passing the check successfully
+//            }
 
             System.out.println("Verificada:" + genuineAndWasNotModified);  /* verificada */
 
@@ -97,6 +101,36 @@ public class ExtraeFirma {
         }
         return signatureCount;
     }
+//
+        public static int leerFirma(String archivo) throws Exception {
+
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(archivo));
+            SignatureUtil signatureUtil = new SignatureUtil(pdfDoc);
+
+            // Get the names of all signature fields
+            for (String signatureName : signatureUtil.getSignatureNames()) {
+
+                System.out.println("Signer Name for signature " + signatureName);
+
+                // Get the PdfPKCS7 object representing the signature
+                PdfPKCS7 pkcs7 = signatureUtil.readSignatureData(signatureName);
+
+                System.out.println("Signer Name for signature '" + pkcs7);
+
+                if (pkcs7 != null) {
+                    // Get the signer's certificate
+                    X509Certificate cert = pkcs7.getSigningCertificate();
+
+                    if (cert != null) {
+                        // Extract the signer's name from the certificate's subject distinguished name
+                        String signerName = cert.getSubjectX500Principal().getName();
+                        System.out.println("Signer Name for signature '" + signatureName + "': " + signerName);
+                    }
+                }
+            }
+            pdfDoc.close();
+            return 0;
+        }
 
 }
 
