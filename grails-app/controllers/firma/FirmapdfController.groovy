@@ -191,6 +191,11 @@ class FirmapdfController {
         String certificado = '/var/tramites/certificado/FABRICIO.p12';
 //        String certificado = '/var/tramites/certificado/Guido.p12';
 
+        BouncyCastleProvider provider = new BouncyCastleProvider();
+        Security.addProvider(provider);
+        KeyStore ks = KeyStore.getInstance("pkcs12", provider.getName());
+        ks.load(new FileInputStream('/var/tramites/certificado/FABRICIO.p12'), pass.toCharArray());
+
         def src = new File(dest)
         def existe = src.exists()
 
