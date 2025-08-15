@@ -31,16 +31,19 @@ public class ExtraeFirma {
                 // Obtener todos los campos del formulario
                 Map<String, PdfFormField> formFields = acroForm.getFormFields();
 
-                System.out.println("Campos:" + acroForm.getFormFields());
+                System.out.println("Campos:" + formFields);
 
                 // Iterar sobre los campos y contar cuántos son firmas
                 for (PdfFormField field : formFields.values()) {
                     if (PdfName.Sig.equals(field.getFormType())) {
+                        System.out.println("incrementa");
                         signatureCount++;
                     }
 
-//                    System.out.println("Campos:" + field.getFieldName() );
-//                    System.out.println("Campos:" + field.getValue() );
+                    System.out.println("Campos2:" + field.getFieldName().toString() );
+                    System.out.println("Campos2:" + field.getFieldName().toString() );
+                    System.out.println("Tipo:" + field.getFormType().toString() );
+                    System.out.println("Campos3:" + field.getValue() );
 
                 }
 
