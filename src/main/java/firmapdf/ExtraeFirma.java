@@ -5,8 +5,8 @@ import com.itextpdf.forms.fields.PdfFormField;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfName;
 import com.itextpdf.kernel.pdf.PdfReader;
-import com.itextpdf.signatures.SignatureUtil;
 import com.itextpdf.signatures.PdfPKCS7;
+import com.itextpdf.signatures.SignatureUtil;
 
 import java.io.IOException;
 import java.security.cert.X509Certificate;
@@ -123,6 +123,7 @@ public class ExtraeFirma {
                 if (pkcs7 != null) {
                     // Get the signer's certificate
                     X509Certificate cert = pkcs7.getSigningCertificate();
+                    System.out.println("dia '" + pkcs7.getSignDate());
 
                     if (cert != null) {
                         // Extract the signer's name from the certificate's subject distinguished name
