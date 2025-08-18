@@ -182,7 +182,6 @@ class FirmapdfController {
         render "ok"
     }
 
-
     def verificarFirma_ajax(){
         def tramite = Tramite.get(params.id)
         String dest = '/var/tramites/' + tramite?.id + '_firmado.pdf'
@@ -206,17 +205,40 @@ class FirmapdfController {
             ExtraeFirma extraeFirma = new ExtraeFirma()
             def respuesta = extraeFirma.leerFirma(dest)
 
-            println("res " + respuesta[1].split("CN=").last())
+            render "ok_" +  respuesta[0] + "_" + respuesta[1].split("CN=").last()
+        }else{
+            render"no"
+        }
+    }
+
+
+    def verificarArchi_ajax(){
+        def tramite = Tramite.get(params.id)
+        String dest = '/var/tramites/' + tramite?.id + '_firmado.pdf'
+        String pass = "machin2501"
+//        String pass = "GdoEdu8aMo"
+        String certificado = '/var/tramites/certificado/FABRICIO.p12';
+//        String certificado = '/var/tramites/certificado/Guido.p12';
+
+        BouncyCastleProvider provider = new BouncyCastleProvider();
+        Security.addProvider(provider);
+        KeyStore ks = KeyStore.getInstance("pkcs12", provider.getName());
+        ks.load(new FileInputStream('/var/tramites/certificado/FABRICIO.p12'), pass.toCharArray());
+
+        def src = new File(dest)
+        def existe = src.exists()
+
+        if(existe){
+            Verifica_java verifica = new Verifica_java()
+            verifica.verificaFirma(dest.toString(),certificado.toString(),pass.toString());
+
+            ExtraeFirma extraeFirma = new ExtraeFirma()
+            def respuesta = extraeFirma.leerFirma(dest)
 
             render "ok_" +  respuesta[0] + "_" + respuesta[1].split("CN=").last()
         }else{
             render"no"
         }
-
-
-
-
-
     }
 
 }

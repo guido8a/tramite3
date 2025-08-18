@@ -91,6 +91,11 @@
     .copias {
         font-size : 8pt;
     }
+
+    .firmado{
+        border: solid 2px #00aa00;
+    }
+
     </style>
 </head>
 
@@ -175,11 +180,8 @@
 
                 <a href="#" name="salir" class="btn btn-danger btnSalir"><i class="fa fa-times"></i> Cerrar</a>
             </div>
-
         </div>
-
     </fieldset>
-
 </div>
 
 <div id="" style=";height: 600px;overflow: auto;position: relative">
@@ -1204,9 +1206,11 @@
             },
             success: function (msg) {
                 if (msg === "ok") {
-                  $("#divLabelFirma").html(" FIRMADO")
+                  $("#divLabelFirma").html(" FIRMADO");
+                    $("#" + id).addClass("firmado")
                 } else {
-                  $("#divLabelFirma").html("")
+                  $("#divLabelFirma").html("");
+                    $("#" + id).removeClass("firmado")
                 }
             }
         });

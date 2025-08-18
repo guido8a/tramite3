@@ -70,8 +70,8 @@
             <g:set var="clase" value="${clase + ' conPadre'}"/>
         </g:if>
 
-        <tr style="width: 100%;"  id="${row.trmt__id}" data-id="${row.trmt__id}"
-            class="trTramite ${clase}"
+        <tr   style="width: 100%;"  id="${row.trmt__id}" data-id="${row.trmt__id} "
+            class="trTramite ${clase}  ${firmados.contains(row.trmt__id) ? 'firmado' : ''} "
             estado="${row.edtrcdgo}" %{--estado tramite codigo--}%
             de="${row.depr__id}" %{--id de la persona q crea el tram.--}%
             codigo="${row.trmtcdgo}" %{--codigo del tramite--}%

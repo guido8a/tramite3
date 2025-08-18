@@ -696,6 +696,7 @@ class Tramite2Controller {
         def busca = false
         def procedure = "salida_prsn"
         def where = ""
+        def firmados = []
 
         if (!params.sort || params.sort == "") {
             params.sort = "trmtfcrc"
@@ -738,7 +739,18 @@ class Tramite2Controller {
 
         def cn = dbConnectionService.getConnection()
         def rows = cn.rows(sql.toString())
-        return [rows: rows, busca: busca, esEditor: session.usuario.puedeEditor]
+
+        rows.each {
+            def path = "/var/tramites/" + it.trmt__id + "_firmado.pdf"
+            def file = new File(path)
+
+            if(file.exists()){
+                firmados += it.trmt__id
+            }
+
+        }
+
+        return [rows: rows, busca: busca, esEditor: session.usuario.puedeEditor, firmados: firmados]
     }
 
     def bandejaSalida_old() {
@@ -2165,11 +2177,21 @@ class Tramite2Controller {
         def file = new File(path)
 
         if(file.exists()){
-            println("ok")
             render "ok"
         }else{
-            println("no")
             render "no"
+        }
+    }
+
+    def verificarPdfExiste2_ajax(){
+        def tramite = Tramite.get(params.id)
+        def path = "/var/tramites/" + tramite?.id + "_firmado.pdf"
+        def file = new File(path)
+
+        if(file.exists()){
+            return true
+        }else{
+           return false
         }
     }
 
