@@ -658,8 +658,9 @@
                         id : id
                     },
                     success : function (msg) {
-                        if(msg === 'ok'){
-                            bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-check-circle text-success' style='font-size: 20px'></i> Verificado correctamente </strong>")
+                        var parts = msg.split("_");
+                        if(parts[0] === 'ok'){
+                            bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-check-circle text-success' style='font-size: 20px'></i>" + "<br/>" + "Firmado por: " + parts[2]  + "<br/>" + "Fecha firma:" +  parts[1]  +  " </strong>")
                         }else{
                             bootbox.alert("No existe un documento firmado")
                         }

@@ -204,11 +204,11 @@ class FirmapdfController {
             verifica.verificaFirma(dest.toString(),certificado.toString(),pass.toString());
 
             ExtraeFirma extraeFirma = new ExtraeFirma()
-//            extraeFirma.cuenta(dest)
+            def respuesta = extraeFirma.leerFirma(dest)
 
-            extraeFirma.leerFirma(dest)
+            println("res " + respuesta[1].split("CN=").last())
 
-            render "ok"
+            render "ok_" +  respuesta[0] + "_" + respuesta[1].split("CN=").last()
         }else{
             render"no"
         }

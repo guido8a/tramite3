@@ -10,7 +10,10 @@ import com.itextpdf.signatures.SignatureUtil;
 
 import java.io.IOException;
 import java.security.cert.X509Certificate;
+import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -105,7 +108,10 @@ public class ExtraeFirma {
         return signatureCount;
     }
 //
-        public static int leerFirma(String archivo) throws Exception {
+        public static String[] leerFirma(String archivo) throws Exception {
+
+            String[] respuestas = new String[2];
+
 
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(archivo));
             SignatureUtil signatureUtil = new SignatureUtil(pdfDoc);
@@ -113,27 +119,36 @@ public class ExtraeFirma {
             // Get the names of all signature fields
             for (String signatureName : signatureUtil.getSignatureNames()) {
 
-                System.out.println("Signer Name for signature " + signatureName);
+//                System.out.println("Signer Name for signature " + signatureName);
 
                 // Get the PdfPKCS7 object representing the signature
                 PdfPKCS7 pkcs7 = signatureUtil.readSignatureData(signatureName);
 
-                System.out.println("Signer Name for signature '" + pkcs7);
+//                System.out.println("Signer Name for signature '" + pkcs7);
 
                 if (pkcs7 != null) {
                     // Get the signer's certificate
                     X509Certificate cert = pkcs7.getSigningCertificate();
-                    System.out.println("dia '" + pkcs7.getSignDate());
+//                    System.out.println("dia '" + pkcs7.getSignDate());
+//                    System.out.println("dia '" + pkcs7.getSignDate().getTime());
+
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+                    String formatted = sdf.format(pkcs7.getSignDate().getTime());
+//                    System.out.println("formateado '" + formatted);
+
+                    respuestas[0] = formatted;
 
                     if (cert != null) {
                         // Extract the signer's name from the certificate's subject distinguished name
                         String signerName = cert.getSubjectX500Principal().getName();
-                        System.out.println("Signer Name for signature '" + signatureName + "': " + signerName);
+//                        System.out.println("Signer Name for signature '" + signatureName + "': " + signerName);
+
+                        respuestas[1] = signerName;
                     }
                 }
             }
             pdfDoc.close();
-            return 0;
+            return respuestas;
         }
 
 }
