@@ -65,7 +65,7 @@ class FirmapdfController {
         while (elist.hasMoreElements()) {
             alist[count] = new String(((String)elist.nextElement()).toString());
 
-//            System.out.println(alist[count]);
+            System.out.println(alist[count]);
 //            println "---> $count"
 
             if( (PrivateKey) ks.getKey(alist[count], pass) ) {
@@ -84,7 +84,7 @@ class FirmapdfController {
 
         Firma_java app = new Firma_java();
         app.sign(src, dest + res1, chain, pk, DigestAlgorithms.SHA256, provider.getName(),
-                PdfSigner.CryptoStandard.CMS, tx_firma, "GADLR", alist[1]);
+                PdfSigner.CryptoStandard.CMS, tx_firma, "GADLR", alist[2]);
 
 //        app.sign(src2, dest + res3, chain, pk, DigestAlgorithms.SHA512, provider.getName(),
 //                PdfSigner.CryptoStandard.CMS, tx_firma, "Segunada firma");
@@ -129,9 +129,10 @@ class FirmapdfController {
         String src = '/var/tramites/' + tramite?.id + ".pdf"
         String dest = '/var/tramites/'
         String res1 = tramite?.id + '_firmado.pdf'
-        char[] pass = "machin2501".toCharArray();
-//        char[] pass = "GdoEdu8aMo".toCharArray();
-        String certificado = '/var/tramites/certificado/FABRICIO.p12';
+//        char[] pass = "machin2501".toCharArray();
+        char[] pass = "GdoEdu8aMo".toCharArray();
+//        String certificado = '/var/tramites/certificado/FABRICIO.p12';
+        String certificado = '/var/tramites/certificado/Guido.p12';
 
         File file = new File(src);
         file.mkdirs();
@@ -139,8 +140,8 @@ class FirmapdfController {
         BouncyCastleProvider provider = new BouncyCastleProvider();
         Security.addProvider(provider);
         KeyStore ks = KeyStore.getInstance("pkcs12", provider.getName());
-        ks.load(new FileInputStream('/var/tramites/certificado/FABRICIO.p12'), pass);
-//        ks.load(new FileInputStream('/var/tramites/certificado/Guido.p12'), pass);
+//        ks.load(new FileInputStream('/var/tramites/certificado/FABRICIO.p12'), pass);
+        ks.load(new FileInputStream('/var/tramites/certificado/Guido.p12'), pass);
 
         String alias = ks.aliases().nextElement();
         PrivateKey pk = (PrivateKey) ks.getKey(alias, pass);
@@ -172,12 +173,12 @@ class FirmapdfController {
 
         def tx_firma = "Firmado por ${usro} - Fecha: ${(new Date()).format('dd-MM-yyyy HH:mm:ss')}"
 //        println "texto firma: $tx_firma"
-        println "lista:" + alist
+        println "lista:" + alist + alist.size()
         println "nombre:" + alist[1]
 
         Firma_java app = new Firma_java();
         app.sign(src, dest + res1, chain, pk, DigestAlgorithms.SHA256, provider.getName(),
-                PdfSigner.CryptoStandard.CMS, tx_firma, "GADLR", alist[1]);
+                PdfSigner.CryptoStandard.CMS, tx_firma, "GADLR", alist[2]);
 
         render "ok"
     }
@@ -185,15 +186,16 @@ class FirmapdfController {
     def verificarFirma_ajax(){
         def tramite = Tramite.get(params.id)
         String dest = '/var/tramites/' + tramite?.id + '_firmado.pdf'
-        String pass = "machin2501"
-//        String pass = "GdoEdu8aMo"
-        String certificado = '/var/tramites/certificado/FABRICIO.p12';
-//        String certificado = '/var/tramites/certificado/Guido.p12';
+//        String pass = "machin2501"
+        String pass = "GdoEdu8aMo"
+//        String certificado = '/var/tramites/certificado/FABRICIO.p12';
+        String certificado = '/var/tramites/certificado/Guido.p12';
 
         BouncyCastleProvider provider = new BouncyCastleProvider();
         Security.addProvider(provider);
         KeyStore ks = KeyStore.getInstance("pkcs12", provider.getName());
-        ks.load(new FileInputStream('/var/tramites/certificado/FABRICIO.p12'), pass.toCharArray());
+//        ks.load(new FileInputStream('/var/tramites/certificado/FABRICIO.p12'), pass.toCharArray());
+        ks.load(new FileInputStream('/var/tramites/certificado/Guido.p12'), pass.toCharArray());
 
         def src = new File(dest)
         def existe = src.exists()

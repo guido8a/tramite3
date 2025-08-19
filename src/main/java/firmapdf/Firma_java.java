@@ -80,7 +80,7 @@ public class Firma_java {
         appearance2.setPageRect(rect); // x, y, width, height for the signature field
         appearance2.setPageNumber(num_pags);
         appearance2.setReason(reason);
-        appearance2.setLayer2Text(nombreFirma);
+//        appearance2.setLayer2Text(nombreFirma);
 //        appearance2.setRenderingMode(PdfSignatureAppearance.RenderingMode.NAME_AND_DESCRIPTION);
         appearance2.setRenderingMode(PdfSignatureAppearance.RenderingMode.DESCRIPTION);
 
