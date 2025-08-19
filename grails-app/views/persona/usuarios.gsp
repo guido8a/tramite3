@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: fabricio
-  Date: 25/11/20
-  Time: 9:19
---%>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -70,7 +63,6 @@
 
 </div>
 
-
 <script type="text/javascript">
 
     $(".btnCrear").click(function () {
@@ -83,7 +75,6 @@
         $("#tipo").val(0);
         $("#perfil").val(0);
         $("#estado").val(0);
-        // cargarTablaUsuarios($("#tipo").val(0), $("#texto").val(''), $("#perfil").val(0), $("#estado").val(0));
     });
 
     $("#btnBuscar").click(function () {
@@ -110,7 +101,6 @@
             }
         })
     }
-
 
     function createContextMenu(node) {
         var $tr = $(node);

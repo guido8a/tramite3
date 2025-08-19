@@ -11,7 +11,7 @@ import tramites.TipoDocumentoDepartamento
 class Persona implements Auditable{
 
     Departamento departamento
-//    String cedula
+    String cedula
     String nombre
     String apellido
 //    Date fechaNacimiento
@@ -34,7 +34,8 @@ class Persona implements Auditable{
     String connect
     String estado
     Empresa empresa
-
+    String passwordFirma
+    String pathFirma
 
     static hasMany = [perfiles: Sesn]
 
@@ -57,7 +58,7 @@ class Persona implements Auditable{
         columns {
             id column: 'prsn__id'
             departamento column: 'dpto__id'
-//            cedula column: 'prsncdla'
+            cedula column: 'prsncdla'
             nombre column: 'prsnnmbr'
             apellido column: 'prsnapll'
 //            fechaNacimiento column: 'prsnfcna'
@@ -81,11 +82,13 @@ class Persona implements Auditable{
             estado column: 'prsnetdo'
             departamentoDesde column: 'dptodsde'
             empresa column: 'empr__id'
+            passwordFirma column: 'prsnpwfm'
+            pathFirma column: 'prsnptfm'
         }
     }
     static constraints = {
         departamento(blank: true, nullable: true, attributes: [title: 'departamento'])
-//        cedula(maxSize: 10, nullable: true, unique: true, blank: true, attributes: [title: 'cedula'])
+        cedula(maxSize: 10, nullable: true, unique: true, blank: true, attributes: [title: 'cedula'])
         nombre(maxSize: 31, blank: false, nullable: false, attributes: [title: 'nombre'])
         apellido(maxSize: 31, blank: false, nullable: false, attributes: [title: 'apellido'])
 //        fechaNacimiento(blank: true, nullable: true, attributes: [title: 'fechaNacimiento'])
@@ -109,6 +112,8 @@ class Persona implements Auditable{
         estado(nullable: true, blank: true, size: 1..1)
         departamentoDesde(nullable: true, blank: true)
         empresa(nullable: false, blank: false)
+        passwordFirma(nullable: true, blank: true)
+        pathFirma(nullable: true, blank: true)
     }
 
     def vaciarPermisos() {

@@ -63,6 +63,19 @@
                 </span>
             </div>
 
+            <div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'cedula', 'error')} required">
+                <span class="grupo">
+                    <label for="apellido" class="col-md-3 control-label text-info">
+                        Cédula
+                    </label>
+
+                    <div class="col-md-7">
+                        <g:textField name="cedula" maxlength="10" required="" class="form-control required" value="${personaInstance?.cedula}"/>
+                    </div>
+                    *
+                </span>
+            </div>
+
             <div class="form-group keeptogether ${hasErrors(bean: personaInstance, field: 'mail', 'error')} ">
                 <span class="grupo">
                     <label for="mail" class="col-md-3 control-label text-info">

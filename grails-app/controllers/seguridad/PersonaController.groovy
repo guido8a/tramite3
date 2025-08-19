@@ -516,7 +516,7 @@ class PersonaController {
 //                    sesion.fechaInicio = accs.accsFechaInicial
                     sesion.fechaInicio = fi
                     sesion.fechaFin =
-                    sesion.save(flush: true)
+                            sesion.save(flush: true)
                     def sesion2 = new Sesn()
                     sesion2.perfil = perfil
                     def usuarioOriginal = Persona.get(session.usuario.id)
@@ -1624,21 +1624,91 @@ class PersonaController {
             perfil = "and usroprfl ilike '%${params.perfil}%' "
         }
 
-
         def cn = dbConnectionService.getConnection()
         def sql = "select * from usuarios(${empresa?.id}) where ${tipo} ilike '%${params.texto}%' ${estado} ${perfil} order by usroapll limit 30"
         println "sql --> $sql"
         def usuarios = cn.rows(sql.toString())
 
-//        println("sql " + sql)
-
         return[usuarios: usuarios]
-
     }
 
     def guardarPerfiles_ajax (){
         println("params " + params)
         render "ok_1"
+    }
+
+    def guardarPasswordFirma_ajax(){
+        def persona = Persona.get(params.id)
+
+        if(persona.cedula){
+            persona.passwordFirma = params.password?.trim()
+
+            if(!persona.save(flush:true)){
+                println("Error al guardar la firma " + persona.errors)
+                render "no_Error al guardar la firma"
+            }else{
+                render "ok_Firma guardada correctamente"
+            }
+        }else{
+            render "no_El usuario no tiene cédula, para ingresar la firma electrónica primero ingrese su cédula"
+        }
+    }
+
+    def uploadArchivoFirma() {
+
+        println("params archivo firma " + params)
+
+        def acceptedExt = ["p12"]
+        def usuario = Persona.get(params.id)
+
+        def path = "/var/tramites/certificado/"
+        new File(path).mkdirs()
+
+        def f = request.getFile('file')  //archivo = name del input type file
+
+        if (f && !f.empty) {
+            def fileName = f.getOriginalFilename() //nombre original del archivo
+            def ext
+            def parts = fileName.split("\\.")
+            fileName = ""
+            parts.eachWithIndex { obj, i ->
+                if (i < parts.size() - 1) {
+                    fileName += obj
+                } else {
+                    ext = obj
+                }
+            }
+            if (acceptedExt.contains(ext.toLowerCase())) {
+//                fileName = fileName + "." + ext.toLowerCase()
+                fileName = usuario.cedula +  "." + ext.toLowerCase()
+                def pathFile = path + fileName
+                def file = new File(pathFile)
+                println "subiendo archivo: $fileName"
+
+                f.transferTo(file)
+
+                def old = usuario?.pathFirma
+                if (old && old.trim() != "") {
+                    def oldPath = "/var/tramites/certificado/" + old
+                    def oldFile = new File(oldPath)
+                    if (oldFile.exists()) {
+                        oldFile.delete()
+                    }
+                }
+
+                usuario?.pathFirma = fileName
+                usuario.save(flush: true)
+
+            } else {
+                render "no_Seleccione un archivo de tipo P12"
+                return
+            }
+        } else {
+            render "no_Seleccione un archivo de tipo P12"
+            return
+        }
+
+        render "ok_Subido correctamente"
     }
 
 
