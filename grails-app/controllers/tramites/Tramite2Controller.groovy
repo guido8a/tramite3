@@ -2195,4 +2195,8 @@ class Tramite2Controller {
         }
     }
 
+    def passwordFirma_ajax(){
+
+    }
+
 }

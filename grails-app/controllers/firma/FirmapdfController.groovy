@@ -135,7 +135,8 @@ class FirmapdfController {
 //        String certificado = '/var/tramites/certificado/Guido.p12';
 
 
-        char[] pass = usro.passwordFirma?.toCharArray();
+//        char[] pass = usro.passwordFirma?.toCharArray();
+        char[] pass = params.password?.toCharArray();
         String certificado = '/var/tramites/certificado/' + usro.pathFirma;
 
         def archivoFirma = new File(certificado)
@@ -224,7 +225,8 @@ class FirmapdfController {
 //        String certificado = '/var/tramites/certificado/Guido.p12';
 
         String certificado = '/var/tramites/certificado/' + usuario.pathFirma;
-        String pass = usuario.passwordFirma
+//        String pass = usuario.passwordFirma
+        String pass = params.password
 
         def archivoFirma = new File(certificado)
         def existeArchivoFirma = archivoFirma.exists()

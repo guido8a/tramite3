@@ -236,25 +236,26 @@
 
         <div id="collapseFirma" class="panel-collapse collapse">
             <div class="panel-body">
-                    <div class="form-group required">
-                        <span class="col-md-3">
-                            <label for="password_actual" class="control-label text-info">
-                                Contraseña
-                            </label>
+                <div class="form-group required">
+                    %{--                        <span class="col-md-3">--}%
+                    %{--                            <label for="password_actual" class="control-label text-info">--}%
+                    %{--                                Contraseña--}%
+                    %{--                            </label>--}%
 
-                            <span class="input-group">
-                                <g:passwordField name="passwordFirma" class="form-control required" />
-                                <span class="input-group-addon"><i class="fa fa-unlock"></i></span>
-                            </span>
-                        </span>
+                    %{--                            <span class="input-group">--}%
+                    %{--                                <g:passwordField name="passwordFirma" class="form-control required" />--}%
+                    %{--                                <span class="input-group-addon"><i class="fa fa-unlock"></i></span>--}%
+                    %{--                            </span>--}%
+                    %{--                        </span>--}%
 
-                        <div class="col-md-2" style="margin-top: 20px;">
-                            <a href="#" class="btn btn-success" id="btnGuardarPasswordFirma">
-                                <i class="fa fa-save"></i> Guardar
-                            </a>
-                        </div>
+                    %{--                        <div class="col-md-2" style="margin-top: 20px;">--}%
+                    %{--                            <a href="#" class="btn btn-success" id="btnGuardarPasswordFirma">--}%
+                    %{--                                <i class="fa fa-save"></i> Guardar--}%
+                    %{--                            </a>--}%
+                    %{--                        </div>--}%
 
-                        <span class="col-md-5">
+                    <span class="col-md-10">
+                        <span class="col-md-8">
                             <g:uploadForm action="uploadArchivoFirma" method="post" name="frmUpload" enctype="multipart/form-data">
                                 <g:hiddenField name="id" value="${usuario?.id}"/>
                                 <div class="fieldcontain required">
@@ -268,10 +269,12 @@
                                     </div>
                                 </div>
                             </g:uploadForm>
+                        </span>
 
+                        <span class="col-md-6">
                             <g:if test="${usuario?.pathFirma}">
-                                <div class="alert alert-success" style="margin-top: 10px">
-                                 <i class="fa fa-exclamation-triangle fa-2x"></i>  <strong style="font-size: 14px"> Una certificado de firma electronica está cargado.</strong>
+                                <div class=" alert alert-success" style="margin-top: 10px">
+                                    <i class="fa fa-exclamation-triangle fa-2x"></i>  <strong style="font-size: 14px"> Una certificado de firma electronica está cargado.</strong>
                                 </div>
                                 <div class="btn-group">
                                     <a href="#" class="btn btn-danger btnBorrarArchivoFirma">
@@ -286,7 +289,9 @@
                                 </div>
                             </g:else>
                         </span>
-                    </div>
+
+                    </span>
+                </div>
             </div>
         </div>
     </div>
@@ -370,62 +375,62 @@
         });
     }
 
-    $("#btnGuardarPasswordFirma").click(function () {
-        var password = $("#passwordFirma").val();
+    %{--$("#btnGuardarPasswordFirma").click(function () {--}%
+    %{--    var password = $("#passwordFirma").val();--}%
 
-        if(password !== ''){
-            bootbox.confirm({
-                title: "<i class='fa fa-exclamation-triangle text-danger fa-2x' style='text-align: center'></i> Alerta",
-                message: "<strong style='font-size: 14px'>" + "Está seguro de guardar la contraseña?" + "<br/>" +"Cualquier contraseña guardada anteriormente será reemplazada" + "</strong>",
-                buttons: {
-                    cancel: {
-                        label: '<i class="fa fa-times"></i> Cancelar',
-                        className: 'btn-primary'
-                    },
-                    confirm: {
-                        label: '<i class="fa fa-check"></i> Aceptar',
-                        className: 'btn-success'
-                    }
-                },
-                callback: function (result) {
-                    if (result) {
-                        $.ajax({
-                            type: "POST",
-                            url: "${createLink(controller: 'persona', action:'guardarPasswordFirma_ajax')}",
-                            data: {
-                                id: '${usuario?.id}',
-                                password: password
-                            },
-                            success: function (msg) {
-                                var parts = msg.split("_");
-                                if (parts[0] === 'ok') {
-                                    log(parts[1], "success");
-                                    setTimeout(function () {
-                                        location.reload();
-                                    }, 1000);
-                                } else {
-                                    bootbox.alert('<i class="fa fa-exclamation-triangle text-danger fa-2x"></i> ' + '<strong style="font-size: 14px">' + parts[1] + '</strong>');
-                                }
-                            }
-                        });
-                    }
-                }
-            });
-        }else{
-            bootbox.alert('<i class="fa fa-exclamation-triangle text-danger fa-2x"></i> ' + '<strong style="font-size: 18px">' + "Ingrese una contraseña" + '</strong>');
-        }
-    });
+    %{--    if(password !== ''){--}%
+    %{--        bootbox.confirm({--}%
+    %{--            title: "<i class='fa fa-exclamation-triangle text-danger fa-2x' style='text-align: center'></i> Alerta",--}%
+    %{--            message: "<strong style='font-size: 14px'>" + "Está seguro de guardar la contraseña?" + "<br/>" +"Cualquier contraseña guardada anteriormente será reemplazada" + "</strong>",--}%
+    %{--            buttons: {--}%
+    %{--                cancel: {--}%
+    %{--                    label: '<i class="fa fa-times"></i> Cancelar',--}%
+    %{--                    className: 'btn-primary'--}%
+    %{--                },--}%
+    %{--                confirm: {--}%
+    %{--                    label: '<i class="fa fa-check"></i> Aceptar',--}%
+    %{--                    className: 'btn-success'--}%
+    %{--                }--}%
+    %{--            },--}%
+    %{--            callback: function (result) {--}%
+    %{--                if (result) {--}%
+    %{--                    $.ajax({--}%
+    %{--                        type: "POST",--}%
+    %{--                        url: "${createLink(controller: 'persona', action:'guardarPasswordFirma_ajax')}",--}%
+    %{--                        data: {--}%
+    %{--                            id: '${usuario?.id}',--}%
+    %{--                            password: password--}%
+    %{--                        },--}%
+    %{--                        success: function (msg) {--}%
+    %{--                            var parts = msg.split("_");--}%
+    %{--                            if (parts[0] === 'ok') {--}%
+    %{--                                log(parts[1], "success");--}%
+    %{--                                setTimeout(function () {--}%
+    %{--                                    location.reload();--}%
+    %{--                                }, 1000);--}%
+    %{--                            } else {--}%
+    %{--                                bootbox.alert('<i class="fa fa-exclamation-triangle text-danger fa-2x"></i> ' + '<strong style="font-size: 14px">' + parts[1] + '</strong>');--}%
+    %{--                            }--}%
+    %{--                        }--}%
+    %{--                    });--}%
+    %{--                }--}%
+    %{--            }--}%
+    %{--        });--}%
+    %{--    }else{--}%
+    %{--        bootbox.alert('<i class="fa fa-exclamation-triangle text-danger fa-2x"></i> ' + '<strong style="font-size: 18px">' + "Ingrese una contraseña" + '</strong>');--}%
+    %{--    }--}%
+    %{--});--}%
 
     // $(function () {
-        $('#datetimepicker1, #datetimepicker2').datetimepicker({
-            locale: 'es',
-            format: 'DD-MM-YYYY',
-            daysOfWeekDisabled: [0, 6],
-            showClose: true,
-            icons: {
-                close: 'closeText'
-            }
-        });
+    $('#datetimepicker1, #datetimepicker2').datetimepicker({
+        locale: 'es',
+        format: 'DD-MM-YYYY',
+        daysOfWeekDisabled: [0, 6],
+        showClose: true,
+        icons: {
+            close: 'closeText'
+        }
+    });
     // });
 
     function loadAccesos() {
@@ -444,17 +449,89 @@
     }
 
     // $(function () {
-        var $btnAccesos = $("#btnAccesos");
-        var $frmAccesos = $("#frmAccesos");
-        var $btnPass = $("#btnPass");
-        var $frmPass = $("#frmPass");
+    var $btnAccesos = $("#btnAccesos");
+    var $frmAccesos = $("#frmAccesos");
+    var $btnPass = $("#btnPass");
+    var $frmPass = $("#frmPass");
 
-        $("#password_actual").val("");
+    $("#password_actual").val("");
 
-        function submitPass() {
-            var url = $frmPass.attr("action");
-            var data = $frmPass.serialize();
-            $btnPass.hide().after(spinner);
+    function submitPass() {
+        var url = $frmPass.attr("action");
+        var data = $frmPass.serialize();
+        $btnPass.hide().after(spinner);
+        $.ajax({
+            type    : "POST",
+            url     : url,
+            data    : data,
+            success : function (msg) {
+                var parts = msg.split("_");
+                log(parts[1], parts[0] === "OK" ? "success" : "error");
+                spinner.remove();
+                $btnPass.show();
+                $frmPass.find("input").val("");
+                validatorPass.resetForm();
+            }
+        });
+    }
+
+    loadAccesos();
+
+    $frmPass.find("input").keyup(function (ev) {
+        if (ev.keyCode === 13) {
+            submitPass();
+        }
+    });
+    var validatorTelf = $(".frmTelf").validate({
+        errorClass     : "help-block",
+        errorPlacement : function (error, element) {
+            if (element.parent().hasClass("input-group")) {
+                error.insertAfter(element.parent());
+            } else {
+                error.insertAfter(element);
+            }
+            element.parents(".grupo").addClass('has-error');
+        },
+
+        success : function (label) {
+            label.parents(".grupo").removeClass('has-error');
+        }
+    });
+    var validatorPass = $frmPass.validate({
+        errorClass     : "help-block",
+        errorPlacement : function (error, element) {
+            if (element.parent().hasClass("input-group")) {
+                error.insertAfter(element.parent());
+            } else {
+                error.insertAfter(element);
+            }
+            element.parents(".grupo").addClass('has-error');
+        },
+        rules          : {
+            password_actual : {
+                remote : {
+                    url  : "${createLink(action:'validarPass_ajax')}",
+                    type : "post"
+                }
+            }
+        },
+        messages       : {
+            password_actual : {
+                remote : "El password actual no coincide"
+            }
+        },
+        success        : function (label) {
+            label.parents(".grupo").removeClass('has-error');
+        }
+    });
+    $btnPass.click(function () {
+        submitPass();
+    });
+    $("#btnTelf").click(function () {
+        var url = $(".frmTelf").attr("action");
+        var data = $(".frmTelf").serialize();
+        if ($(".frmTelf").valid()) {
+            $("#btnTelf").hide().after(spinner);
             $.ajax({
                 type    : "POST",
                 url     : url,
@@ -463,119 +540,87 @@
                     var parts = msg.split("_");
                     log(parts[1], parts[0] === "OK" ? "success" : "error");
                     spinner.remove();
-                    $btnPass.show();
-                    $frmPass.find("input").val("");
-                    validatorPass.resetForm();
+                    $("#btnTelf").show();
+                    validatorTelf.resetForm();
                 }
             });
         }
+    });
 
-        loadAccesos();
-
-        $frmPass.find("input").keyup(function (ev) {
-            if (ev.keyCode === 13) {
-                submitPass();
+    $frmAccesos.validate({
+        errorClass     : "help-block",
+        errorPlacement : function (error, element) {
+            if (element.parent().hasClass("input-group")) {
+                error.insertAfter(element.parent());
+            } else {
+                error.insertAfter(element);
             }
-        });
-        var validatorTelf = $(".frmTelf").validate({
-            errorClass     : "help-block",
-            errorPlacement : function (error, element) {
-                if (element.parent().hasClass("input-group")) {
-                    error.insertAfter(element.parent());
-                } else {
-                    error.insertAfter(element);
-                }
-                element.parents(".grupo").addClass('has-error');
-            },
-
-            success : function (label) {
-                label.parents(".grupo").removeClass('has-error');
-            }
-        });
-        var validatorPass = $frmPass.validate({
-            errorClass     : "help-block",
-            errorPlacement : function (error, element) {
-                if (element.parent().hasClass("input-group")) {
-                    error.insertAfter(element.parent());
-                } else {
-                    error.insertAfter(element);
-                }
-                element.parents(".grupo").addClass('has-error');
-            },
-            rules          : {
-                password_actual : {
-                    remote : {
-                        url  : "${createLink(action:'validarPass_ajax')}",
-                        type : "post"
-                    }
-                }
-            },
-            messages       : {
-                password_actual : {
-                    remote : "El password actual no coincide"
-                }
-            },
-            success        : function (label) {
-                label.parents(".grupo").removeClass('has-error');
-            }
-        });
-        $btnPass.click(function () {
-            submitPass();
-        });
-        $("#btnTelf").click(function () {
-            var url = $(".frmTelf").attr("action");
-            var data = $(".frmTelf").serialize();
-            if ($(".frmTelf").valid()) {
-                $("#btnTelf").hide().after(spinner);
-                $.ajax({
-                    type    : "POST",
-                    url     : url,
-                    data    : data,
-                    success : function (msg) {
-                        var parts = msg.split("_");
+            element.parents(".grupo").addClass('has-error');
+        },
+        success        : function (label) {
+            label.parents(".grupo").removeClass('has-error');
+        }
+    });
+    $btnAccesos.click(function () {
+        if ($frmAccesos.valid()) {
+            var url = $frmAccesos.attr("action");
+            var data = "usuario.id=${usuario.id}";
+            data += "&" + $frmAccesos.serialize();
+            $btnAccesos.hide().after(spinner);
+            $.ajax({
+                type    : "POST",
+                url     : url,
+                data    : data,
+                success : function (msg) {
+                    var parts = msg.split("_");
+                    if (parts.length === 3) {
+                        log(parts[1] + ". Usted será desconectado del sistema en 5 segundos", parts[0] === "OK" ? "success" : "error");
+                        spinner.remove();
+                        $("#btnAccesos-svt").show();
+                        $frmAccesos.find("input, textarea").val("");
+                        // $("#accsFechaInicial").val("date.struct");
+                        $("#datetimepicker1").val();
+                        // $("#accsFechaFinal").val("date.struct");
+                        $("#datetimepicker2").val();
+                        loadAccesos();
+                        setInterval(function () {
+                            location.href = "${g.createLink(controller: 'login',action: 'logout')}"
+                        }, 5000);
+                    } else {
                         log(parts[1], parts[0] === "OK" ? "success" : "error");
                         spinner.remove();
-                        $("#btnTelf").show();
-                        validatorTelf.resetForm();
+                        $("#btnAccesos-svt").show();
+                        $frmAccesos.find("input, textarea").val("");
+                        $("#datetimepicker1").val();
+                        $("#datetimepicker2").val();
+                        loadAccesos();
                     }
-                });
-            }
-        });
-
-        $frmAccesos.validate({
-            errorClass     : "help-block",
-            errorPlacement : function (error, element) {
-                if (element.parent().hasClass("input-group")) {
-                    error.insertAfter(element.parent());
-                } else {
-                    error.insertAfter(element);
                 }
-                element.parents(".grupo").addClass('has-error');
-            },
-            success        : function (label) {
-                label.parents(".grupo").removeClass('has-error');
-            }
-        });
-        $btnAccesos.click(function () {
-            if ($frmAccesos.valid()) {
+            });
+        }
+        return false;
+    });
+
+    $("#btnAccesos-svt").click(function () {
+        if ($frmAccesos.valid()) {
+            if ($("#nuevo-triangulo").val() !== "" && !isNaN($("#nuevo-triangulo").val())) {
                 var url = $frmAccesos.attr("action");
                 var data = "usuario.id=${usuario.id}";
                 data += "&" + $frmAccesos.serialize();
-                $btnAccesos.hide().after(spinner);
+                $("#btnAccesos-svt").hide().after(spinner);
                 $.ajax({
                     type    : "POST",
                     url     : url,
                     data    : data,
                     success : function (msg) {
                         var parts = msg.split("_");
+
                         if (parts.length === 3) {
                             log(parts[1] + ". Usted será desconectado del sistema en 5 segundos", parts[0] === "OK" ? "success" : "error");
                             spinner.remove();
                             $("#btnAccesos-svt").show();
                             $frmAccesos.find("input, textarea").val("");
-                            // $("#accsFechaInicial").val("date.struct");
                             $("#datetimepicker1").val();
-                            // $("#accsFechaFinal").val("date.struct");
                             $("#datetimepicker2").val();
                             loadAccesos();
                             setInterval(function () {
@@ -592,52 +637,12 @@
                         }
                     }
                 });
+            } else {
+                bootbox.alert("Debe escoger un usuario para asignarle las funciones de recepcón, en caso de no haber usuarios activos comuniquese con el administrador del sistema.")
             }
-            return false;
-        });
-
-        $("#btnAccesos-svt").click(function () {
-            if ($frmAccesos.valid()) {
-                if ($("#nuevo-triangulo").val() !== "" && !isNaN($("#nuevo-triangulo").val())) {
-                    var url = $frmAccesos.attr("action");
-                    var data = "usuario.id=${usuario.id}";
-                    data += "&" + $frmAccesos.serialize();
-                    $("#btnAccesos-svt").hide().after(spinner);
-                    $.ajax({
-                        type    : "POST",
-                        url     : url,
-                        data    : data,
-                        success : function (msg) {
-                            var parts = msg.split("_");
-
-                            if (parts.length === 3) {
-                                log(parts[1] + ". Usted será desconectado del sistema en 5 segundos", parts[0] === "OK" ? "success" : "error");
-                                spinner.remove();
-                                $("#btnAccesos-svt").show();
-                                $frmAccesos.find("input, textarea").val("");
-                                $("#datetimepicker1").val();
-                                $("#datetimepicker2").val();
-                                loadAccesos();
-                                setInterval(function () {
-                                    location.href = "${g.createLink(controller: 'login',action: 'logout')}"
-                                }, 5000);
-                            } else {
-                                log(parts[1], parts[0] === "OK" ? "success" : "error");
-                                spinner.remove();
-                                $("#btnAccesos-svt").show();
-                                $frmAccesos.find("input, textarea").val("");
-                                $("#datetimepicker1").val();
-                                $("#datetimepicker2").val();
-                                loadAccesos();
-                            }
-                        }
-                    });
-                } else {
-                    bootbox.alert("Debe escoger un usuario para asignarle las funciones de recepcón, en caso de no haber usuarios activos comuniquese con el administrador del sistema.")
-                }
-            }
-            return false;
-        });
+        }
+        return false;
+    });
     // });
 </script>
 </body>
