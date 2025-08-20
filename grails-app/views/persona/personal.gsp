@@ -236,7 +236,6 @@
 
         <div id="collapseFirma" class="panel-collapse collapse">
             <div class="panel-body">
-                <g:form class="form-horizontal" name="frmFirma">
                     <div class="form-group required">
                         <span class="col-md-3">
                             <label for="password_actual" class="control-label text-info">
@@ -256,14 +255,14 @@
                         </div>
 
                         <span class="col-md-5">
-                            <g:uploadForm action="uploadArchivoFirma" method="post" name="frmUpload" enctype="multipart/form-data"  >
+                            <g:uploadForm action="uploadArchivoFirma" method="post" name="frmUpload" enctype="multipart/form-data">
                                 <g:hiddenField name="id" value="${usuario?.id}"/>
                                 <div class="fieldcontain required">
                                     <b>Cargar archivo:</b>
-                                    <input type="file" id="file" name="file" class="" multiple accept=".p12"/>
+                                    <input type="file" id="file" name="file" class="required" multiple accept=".p12"/>
 
                                     <div class="btn-group" style="margin-top: 20px;">
-                                        <a href="#" id="submit" class="btn btn-success">
+                                        <a href="#" id="submitArchivoFirma" class="btn btn-success">
                                             <i class="fa fa-save"></i> Guardar
                                         </a>
                                     </div>
@@ -271,10 +270,10 @@
                             </g:uploadForm>
 
                             <g:if test="${usuario?.pathFirma}">
-                                <div class="alert alert-info" style="margin-top: 10px">
-                                   <strong style="font-size: 14px"> Una certificado de firma electronica está cargado</strong>
+                                <div class="alert alert-success" style="margin-top: 10px">
+                                 <i class="fa fa-exclamation-triangle fa-2x"></i>  <strong style="font-size: 14px"> Una certificado de firma electronica está cargado.</strong>
                                 </div>
-                                <div class="btn-group" style="margin-top: 0px; margin-left: 52px">
+                                <div class="btn-group">
                                     <a href="#" class="btn btn-danger btnBorrarArchivoFirma">
                                         <i class="fa fa-trash"></i> Borrar
                                     </a>
@@ -286,10 +285,8 @@
                                     No existe ningún certificado cargado.
                                 </div>
                             </g:else>
-
                         </span>
                     </div>
-                </g:form>
             </div>
         </div>
     </div>
@@ -297,7 +294,53 @@
 
 <script type="text/javascript">
 
-    $("#submit").click(function () {
+    $(".btnBorrarArchivoFirma").click(function () {
+        var id = '${usuario?.id}';
+        borrarArchivo(id)
+    });
+
+    function borrarArchivo(id) {
+        bootbox.dialog({
+            title   : "<i class='fa fa-trash text-danger text-shadow'></i> Alerta",
+            message : "<strong style='font-size: 16px'> Está seguro que desea borrar este certificado de firma electrónica?" + "<br/>" + "Esta acción no se puede deshacer.</strong>",
+            buttons : {
+                cancelar : {
+                    label     : "Cancelar",
+                    className : "btn-primary",
+                    callback  : function () {
+                    }
+                },
+                eliminar : {
+                    label     : "<i class='fa fa-trash'></i> Eliminar",
+                    className : "btn-danger",
+                    callback  : function () {
+                        var v = cargarLoader("Eliminando...");
+                        $.ajax({
+                            type    : "POST",
+                            url     : '${createLink(controller: 'persona',  action:'borrarArchivoFirma_ajax')}',
+                            data    : {
+                                id : id
+                            },
+                            success : function (msg) {
+                                v.modal("hide");
+                                var parts = msg.split("_");
+                                if(parts[0] === 'ok'){
+                                    log(parts[1],"success");
+                                    setTimeout(function () {
+                                        location.reload();
+                                    }, 1000);
+                                }else{
+                                    log(parts[1],"error")
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        });
+    }
+
+    $("#submitArchivoFirma").click(function () {
         return submitFormFirma();
     });
 
@@ -373,19 +416,17 @@
         }
     });
 
-    $(function () {
+    // $(function () {
         $('#datetimepicker1, #datetimepicker2').datetimepicker({
             locale: 'es',
             format: 'DD-MM-YYYY',
             daysOfWeekDisabled: [0, 6],
-            // inline: true,
-            // sideBySide: true,
             showClose: true,
             icons: {
                 close: 'closeText'
             }
         });
-    });
+    // });
 
     function loadAccesos() {
         var $div = $("#divAccesos");
@@ -402,7 +443,7 @@
         });
     }
 
-    $(function () {
+    // $(function () {
         var $btnAccesos = $("#btnAccesos");
         var $frmAccesos = $("#frmAccesos");
         var $btnPass = $("#btnPass");
@@ -597,7 +638,7 @@
             }
             return false;
         });
-    });
+    // });
 </script>
 </body>
 </html>

@@ -130,86 +130,143 @@ class FirmapdfController {
         String dest = '/var/tramites/'
         String res1 = tramite?.id + '_firmado.pdf'
 //        char[] pass = "machin2501".toCharArray();
-        char[] pass = "GdoEdu8aMo".toCharArray();
+//        char[] pass = "GdoEdu8aMo".toCharArray();
 //        String certificado = '/var/tramites/certificado/FABRICIO.p12';
-        String certificado = '/var/tramites/certificado/Guido.p12';
+//        String certificado = '/var/tramites/certificado/Guido.p12';
 
-        File file = new File(src);
-        file.mkdirs();
 
-        BouncyCastleProvider provider = new BouncyCastleProvider();
-        Security.addProvider(provider);
-        KeyStore ks = KeyStore.getInstance("pkcs12", provider.getName());
+        char[] pass = usro.passwordFirma?.toCharArray();
+        String certificado = '/var/tramites/certificado/' + usro.pathFirma;
+
+        def archivoFirma = new File(certificado)
+        def existeArchivoFirma = archivoFirma.exists()
+
+        if(existeArchivoFirma){
+            if(pass){
+                File file = new File(src);
+                file.mkdirs();
+
+                BouncyCastleProvider provider = new BouncyCastleProvider();
+                Security.addProvider(provider);
+                KeyStore ks = KeyStore.getInstance("pkcs12", provider.getName());
 //        ks.load(new FileInputStream('/var/tramites/certificado/FABRICIO.p12'), pass);
-        ks.load(new FileInputStream('/var/tramites/certificado/Guido.p12'), pass);
+//        ks.load(new FileInputStream('/var/tramites/certificado/Guido.p12'), pass);
 
-        String alias = ks.aliases().nextElement();
-        PrivateKey pk = (PrivateKey) ks.getKey(alias, pass);
-        Certificate[] chain = ks.getCertificateChain(alias);
+
+                try {
+                    ks.load(new FileInputStream(certificado), pass)
+                    System.out.println("Keystore password is correct.");
+                }catch(e){
+                    System.out.println("Keystore password is incorrect.");
+                    render "no_La contraseña del certificado de firma electrónica es incorrecto"
+                    return
+                }
+
+                ks.load(new FileInputStream(certificado), pass);
+
+                String alias = ks.aliases().nextElement();
+                PrivateKey pk = (PrivateKey) ks.getKey(alias, pass);
+                Certificate[] chain = ks.getCertificateChain(alias);
 
 //        println "ks: $ks, lista: ${ks.aliases()}, alias: $alias, pk: $pk"
 //        println "ks:" + ks.getCertificate(alias)
 
-        Enumeration elist = ks.aliases();
-        int count = 0;
-        while (elist.hasMoreElements()) {
-            elist.nextElement();
-            count++;
-        }
+                Enumeration elist = ks.aliases();
+                int count = 0;
+                while (elist.hasMoreElements()) {
+                    elist.nextElement();
+                    count++;
+                }
 
-        String[] alist = new String[count];
-        elist = ks.aliases();
-        count = 0;
+                String[] alist = new String[count];
+                elist = ks.aliases();
+                count = 0;
 
-        while (elist.hasMoreElements()) {
-            alist[count] = new String(((String)elist.nextElement()).toString());
+                while (elist.hasMoreElements()) {
+                    alist[count] = new String(((String)elist.nextElement()).toString());
 
-            if( (PrivateKey) ks.getKey(alist[count], pass) ) {
-                pk = (PrivateKey) ks.getKey(alist[count], pass)
-                chain = ks.getCertificateChain(alist[count])
+                    if( (PrivateKey) ks.getKey(alist[count], pass) ) {
+                        pk = (PrivateKey) ks.getKey(alist[count], pass)
+                        chain = ks.getCertificateChain(alist[count])
+                    }
+                    count++;
+                }
+
+//                def tx_firma = "Firmado por ${usro} - Fecha: ${(new Date()).format('dd-MM-yyyy HH:mm:ss')}"
+                def tx_firma = "Documento ${tramite?.codigo} firmado electronicamente"
+                def location = "Firmado por el sistema Tramites"
+//        println "lista:" + alist + alist.size()
+//        println "nombre:" + alist[1]
+
+                Firma_java app = new Firma_java();
+                app.sign(src, dest + res1, chain, pk, DigestAlgorithms.SHA256, provider.getName(),
+                        PdfSigner.CryptoStandard.CMS, tx_firma, location, alist[2]);
+
+                render "ok_Documento firmado correctamente"
+            }else{
+                render "no_No existe la contraseña de la firma electrónica"
             }
-            count++;
+        }else{
+            render "no_No existe el certificado de la firma electrónica"
         }
 
-        def tx_firma = "Firmado por ${usro} - Fecha: ${(new Date()).format('dd-MM-yyyy HH:mm:ss')}"
-//        println "texto firma: $tx_firma"
-        println "lista:" + alist + alist.size()
-        println "nombre:" + alist[1]
 
-        Firma_java app = new Firma_java();
-        app.sign(src, dest + res1, chain, pk, DigestAlgorithms.SHA256, provider.getName(),
-                PdfSigner.CryptoStandard.CMS, tx_firma, "GADLR", alist[2]);
 
-        render "ok"
     }
 
     def verificarFirma_ajax(){
+        def usuario = Persona.get(session.usuario.id)
         def tramite = Tramite.get(params.id)
         String dest = '/var/tramites/' + tramite?.id + '_firmado.pdf'
 //        String pass = "machin2501"
-        String pass = "GdoEdu8aMo"
+//        String pass = "GdoEdu8aMo"
 //        String certificado = '/var/tramites/certificado/FABRICIO.p12';
-        String certificado = '/var/tramites/certificado/Guido.p12';
+//        String certificado = '/var/tramites/certificado/Guido.p12';
 
-        BouncyCastleProvider provider = new BouncyCastleProvider();
-        Security.addProvider(provider);
-        KeyStore ks = KeyStore.getInstance("pkcs12", provider.getName());
+        String certificado = '/var/tramites/certificado/' + usuario.pathFirma;
+        String pass = usuario.passwordFirma
+
+        def archivoFirma = new File(certificado)
+        def existeArchivoFirma = archivoFirma.exists()
+
+        if(existeArchivoFirma){
+            if(pass){
+                BouncyCastleProvider provider = new BouncyCastleProvider();
+                Security.addProvider(provider);
+                KeyStore ks = KeyStore.getInstance("pkcs12", provider.getName());
 //        ks.load(new FileInputStream('/var/tramites/certificado/FABRICIO.p12'), pass.toCharArray());
-        ks.load(new FileInputStream('/var/tramites/certificado/Guido.p12'), pass.toCharArray());
+//            ks.load(new FileInputStream('/var/tramites/certificado/Guido.p12'), pass.toCharArray());
 
-        def src = new File(dest)
-        def existe = src.exists()
+                try {
+                    ks.load(new FileInputStream(certificado), pass.toCharArray())
+                    System.out.println("Keystore password is correct.");
+                }catch(e){
+                    System.out.println("Keystore password is incorrect.");
+                    render "no_La contraseña del certificado de firma electrónica es incorrecto"
+                    return
+                }
 
-        if(existe){
-            Verifica_java verifica = new Verifica_java()
-            verifica.verificaFirma(dest.toString(),certificado.toString(),pass.toString());
+                ks.load(new FileInputStream(certificado), pass.toCharArray());
 
-            ExtraeFirma extraeFirma = new ExtraeFirma()
-            def respuesta = extraeFirma.leerFirma(dest)
+                def src = new File(dest)
+                def existe = src.exists()
 
-            render "ok_" +  respuesta[0] + "_" + respuesta[1].split("CN=").last()
+                if(existe){
+                    Verifica_java verifica = new Verifica_java()
+                    verifica.verificaFirma(dest.toString(),certificado.toString(),pass.toString());
+
+                    ExtraeFirma extraeFirma = new ExtraeFirma()
+                    def respuesta = extraeFirma.leerFirma(dest)
+
+                    render "ok_" +  respuesta[0] + "_" + respuesta[1].split("CN=").last()
+                }else{
+                    render"no_No existe un documento firmado"
+                }
+            }else{
+                render "no_No existe la contraseña de la firma electrónica"
+            }
         }else{
-            render"no"
+            render "no_No existe el certificado de la firma electrónica"
         }
     }
 

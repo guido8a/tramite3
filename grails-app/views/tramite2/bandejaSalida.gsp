@@ -627,19 +627,19 @@
                                                 persona: '${persona?.id}'
                                             },
                                             success: function (msg) {
-                                                if (msg === "ok") {
-                                                    bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-check-circle text-success' style='font-size: 20px'></i> Documento firmado correctamente </strong>")
+                                                var parts = msg.split("_");
+                                                if (parts[0] === "ok") {
+                                                    bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-check-circle text-success' style='font-size: 20px'></i>" + parts[1]  + "</strong>")
                                                 } else {
-                                                    bootbox.alert("Error al firmar el documento")
+                                                    bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-exclamation-triangle text-danger' style='font-size: 20px'></i>" + parts[1]  + "</strong>")
                                                 }
                                             }
                                         });
                                     } else {
-                                        bootbox.alert("Error al crear el documento")
+                                        bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-exclamation-triangle text-danger' style='font-size: 20px'></i>" + "Error al crear el documento"  + "</strong>")
                                     }
                                 }
                             });
-                            %{--location.href = "${createLink(controller:'tramiteExport',action:'crearYGuardarPdf')}?id=" + id + "&type=download" + "&enviar=1" + "&timestamp=" + timestamp}--}%
                         }
                         else{
                             bootbox.alert("El documento esta anulado, por favor refresque su bandeja de salida.")
@@ -664,7 +664,7 @@
                         if(parts[0] === 'ok'){
                             bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-check-circle text-success' style='font-size: 20px'></i>" + "<br/>" + "Firmado por: " + parts[2]  + "<br/>" + "Fecha firma:" +  parts[1]  +  " </strong>")
                         }else{
-                            bootbox.alert("No existe un documento firmado")
+                            bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-exclamation-triangle text-danger' style='font-size: 20px'></i>" + parts[1] + " </strong>")
                         }
                     }
                 });

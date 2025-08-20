@@ -1656,38 +1656,68 @@ class PersonaController {
 
     def uploadArchivoFirma() {
 
-        println("params archivo firma " + params)
-
         def acceptedExt = ["p12"]
         def usuario = Persona.get(params.id)
-
         def path = "/var/tramites/certificado/"
         new File(path).mkdirs()
 
-        def f = request.getFile('file')  //archivo = name del input type file
+        if(usuario.cedula){
 
-        if (f && !f.empty) {
-            def fileName = f.getOriginalFilename() //nombre original del archivo
-            def ext
-            def parts = fileName.split("\\.")
-            fileName = ""
-            parts.eachWithIndex { obj, i ->
-                if (i < parts.size() - 1) {
-                    fileName += obj
-                } else {
-                    ext = obj
+            def f = request.getFile('file')  //archivo = name del input type file
+
+            if (f && !f.empty) {
+                def fileName = f.getOriginalFilename() //nombre original del archivo
+                def ext
+                def parts = fileName.split("\\.")
+                fileName = ""
+                parts.eachWithIndex { obj, i ->
+                    if (i < parts.size() - 1) {
+                        fileName += obj
+                    } else {
+                        ext = obj
+                    }
                 }
+                if (acceptedExt.contains(ext.toLowerCase())) {
+                    fileName = usuario.cedula +  "." + ext.toLowerCase()
+                    def pathFile = path + fileName
+                    def file = new File(pathFile)
+
+                    f.transferTo(file)
+
+                    def old = usuario?.pathFirma
+                    if (old && old.trim() != "") {
+                        def oldPath = "/var/tramites/certificado/" + old
+                        def oldFile = new File(oldPath)
+                        if (oldFile.exists()) {
+                            oldFile.delete()
+                        }
+                    }
+
+                    usuario?.pathFirma = fileName
+                    usuario.save(flush: true)
+
+                } else {
+                    render "no_Seleccione un archivo de tipo P12"
+                    return
+                }
+            } else {
+                render "no_Seleccione un archivo"
+                return
             }
-            if (acceptedExt.contains(ext.toLowerCase())) {
-//                fileName = fileName + "." + ext.toLowerCase()
-                fileName = usuario.cedula +  "." + ext.toLowerCase()
-                def pathFile = path + fileName
-                def file = new File(pathFile)
-                println "subiendo archivo: $fileName"
 
-                f.transferTo(file)
+            render "ok_Subido correctamente"
+        }else{
+            render "no_El usuario no tiene cédula, para subir el certificado de firma electrónica primero ingrese su cédula"
+        }
+    }
 
-                def old = usuario?.pathFirma
+    def borrarArchivoFirma_ajax(){
+
+       def usuario = Persona.get(params.id)
+
+        if(usuario){
+            if(usuario?.pathFirma){
+                def old = usuario.pathFirma
                 if (old && old.trim() != "") {
                     def oldPath = "/var/tramites/certificado/" + old
                     def oldFile = new File(oldPath)
@@ -1695,21 +1725,26 @@ class PersonaController {
                         oldFile.delete()
                     }
                 }
-
-                usuario?.pathFirma = fileName
-                usuario.save(flush: true)
-
-            } else {
-                render "no_Seleccione un archivo de tipo P12"
-                return
+                borrarRegistroFirma(usuario?.id)
+            }else{
+                borrarRegistroFirma(usuario?.id)
             }
-        } else {
-            render "no_Seleccione un archivo de tipo P12"
-            return
+        }else{
+            render "no_Error al borrar el documento"
         }
-
-        render "ok_Subido correctamente"
     }
 
+    def borrarRegistroFirma(id){
+        def usuario = Persona.get(id)
+
+        usuario.pathFirma = null;
+
+        if(!usuario.save(flush:true)){
+            println("error al borrar " + usuario.errors)
+            render "no_Error al borrar"
+        }else{
+            render "ok_Borrado correctamente"
+        }
+    }
 
 }
