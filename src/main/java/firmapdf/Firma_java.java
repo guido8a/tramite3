@@ -81,6 +81,7 @@ public class Firma_java {
         appearance2.setPageNumber(num_pags);
         appearance2.setReason(reason);
         appearance2.setLocation(location);
+        appearance2.setLayer2FontSize(8);
 //        appearance2.setLayer2Text(nombreFirma);
 //        appearance2.setRenderingMode(PdfSignatureAppearance.RenderingMode.NAME_AND_DESCRIPTION);
         appearance2.setRenderingMode(PdfSignatureAppearance.RenderingMode.DESCRIPTION);

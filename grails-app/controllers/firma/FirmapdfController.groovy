@@ -142,78 +142,82 @@ class FirmapdfController {
         def archivoFirma = new File(certificado)
         def existeArchivoFirma = archivoFirma.exists()
 
-        if(existeArchivoFirma){
-            if(pass){
-                File file = new File(src);
-                file.mkdirs();
+        def archivoFirmado = dest + res1
+        File fileFirmado = new File(archivoFirmado);
 
-                BouncyCastleProvider provider = new BouncyCastleProvider();
-                Security.addProvider(provider);
-                KeyStore ks = KeyStore.getInstance("pkcs12", provider.getName());
+        if(fileFirmado.exists()){
+            render "no_El documento ya se encuentra firmado"
+        }else{
+            if(existeArchivoFirma){
+                if(pass){
+                    File file = new File(src);
+                    file.mkdirs();
+
+                    BouncyCastleProvider provider = new BouncyCastleProvider();
+                    Security.addProvider(provider);
+                    KeyStore ks = KeyStore.getInstance("pkcs12", provider.getName());
 //        ks.load(new FileInputStream('/var/tramites/certificado/FABRICIO.p12'), pass);
 //        ks.load(new FileInputStream('/var/tramites/certificado/Guido.p12'), pass);
 
 
-                try {
-                    ks.load(new FileInputStream(certificado), pass)
-                    System.out.println("Keystore password is correct.");
-                }catch(e){
-                    System.out.println("Keystore password is incorrect.");
-                    render "no_La contraseña del certificado de firma electrónica es incorrecto"
-                    return
-                }
+                    try {
+                        ks.load(new FileInputStream(certificado), pass)
+                        System.out.println("Keystore password is correct.");
+                    }catch(e){
+                        System.out.println("Keystore password is incorrect.");
+                        render "no_La contraseña del certificado de firma electrónica es incorrecto"
+                        return
+                    }
 
-                ks.load(new FileInputStream(certificado), pass);
+                    ks.load(new FileInputStream(certificado), pass);
 
-                String alias = ks.aliases().nextElement();
-                PrivateKey pk = (PrivateKey) ks.getKey(alias, pass);
-                Certificate[] chain = ks.getCertificateChain(alias);
+                    String alias = ks.aliases().nextElement();
+                    PrivateKey pk = (PrivateKey) ks.getKey(alias, pass);
+                    Certificate[] chain = ks.getCertificateChain(alias);
 
 //        println "ks: $ks, lista: ${ks.aliases()}, alias: $alias, pk: $pk"
 //        println "ks:" + ks.getCertificate(alias)
 
-                Enumeration elist = ks.aliases();
-                int count = 0;
-                while (elist.hasMoreElements()) {
-                    elist.nextElement();
-                    count++;
-                }
-
-                String[] alist = new String[count];
-                elist = ks.aliases();
-                count = 0;
-
-                while (elist.hasMoreElements()) {
-                    alist[count] = new String(((String)elist.nextElement()).toString());
-
-                    if( (PrivateKey) ks.getKey(alist[count], pass) ) {
-                        pk = (PrivateKey) ks.getKey(alist[count], pass)
-                        chain = ks.getCertificateChain(alist[count])
+                    Enumeration elist = ks.aliases();
+                    int count = 0;
+                    while (elist.hasMoreElements()) {
+                        elist.nextElement();
+                        count++;
                     }
-                    count++;
-                }
+
+                    String[] alist = new String[count];
+                    elist = ks.aliases();
+                    count = 0;
+
+                    while (elist.hasMoreElements()) {
+                        alist[count] = new String(((String)elist.nextElement()).toString());
+
+                        if( (PrivateKey) ks.getKey(alist[count], pass) ) {
+                            pk = (PrivateKey) ks.getKey(alist[count], pass)
+                            chain = ks.getCertificateChain(alist[count])
+                        }
+                        count++;
+                    }
 
 //                def tx_firma = "Firmado por ${usro} - Fecha: ${(new Date()).format('dd-MM-yyyy HH:mm:ss')}"
-                def tx_firma = "Documento ${tramite?.codigo} firmado electronicamente"
-                def location = "Firmado por el sistema Tramites"
+                    def tx_firma = "Documento ${tramite?.codigo} firmado electrónicamente"
+                    def location = "Quito, Ecuador"
 //        println "lista:" + alist + alist.size()
 //        println "nombre:" + alist[1]
 
-                Firma_java app = new Firma_java();
-                app.sign(src, dest + res1, chain, pk, DigestAlgorithms.SHA256, provider.getName(),
-                        PdfSigner.CryptoStandard.CMS, tx_firma, location, alist[2]);
+                    Firma_java app = new Firma_java();
+                    app.sign(src, dest + res1, chain, pk, DigestAlgorithms.SHA256, provider.getName(),
+                            PdfSigner.CryptoStandard.CMS, tx_firma, location, alist[2]);
 
-                render "ok_Documento firmado correctamente"
+                    render "ok_Documento firmado correctamente"
+                }else{
+                    render "no_No existe la contraseña de la firma electrónica"
+                }
             }else{
-                render "no_No existe la contraseña de la firma electrónica"
+                render "no_No existe el certificado de la firma electrónica"
             }
-        }else{
-            render "no_No existe el certificado de la firma electrónica"
         }
-
-
-
-    }
+      }
 
     def verificarFirma_ajax(){
         def usuario = Persona.get(session.usuario.id)
