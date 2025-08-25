@@ -73,7 +73,8 @@ public class Firma_java {
         Rectangle rect = new Rectangle(100, 100, 400, 100);
 
         signer.setFieldName("firma");
-        rect = new Rectangle(100, 92, 400, 100);  /* mover para no sobreponer el rect */
+//        rect = new Rectangle(100, 92, 400, 100);  /* mover para no sobreponer el rect */
+        rect = new Rectangle(100, 20, 400, 100);  /* mover para no sobreponer el rect */
 
         PdfSigner signer2 = new PdfSigner(reader3, new FileOutputStream(dest), new StampingProperties());
         PdfSignatureAppearance appearance2 = signer2.getSignatureAppearance();
