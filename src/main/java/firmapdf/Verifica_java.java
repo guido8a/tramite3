@@ -19,7 +19,10 @@ import com.itextpdf.signatures.PdfSigner;
 import com.itextpdf.signatures.PdfSignatureAppearance;
 import com.itextpdf.signatures.PdfSigner;
 import com.itextpdf.signatures.SignatureUtil;
-import com.itextpdf.signatures.PdfPKCS7;
+import com.itextpdf.text.pdf.AcroFields;
+import com.itextpdf.text.pdf.security.CertificateInfo;
+import com.itextpdf.text.pdf.security.CertificateUtil;
+import com.itextpdf.text.pdf.security.PdfPKCS7;
 //import com.itextpdf.signatures.SignatureVerificationException;
 //import com.itextpdf.signatures.SignatureExistException;
 
@@ -27,13 +30,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.KeyStore;
 import java.security.PrivateKey;
+import java.security.SignatureException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class Verifica_java {
     public void verifica() {
@@ -117,8 +119,6 @@ public class Verifica_java {
 
 
 
-
-
             // Verificar las firmas
             SignatureUtil signatureUtil = new SignatureUtil( new PdfDocument(pdfReader) );
             Set<String> names = new HashSet<>( signatureUtil.getSignatureNames() );
@@ -138,6 +138,7 @@ public class Verifica_java {
             e.printStackTrace();
         }
     }
+
 }
 
 
