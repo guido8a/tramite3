@@ -217,65 +217,58 @@ class FirmapdfController {
                 render "no_No existe el certificado de la firma electrónica"
             }
         }
-      }
-
-    def verificarFirma_ajax(){
-        def usuario = Persona.get(session.usuario.id)
-        def tramite = Tramite.get(params.id)
-        String dest = '/var/tramites/' + tramite?.id + '_firmado.pdf'
-//        String pass = "machin2501"
-//        String pass = "GdoEdu8aMo"
-//        String certificado = '/var/tramites/certificado/FABRICIO.p12';
-//        String certificado = '/var/tramites/certificado/Guido.p12';
-
-        String certificado = '/var/tramites/certificado/' + usuario.pathFirma;
-//        String pass = usuario.passwordFirma
-        String pass = params.password
-
-        def archivoFirma = new File(certificado)
-        def existeArchivoFirma = archivoFirma.exists()
-
-        if(existeArchivoFirma){
-            if(pass){
-                BouncyCastleProvider provider = new BouncyCastleProvider();
-                Security.addProvider(provider);
-                KeyStore ks = KeyStore.getInstance("pkcs12", provider.getName());
-
-                try {
-                    ks.load(new FileInputStream(certificado), pass.toCharArray())
-                    System.out.println("Keystore password is correct.");
-                }catch(e){
-                    System.out.println("Keystore password is incorrect.");
-                    render "no_La contraseña del certificado de firma electrónica es incorrecto"
-                    return
-                }
-
-                ks.load(new FileInputStream(certificado), pass.toCharArray());
-
-                def src = new File(dest)
-                def existe = src.exists()
-
-                if(existe){
-                    Verifica_java verifica = new Verifica_java()
-                    verifica.verificaFirma(dest.toString(),certificado.toString(),pass.toString());
-
-                    ExtraeFirma extraeFirma = new ExtraeFirma()
-                    def respuesta = extraeFirma.leerFirma(dest)
-
-                    println("---> " + respuesta)
-
-
-                    render "ok_" +  respuesta[0] + "_" + respuesta[1].split("CN=").last()
-                }else{
-                    render"no_No existe un documento firmado"
-                }
-            }else{
-                render "no_No existe la contraseña de la firma electrónica"
-            }
-        }else{
-            render "no_No existe el certificado de la firma electrónica"
-        }
     }
+
+//    def verificarFirma_ajax(){
+//        def usuario = Persona.get(session.usuario.id)
+//        def tramite = Tramite.get(params.id)
+//        String dest = '/var/tramites/' + tramite?.id + '_firmado.pdf'
+//
+//        String certificado = '/var/tramites/certificado/' + usuario.pathFirma;
+//        String pass = params.password
+//
+//        def archivoFirma = new File(certificado)
+//        def existeArchivoFirma = archivoFirma.exists()
+//
+//        if(existeArchivoFirma){
+//            if(pass){
+//                BouncyCastleProvider provider = new BouncyCastleProvider();
+//                Security.addProvider(provider);
+//                KeyStore ks = KeyStore.getInstance("pkcs12", provider.getName());
+//
+//                try {
+//                    ks.load(new FileInputStream(certificado), pass.toCharArray())
+//                    System.out.println("Keystore password is correct.");
+//                }catch(e){
+//                    System.out.println("Keystore password is incorrect.");
+//                    render "no_La contraseña del certificado de firma electrónica es incorrecto"
+//                    return
+//                }
+//
+//                ks.load(new FileInputStream(certificado), pass.toCharArray());
+//
+//                def src = new File(dest)
+//                def existe = src.exists()
+//
+//                if(existe){
+//                    Verifica_java verifica = new Verifica_java()
+//                    verifica.verificaFirma(dest.toString(),certificado.toString(),pass.toString());
+//
+//                    ExtraeFirma extraeFirma = new ExtraeFirma()
+//                    def respuesta = extraeFirma.leerFirma(dest)
+//
+//
+//                    render "ok_" +  respuesta[0] + "_" + respuesta[1].split("CN=").last()
+//                }else{
+//                    render"no_No existe un documento firmado"
+//                }
+//            }else{
+//                render "no_No existe la contraseña de la firma electrónica"
+//            }
+//        }else{
+//            render "no_No existe el certificado de la firma electrónica"
+//        }
+//    }
 
 
     def verificarArchi_ajax(){
@@ -307,59 +300,26 @@ class FirmapdfController {
         }
     }
 
-
-
     def verificarFirma2_ajax(){
-//        def usuario = Persona.get(session.usuario.id)
         def tramite = Tramite.get(params.id)
         String dest = '/var/tramites/' + tramite?.id + '_firmado.pdf'
 
-//        String certificado = '/var/tramites/certificado/' + usuario.pathFirma;
-//        String pass = params.password
+        BouncyCastleProvider provider = new BouncyCastleProvider();
+        Security.addProvider(provider);
+        KeyStore ks = KeyStore.getInstance("pkcs12", provider.getName());
 
-//        def archivoFirma = new File(certificado)
-//        def existeArchivoFirma = archivoFirma.exists()
+        def src = new File(dest)
+        def existe = src.exists()
 
-//        if(existeArchivoFirma){
-//            if(pass){
-                BouncyCastleProvider provider = new BouncyCastleProvider();
-                Security.addProvider(provider);
-                KeyStore ks = KeyStore.getInstance("pkcs12", provider.getName());
-//
-//                try {
-//                    ks.load(new FileInputStream(certificado), pass.toCharArray())
-//                    System.out.println("Keystore password is correct.");
-//                }catch(e){
-//                    System.out.println("Keystore password is incorrect.");
-//                    render "no_La contraseña del certificado de firma electrónica es incorrecto"
-//                    return
-//                }
-//
-//                ks.load(new FileInputStream(certificado), pass.toCharArray());
+        if(existe){
 
-                def src = new File(dest)
-                def existe = src.exists()
+            ExtraeFirma extraeFirma = new ExtraeFirma()
+            def respuesta = extraeFirma.leerFirma(dest)
 
-                if(existe){
-//                    Verifica_java verifica = new Verifica_java()
-//                    verifica.verificaFirma(dest.toString(),certificado.toString(),pass.toString());
-
-                    ExtraeFirma extraeFirma = new ExtraeFirma()
-                    def respuesta = extraeFirma.leerFirma(dest)
-
-                    println("---> " + respuesta)
-
-
-                    render "ok_" +  respuesta[0] + "_" + respuesta[1].split("CN=").last()
-                }else{
-                    render"no_No existe un documento firmado"
-                }
-//            }else{
-//                render "no_No existe la contraseña de la firma electrónica"
-//            }
-//        }else{
-//            render "no_No existe el certificado de la firma electrónica"
-//        }
+            render "ok_" +  respuesta[0] + "_" + respuesta[1].split("CN=").last()
+        }else{
+            render"no_No existe un documento firmado"
+        }
     }
 
 
