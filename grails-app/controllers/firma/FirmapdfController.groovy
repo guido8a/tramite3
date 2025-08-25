@@ -322,9 +322,9 @@ class FirmapdfController {
 
 //        if(existeArchivoFirma){
 //            if(pass){
-//                BouncyCastleProvider provider = new BouncyCastleProvider();
-//                Security.addProvider(provider);
-//                KeyStore ks = KeyStore.getInstance("pkcs12", provider.getName());
+                BouncyCastleProvider provider = new BouncyCastleProvider();
+                Security.addProvider(provider);
+                KeyStore ks = KeyStore.getInstance("pkcs12", provider.getName());
 //
 //                try {
 //                    ks.load(new FileInputStream(certificado), pass.toCharArray())
