@@ -84,8 +84,8 @@ public class Firma_java {
         appearance2.setLocation(location);
         appearance2.setLayer2FontSize(8);
 //        appearance2.setLayer2Text(nombreFirma);
-//        appearance2.setRenderingMode(PdfSignatureAppearance.RenderingMode.NAME_AND_DESCRIPTION);
-        appearance2.setRenderingMode(PdfSignatureAppearance.RenderingMode.DESCRIPTION);
+        appearance2.setRenderingMode(PdfSignatureAppearance.RenderingMode.NAME_AND_DESCRIPTION);
+//        appearance2.setRenderingMode(PdfSignatureAppearance.RenderingMode.DESCRIPTION);
 
         IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm, provider);
         IExternalDigest digest = new BouncyCastleDigest();
