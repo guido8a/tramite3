@@ -1,5 +1,7 @@
 package firmapdf;
 
+import com.itextpdf.io.image.ImageData;
+import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.events.Event;
 import com.itextpdf.kernel.events.IEventHandler;
 import com.itextpdf.kernel.events.PdfDocumentEvent;
@@ -7,6 +9,7 @@ import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.*;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Image;
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.security.ExternalDigest;
@@ -40,6 +43,20 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import com.itextpdf.forms.PdfAcroForm;
 import com.itextpdf.forms.fields.PdfFormField;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class Firma_java {
 
@@ -58,7 +75,7 @@ public class Firma_java {
 //    };
 
     public void sign(String src, String dest, Certificate[] chain, PrivateKey pk, String digestAlgorithm,
-                     String provider, PdfSigner.CryptoStandard signatureType, String reason, String location, String nombreFirma)
+                     String provider, PdfSigner.CryptoStandard signatureType, String reason, String location, String nombreFirma, int idTramite)
             throws GeneralSecurityException, IOException, DocumentException  {
         PdfReader reader = new PdfReader(src);
         PdfReader reader2 = new PdfReader(src);
@@ -67,9 +84,7 @@ public class Firma_java {
         int num_pags = doc.getNumberOfPages();
 
         StampingProperties stampingProperties = new StampingProperties();
-
         PdfSigner signer = new PdfSigner(reader2, new FileOutputStream(dest), new StampingProperties());
-
         Rectangle rect = new Rectangle(100, 100, 400, 100);
 
         signer.setFieldName("firma");
@@ -85,14 +100,20 @@ public class Firma_java {
         appearance2.setLayer2FontSize(8);
 //        appearance2.setLayer2Text(nombreFirma);
 //        appearance2.setRenderingMode(PdfSignatureAppearance.RenderingMode.NAME_AND_DESCRIPTION);
-        appearance2.setRenderingMode(PdfSignatureAppearance.RenderingMode.DESCRIPTION);
+//        appearance2.setRenderingMode(PdfSignatureAppearance.RenderingMode.DESCRIPTION);
+
+        String imFile = "/var/tramites/images/" + idTramite + ".png";
+        ImageData data = ImageDataFactory.create(imFile);
+
+        appearance2.setSignatureGraphic(data);
+        appearance2.setRenderingMode(PdfSignatureAppearance.RenderingMode.GRAPHIC_AND_DESCRIPTION);
 
         IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm, provider);
         IExternalDigest digest = new BouncyCastleDigest();
 
         stampingProperties.useAppendMode();
 
-        System.out.println("digest:" + digest + " pks: " + pks + " chain:" + chain + "Pdf: " + PdfSigner.CryptoStandard.CMS);
+//        System.out.println("digest:" + digest + " pks: " + pks + " chain:" + chain + "Pdf: " + PdfSigner.CryptoStandard.CMS);
         signer2.signDetached(digest, pks, chain, null, null, null, 8096, PdfSigner.CryptoStandard.CMS);
 
 
@@ -124,5 +145,35 @@ public class Firma_java {
 //    }
 
 
+
+        public static void generateQRCode(String data, String filePath, int width, int height)
+                throws WriterException, IOException {
+
+            Map<EncodeHintType, Object> hints = new HashMap<>();
+            hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+            hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H); // High error correction
+            hints.put(EncodeHintType.MARGIN, 4); // White border around the QR code
+
+            BitMatrix bitMatrix = new MultiFormatWriter().encode(
+                    data, BarcodeFormat.QR_CODE, width, height, hints);
+
+            Path path = Paths.get(filePath);
+            MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
+            System.out.println("QR Code generated successfully at: " + filePath);
+        }
+
+        public void generarCodigoQR(String nombre, String fecha, String razon, String lugar, int idTramite) {
+//            String data = "https://www.example.com"; // Data to encode in the QR code
+            String data = (nombre + '\n' + " Fecha:" + fecha + '\n' + "Razon:" + razon + '\n' + "Lugar:" + lugar); // Data to encode in the QR code
+            String filePath = "/var/tramites/images/" + idTramite  + ".png"; // Output file path
+            int width = 300; // Width of the QR code image
+            int height = 300; // Height of the QR code image
+
+            try {
+                generateQRCode(data, filePath, width, height);
+            } catch (WriterException | IOException e) {
+                e.printStackTrace();
+            }
+        }
 
 }

@@ -72,6 +72,8 @@ dependencies {
     compile files('PDFOne.jar')
 //    compile "org.grails.plugins:rendering:1.0.0"
     compile 'org.grails.plugins:quartz:2.0.13'
+    implementation("com.google.zxing:core:3.3.3")
+    implementation("com.google.zxing:javase:3.3.3")
 }
 
 bootRun {

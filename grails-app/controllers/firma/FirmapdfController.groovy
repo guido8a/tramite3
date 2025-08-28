@@ -104,8 +104,6 @@ class FirmapdfController {
         render "Firmado Ok"
     }
 
-
-
     def verifica() {
         Verifica_java app = new Verifica_java()
         app.verifica()
@@ -126,16 +124,10 @@ class FirmapdfController {
 
         def usro = Persona.get(params.persona)
         def tramite = Tramite.get(params.id)
+        def fecha = new Date().format('dd-MM-yyyy HH:mm')
         String src = '/var/tramites/' + tramite?.id + ".pdf"
         String dest = '/var/tramites/'
         String res1 = tramite?.id + '_firmado.pdf'
-//        char[] pass = "machin2501".toCharArray();
-//        char[] pass = "GdoEdu8aMo".toCharArray();
-//        String certificado = '/var/tramites/certificado/FABRICIO.p12';
-//        String certificado = '/var/tramites/certificado/Guido.p12';
-
-
-//        char[] pass = usro.passwordFirma?.toCharArray();
         char[] pass = params.password?.toCharArray();
         String certificado = '/var/tramites/certificado/' + usro.pathFirma;
 
@@ -156,9 +148,6 @@ class FirmapdfController {
                     BouncyCastleProvider provider = new BouncyCastleProvider();
                     Security.addProvider(provider);
                     KeyStore ks = KeyStore.getInstance("pkcs12", provider.getName());
-//        ks.load(new FileInputStream('/var/tramites/certificado/FABRICIO.p12'), pass);
-//        ks.load(new FileInputStream('/var/tramites/certificado/Guido.p12'), pass);
-
 
                     try {
                         ks.load(new FileInputStream(certificado), pass)
@@ -202,12 +191,14 @@ class FirmapdfController {
 //                def tx_firma = "Firmado por ${usro} - Fecha: ${(new Date()).format('dd-MM-yyyy HH:mm:ss')}"
                     def tx_firma = "Documento ${tramite?.codigo} firmado electrónicamente"
                     def location = "Quito, Ecuador"
-//        println "lista:" + alist + alist.size()
-//        println "nombre:" + alist[1]
+//                    println "lista:" + alist + alist.size()
+//                    println "nombre:" + alist[1]
 
                     Firma_java app = new Firma_java();
+                    app.generarCodigoQR(alist[1]?.toString(), fecha?.toString(), tx_firma?.toString(), location?.toString(), tramite?.id?.toInteger())
+
                     app.sign(src, dest + res1, chain, pk, DigestAlgorithms.SHA256, provider.getName(),
-                            PdfSigner.CryptoStandard.CMS, tx_firma, location, alist[2]);
+                            PdfSigner.CryptoStandard.CMS, tx_firma, location, alist[1], tramite?.id?.toInteger());
 
                     render "ok_Documento firmado correctamente"
                 }else{
