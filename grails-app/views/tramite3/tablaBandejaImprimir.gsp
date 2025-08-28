@@ -1,4 +1,4 @@
-<%@ page import="tramites.DocumentoTramite" %>
+<%@ page import="tramites.Tramite; seguridad.Persona; tramites.RolPersonaTramite; tramites.DocumentoTramite" %>
 
 %{--<script type="text/javascript" src="${resource(dir: 'js/plugins/lzm.context/js', file: 'lzm.context-0.5.js')}"></script>--}%
 %{--<link href="${resource(dir: 'js/plugins/lzm.context/css', file: 'lzm.context-0.5.css')}" rel="stylesheet">--}%
@@ -28,9 +28,10 @@
             <g:set var="copias" value="${tramite.getCopias()}"/>
 
             <g:set var="esImprimir" value="${false}"/>
-            <g:if test="${(tramites.PersonaDocumentoTramite.findAllByPersonaAndTramite(session.usuario, tramite).findAll {
-                it.rolPersonaTramite.codigo == 'I005'
-            }).size() > 0}">
+            <g:set var="pdt" value="${tramites.PersonaDocumentoTramite.findAllByPersonaAndTramiteAndRolPersonaTramite(Persona.get(session.usuario.id),Tramite.get(tramite?.id),tramites.RolPersonaTramite.findByCodigo('I005'))}"/>
+
+%{--            <g:if test="${(tramites.PersonaDocumentoTramite.findAllByPersonaAndTramite(session.usuario, tramite).findAll {it.rolPersonaTramite.codigo == 'I005'}).size() > 0}">--}%
+            <g:if test="${pdt}">
                 <g:set var="esImprimir" value="${true}"/>
             </g:if>
 

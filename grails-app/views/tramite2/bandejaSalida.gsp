@@ -626,7 +626,7 @@
                                             },
                                             success: function (msg2){
                                                 if(msg2 === 'ok'){
-                                                    bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-exclamation-triangle text-danger' style='font-size: 20px'></i>" + "El documento ya fue firmado con anterioridad"  + "</strong>")
+                                                    bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-exclamation-triangle text-danger' style='font-size: 20px'></i>" + "     El documento ya fue firmado con anterioridad"  + "</strong>")
                                                 }else{
                                                     $.ajax({
                                                         type:'POST',

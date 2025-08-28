@@ -89,7 +89,7 @@ public class Firma_java {
 
         signer.setFieldName("firma");
 //        rect = new Rectangle(100, 92, 400, 100);  /* mover para no sobreponer el rect */
-        rect = new Rectangle(100, 40, 400, 100);  /* mover para no sobreponer el rect */
+        rect = new Rectangle(20, 30, 300, 60);  /* mover para no sobreponer el rect */
 
         PdfSigner signer2 = new PdfSigner(reader3, new FileOutputStream(dest), new StampingProperties());
         PdfSignatureAppearance appearance2 = signer2.getSignatureAppearance();
@@ -166,8 +166,8 @@ public class Firma_java {
 //            String data = "https://www.example.com"; // Data to encode in the QR code
             String data = (nombre + '\n' + " Fecha:" + fecha + '\n' + "Razon:" + razon + '\n' + "Lugar:" + lugar); // Data to encode in the QR code
             String filePath = "/var/tramites/images/" + idTramite  + ".png"; // Output file path
-            int width = 200; // Width of the QR code image
-            int height = 200; // Height of the QR code image
+            int width = 150; // Width of the QR code image
+            int height = 150; // Height of the QR code image
 
             try {
                 generateQRCode(data, filePath, width, height);

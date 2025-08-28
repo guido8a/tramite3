@@ -1569,10 +1569,18 @@ class Tramite3Controller{
         def persona = Persona.get(session.usuario.id)
         def tramites = []
 
-        def t = PersonaDocumentoTramite.findAllByPersonaAndRolPersonaTramite(persona, rolImprimir).tramite
+//        def t = PersonaDocumentoTramite.findAllByPersonaAndRolPersonaTramite(persona, rolImprimir).tramite
+        def t = PersonaDocumentoTramite.findAllByPersonaAndRolPersonaTramite(persona, rolImprimir)
+
         if (t.size() > 0) {
-            tramites += t
+//            tramites += t
+
+            t.each {
+                tramites += it.tramite
+            }
+
         }
+
         tramites?.sort { it.fechaCreacion }
         tramites = tramites?.reverse()
 
