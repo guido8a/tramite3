@@ -191,11 +191,11 @@ class FirmapdfController {
 //                def tx_firma = "Firmado por ${usro} - Fecha: ${(new Date()).format('dd-MM-yyyy HH:mm:ss')}"
                     def tx_firma = "Documento ${tramite?.codigo} firmado electrónicamente"
                     def location = "Quito, Ecuador"
-                    println "lista:" + alist + alist.size()
+//                    println "lista:" + alist + alist.size()
 //                    println "nombre:" + alist[1]
 
                     Firma_java app = new Firma_java();
-                    app.generarCodigoQR(alist[1]?.toString(), fecha?.toString(), tx_firma?.toString(), location?.toString(), tramite?.id?.toInteger())
+                    app.generarCodigoQR(alist.last()?.toUpperCase()?.toString(), fecha?.toString(), tx_firma?.toString(), location?.toString(), tramite?.id?.toInteger())
 
                     app.sign(src, dest + res1, chain, pk, DigestAlgorithms.SHA256, provider.getName(),
                             PdfSigner.CryptoStandard.CMS, tx_firma, location, alist[1], tramite?.id?.toInteger());
