@@ -56,7 +56,7 @@
 
         <!-- botones -->
         <div class="btn-toolbar toolbar">
-            <div class="btn-group">
+            <div class="btn-group" style="margin-top: 4px;">
                 <g:link controller="inicio" action="parametros" class="btn btn-default">
                     <i class="fa fa-arrow-left"></i> Regresar
                 </g:link>
@@ -82,7 +82,7 @@
                 <div class="input-group">
                     <g:textField name="search" class="form-control input-sm"/>
                     <span class="input-group-btn">
-                        <a href="#" id="btnSearch" class="btn btn-sm btn-info" type="button">
+                        <a href="#" id="btnSearch" class="btn btn-sm btn-info" type="button" title="Buscar">
                             <i class="fa fa-search"></i>&nbsp;
                         </a>
                     </span>
@@ -141,7 +141,7 @@
                         var parts = msg.split("_");
                         log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
                         if (parts[0] == "OK") {
-                            location.reload(true);
+                            location.reload();
                         } else {
                             spinner.replaceWith($btn);
                             return false;
@@ -998,6 +998,7 @@
             });
 
             $('#tree').on("loaded.jstree", function () {
+
                 $("#loading").hide();
                 $("#tree").removeClass("hide").show();
             }).on("select_node.jstree", function (node, selected, event) {
@@ -1124,8 +1125,9 @@
                 $('#tree').jstree(true).search($.trim($("#search").val()));
                 return false;
             });
+
             $("#search").keypress(function (ev) {
-                if (ev.keyCode == 13) {
+                if (ev.keyCode === 13) {
                     $('#tree').jstree(true).search($.trim($("#search").val()));
                     return false;
                 }

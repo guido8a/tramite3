@@ -75,6 +75,7 @@
         $("#tipo").val(0);
         $("#perfil").val(0);
         $("#estado").val(0);
+        cargarTablaUsuarios($("#tipo option:selected").val(), $("#texto").val(), $("#perfil option:selected").val(), $("#estado option:selected").val());
     });
 
     $("#btnBuscar").click(function () {
@@ -343,6 +344,11 @@
         } //else
     }
 
+    $("#texto").keyup(function (ev) {
+        if (ev.keyCode === 13) {
+            cargarTablaUsuarios($("#tipo option:selected").val(), $("#texto").val(), $("#perfil option:selected").val(), $("#estado option:selected").val());
+        }
+    })
 
 </script>
 

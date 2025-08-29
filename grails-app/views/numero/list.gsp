@@ -178,6 +178,13 @@
         }); //ajax
     } //createEdit
 
+
+    $("#texto").keyup(function (ev) {
+        if (ev.keyCode === 13) {
+            cargarTablaDepartamentos($("#tipo option:selected").val(), $("#texto").val());
+        }
+    })
+
 </script>
 
 </body>
