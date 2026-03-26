@@ -350,6 +350,7 @@
 
         var esRespuestaNueva = $tr.attr("ern");
         var esExternoCC = $tr.hasClass("externoCC");
+        var firmado = $tr.hasClass("firmado");
 
         var copia = {
             separator_before : true,
@@ -1055,7 +1056,9 @@
             if (esSumilla || esDex) {
                 items.editar = editarSumilla;
             } else {
-                items.editar = editar;
+                if(!firmado){
+                    items.editar = editar;
+                }
             }
         }
         <g:if test="${!esEditor}">
@@ -1267,7 +1270,6 @@
             }
         });
     }
-
 
 </script>
 </body>
