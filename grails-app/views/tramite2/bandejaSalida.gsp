@@ -807,7 +807,7 @@
 
         var editarSumilla = {
             label : "Editar",
-            icon  : "fa fa-pencil",
+            icon  : "fa fa-edit",
             url   : "${g.createLink(action: 'crearTramite',controller: 'tramite')}/" + id + "?esRespuestaNueva=" + esRespuestaNueva
         }; //editar sumilla
 
