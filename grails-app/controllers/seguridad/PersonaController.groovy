@@ -1678,12 +1678,6 @@ class PersonaController {
                     }
                 }
                 if (acceptedExt.contains(ext.toLowerCase())) {
-                    fileName = usuario.cedula +  "." + ext.toLowerCase()
-                    def pathFile = path + fileName
-                    def file = new File(pathFile)
-
-                    f.transferTo(file)
-
                     def old = usuario?.pathFirma
                     if (old && old.trim() != "") {
                         def oldPath = "/var/tramites/certificado/" + old
@@ -1692,6 +1686,13 @@ class PersonaController {
                             oldFile.delete()
                         }
                     }
+
+                    fileName = usuario.cedula +  "." + ext.toLowerCase()
+                    def pathFile = path + fileName
+                    def file = new File(pathFile)
+
+                    f.transferTo(file)
+
 
                     usuario?.pathFirma = fileName
                     usuario.save(flush: true)
@@ -1704,7 +1705,6 @@ class PersonaController {
                 render "no_Seleccione un archivo"
                 return
             }
-
             render "ok_Subido correctamente"
         }else{
             render "no_El usuario no tiene cédula, para subir el certificado de firma electrónica primero ingrese su cédula"

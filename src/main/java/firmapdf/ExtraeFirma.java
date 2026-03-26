@@ -7,8 +7,11 @@ import com.itextpdf.kernel.pdf.PdfName;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.signatures.PdfPKCS7;
 import com.itextpdf.signatures.SignatureUtil;
+import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 
 import java.io.IOException;
+import java.security.cert.CertificateExpiredException;
+import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
@@ -140,6 +143,10 @@ public class ExtraeFirma {
 
                     if (cert != null) {
                         // Extract the signer's name from the certificate's subject distinguished name
+
+                        cert.checkValidity(new Date());
+
+
                         String signerName = cert.getSubjectX500Principal().getName();
 //                        System.out.println("Signer Name for signature '" + signatureName + "': " + signerName);
 
@@ -150,6 +157,7 @@ public class ExtraeFirma {
             pdfDoc.close();
             return respuestas;
         }
+
 
 }
 

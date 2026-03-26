@@ -17,6 +17,9 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider
 
 import com.itextpdf.signatures.PdfSigner
 
+import java.security.cert.CertificateFactory
+import java.security.cert.X509Certificate
+
 class FirmapdfController {
 
     def index() { }
@@ -122,6 +125,7 @@ class FirmapdfController {
 
     def firmarTramite(){
 
+        def valido
         def usro = Persona.get(params.persona)
         def tramite = Tramite.get(params.id)
         def fecha = new Date().format('dd-MM-yyyy HH:mm')
@@ -141,7 +145,7 @@ class FirmapdfController {
             render "no_El documento ya se encuentra firmado"
         }else{
             if(existeArchivoFirma){
-                if(pass){
+                if(pass) {
                     File file = new File(src);
                     file.mkdirs();
 
@@ -152,14 +156,32 @@ class FirmapdfController {
                     try {
                         ks.load(new FileInputStream(certificado), pass)
                         System.out.println("Keystore password is correct.");
-                    }catch(e){
+                    } catch (e) {
                         System.out.println("Keystore password is incorrect.");
                         render "no_La contraseña del certificado de firma electrónica es incorrecto"
                         return
                     }
 
-                    ks.load(new FileInputStream(certificado), pass);
+                    //comprobación de valides de certificado
+                    Enumeration<String> aliases = ks.aliases();
 
+                    while ( aliases.hasMoreElements()) {
+                        String alias2 =aliases.nextElement();
+                        Certificate cert = ks.getCertificate(alias2);
+                        if (cert instanceof X509Certificate) {
+                            X509Certificate x509Cert = (X509Certificate) cert;
+                            try {
+                                x509Cert.checkValidity(new Date());
+                                println("valido")
+                            } catch (Exception e) {
+                                println("expirado")
+                                render "no_El certificado de firma electrónica ya ha expirado"
+                                return true
+                            }
+                        }
+                    }
+
+                    ks.load(new FileInputStream(certificado), pass);
                     String alias = ks.aliases().nextElement();
                     PrivateKey pk = (PrivateKey) ks.getKey(alias, pass);
                     Certificate[] chain = ks.getCertificateChain(alias);
@@ -209,6 +231,8 @@ class FirmapdfController {
             }
         }
     }
+
+
 
 //    def verificarFirma_ajax(){
 //        def usuario = Persona.get(session.usuario.id)
