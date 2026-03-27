@@ -669,6 +669,7 @@
                                                                                         var parts = msg.split("_");
                                                                                         if (parts[0] === "ok") {
                                                                                             bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-check-circle text-success' style='font-size: 20px'></i>" + parts[1]  + "</strong>")
+                                                                                            cargarBandeja();
                                                                                         } else {
                                                                                             bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-exclamation-triangle text-danger' style='font-size: 20px'></i>" + parts[1]  + "</strong>")
                                                                                         }
@@ -803,7 +804,29 @@
         var editar = {
             label : "Editar",
             icon  : "fa fa-edit",
-            url   : "${g.createLink(action: 'redactar',controller: 'tramite')}/" + id
+            id: "editarTramite",
+            url   : "${g.createLink(action: 'redactar',controller: 'tramite')}/" + id,
+            // onload :
+            %{--action : function () {--}%
+            %{--    $.ajax({--}%
+            %{--        type    : 'POST',--}%
+            %{--        url     : '${createLink(controller: 'tramite3', action: 'verificarEstado')}',--}%
+            %{--        data    : {--}%
+            %{--            id : id--}%
+            %{--        },--}%
+            %{--        success : function (msg) {--}%
+            %{--            if (msg === "ok") {--}%
+            %{--                cargarPdf(id);--}%
+            %{--            }--}%
+            %{--            else{--}%
+            %{--                bootbox.alert("El documento esta anulado, por favor refresque su bandeja de salida.")--}%
+            %{--            }--}%
+            %{--        }--}%
+            %{--    });--}%
+            %{--}--}%
+
+
+
         }; //editar
 
         var editarSumilla = {
@@ -1070,11 +1093,6 @@
             }
         }
         </g:if>
-        %{--if (porEnviar) {--}%
-        %{--    <g:if test="${!esEditor}">--}%
-        %{--    items.imprimir = permisoImprimir;--}%
-        %{--    </g:if>--}%
-        %{--}--}%
         if (tieneAnexo) {
             items.anexos = anexos;
         }
