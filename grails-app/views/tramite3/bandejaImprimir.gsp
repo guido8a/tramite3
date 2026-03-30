@@ -85,7 +85,7 @@
     }
 
     </style>
-    <link href="${resource(dir: 'css', file: 'custom/loader.css')}" rel="stylesheet">
+%{--    <link href="${resource(dir: 'css', file: 'custom/loader.css')}" rel="stylesheet">--}%
 </head>
 
 <body>
@@ -194,12 +194,14 @@
     function cargarBandeja(band) {
         $(".qtip").hide();
         $("#bandeja").html("").append($("<div style='width:100%; text-align: center;'/>").append(spinnerSquare64));
+       var a = cargarLoader("Cargando...");
         $.ajax({
             type    : "POST",
             url     : "${g.createLink(controller: 'tramite3',action:'tablaBandejaImprimir')}",
             data    : "",
             async   : false,
             success : function (msg) {
+                a.modal("hide");
                 $("#bandeja").html(msg).show("slide");
                 cargarAlertas();
                 if (band) {
@@ -342,9 +344,9 @@
 
         });
         $(".btnActualizar").click(function () {
-            openLoader();
+            // openLoader();
             cargarBandeja(true);
-            closeLoader();
+            // closeLoader();
             return false;
         });
 
@@ -402,7 +404,6 @@
                 },
                 success : function (msg) {
                     closeLoader();
-//                                                console.log(msg);
                     var parts = msg.split("_");
                     if (parts[0] == 'ok') {
                         cargarBandeja(true);

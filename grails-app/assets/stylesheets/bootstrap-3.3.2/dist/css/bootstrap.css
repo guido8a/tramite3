@@ -6624,17 +6624,17 @@ button.close {
   background-color: #506c9d;
   border-bottom: 2px solid #ddd;
 }
-.table > thead > tr > th.sortable {
-  background-image: url("../../../images/skin/upDown.png");
-  background-repeat: no-repeat;
-  background-position: right;
-}
-.table > thead > tr > th.sortable.asc {
-  background-image: url("../../../images/skin/up.png");
-}
-.table > thead > tr > th.sortable.desc {
-  background-image: url("../../../images/skin/down.png");
-}
+/*.table > thead > tr > th.sortable {*/
+/*  background-image: url("../../../images/skin/upDown.png");*/
+/*  background-repeat: no-repeat;*/
+/*  background-position: right;*/
+/*}*/
+/*.table > thead > tr > th.sortable.asc {*/
+/*  background-image: url("../../../images/skin/up.png");*/
+/*}*/
+/*.table > thead > tr > th.sortable.desc {*/
+/*  background-image: url("../../../images/skin/down.png");*/
+/*}*/
 .table > thead > tr > th > a {
   color: #eee;
 }
