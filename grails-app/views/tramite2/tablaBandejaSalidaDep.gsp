@@ -126,7 +126,7 @@
                            data-row2="${row.copidpto && row.copidpto != "" && row.copiprsn && row.copiprsn != "" ? ', ' : ''}"
                            data-row3="${row.copiprsn.replaceAll('cc: *', '[CC] ')}"
                            data-row4="${row.paratitl}"
-                           style="margin-left: 2px"><i class="fa fa-exclamation"></i>
+                           style="margin-left: 2px"><i class="fa fa-info"></i>
                         </a>
                     </strong>
                 </g:if>
