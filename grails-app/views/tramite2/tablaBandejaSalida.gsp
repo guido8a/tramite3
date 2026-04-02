@@ -104,7 +104,7 @@
                 </g:else>
             </td>
             <td style="width: 25%;" class="titleEspecial"
-                title="<div style='max-height:150px; overflow-y:auto;'>${row.paratitl}</div>">%{--el title con los destinatarios y si recibieron o no--}%
+                title="${row.paratitl}">%{--el title con los destinatarios y si recibieron o no--}%
                 <span class="para">
                     <g:if test="${row.prtrprsn}">%{--para persona (squi guarda la persona, interna o externa)--}%
                         ${row.prtrprsn}
