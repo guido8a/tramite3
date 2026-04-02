@@ -103,7 +103,7 @@
                     ${row.prtrdpto}
                 </g:else>
             </td>
-            <td style="width: 30%;" class="titleEspecial" title="${row.paratitl}">%{--el title con los destinatarios y si recibieron o no--}%
+            <td style="width: 30%;" class="titleEspecial" title="${raw(row.paratitl)}">%{--el title con los destinatarios y si recibieron o no--}%
                 <span class="para">
                     <g:if test="${row.prtrprsn}">%{--para persona (squi guarda la persona, interna o externa)--}%
                         ${row.prtrprsn}
