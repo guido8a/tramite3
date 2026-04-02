@@ -103,8 +103,7 @@
                     ${row.prtrdpto}
                 </g:else>
             </td>
-            <td style="width: 30%;" class="titleEspecial" title="${row.paratitl}">%{--el title con los destinatarios y si recibieron o no--}%
-                <elm:poneHtml textoHtml="${row.paratitl}"/>
+            <td style="width: 30%;" class="titleEspecial" >%{--el title con los destinatarios y si recibieron o no--}%
                 <span class="para">
                     <g:if test="${row.prtrprsn}">%{--para persona (squi guarda la persona, interna o externa)--}%
                         ${row.prtrprsn}
@@ -119,16 +118,17 @@
                 </span>
 
                 <g:if test="${row.copidpto && row.copidpto != "" || row.copiprsn && row.copiprsn != ""}">
-                    <br> <strong style="float: right"> Copias: <a href="#"
-                                                                  name="informacion" class="btn btn-info btn-xs btnCopias"
-                                                                  title="Copias" data-row="${row.copidpto.replaceAll('cc: *', '[CC] ')}"
-                                                                  data-row2="${row.copidpto && row.copidpto != "" && row.copiprsn && row.copiprsn != "" ? ', ' : ''}" data-row3="${row.copiprsn.replaceAll('cc: *', '[CC] ')}"
-                                                                  style="margin-left: 2px"><i class="fa fa-exclamation"></i></a></strong>
-                %{--                    <span class="copias">--}%
-                %{--                        ${row.copidpto.replaceAll('cc: *', '[CC] ')}${row.copidpto && row.copidpto != "" && row.copiprsn && row.copiprsn != "" ? ', ' : ''}--}%
-                %{--                        ${row.copiprsn.replaceAll('cc: *', '[CC] ')}--}%
-                %{--                    </span>--}%
-
+                    <br>
+                    <strong style="float: right">
+                        <a href="#" name="informacion" class="btn btn-info btn-xs btnCopias"
+                           title="Copias"
+                           data-row="${row.copidpto.replaceAll('cc: *', '[CC] ')}"
+                           data-row2="${row.copidpto && row.copidpto != "" && row.copiprsn && row.copiprsn != "" ? ', ' : ''}"
+                           data-row3="${row.copiprsn.replaceAll('cc: *', '[CC] ')}"
+                           data-row4="${row.paratitl}"
+                           style="margin-left: 2px"><i class="fa fa-exclamation"></i>
+                        </a>
+                    </strong>
                 </g:if>
                 <g:if test="${!((row.prtrprsn && row.prtrprsn != '') ||
                         (row.paradpto && row.paradpto != '') ||
@@ -174,11 +174,35 @@
     });
 
     $(".btnCopias").click(function () {
-        var row = $(this).data("row");
-        var row2 = $(this).data("row2");
-        var row3 = $(this).data("row3");
-        bootbox.alert(row + row2 + row3);
+        var row4 = $(this).data("row4");
+        cargarTextoInformacionDepartamento(row4)
     });
+
+    function cargarTextoInformacionDepartamento(texto){
+        $.ajax({
+            type    : "POST",
+            url     : "${createLink(controller: 'tramite2', action:'informacionDepartamento_ajax')}",
+            data    : {
+                texto: texto
+            },
+            success : function (msg) {
+                var b = bootbox.dialog({
+                    id      : "dlgCreateEdit",
+                    title   : "Información",
+                    // class   : "modal-sm",
+                    message : msg,
+                    buttons : {
+                        cancelar : {
+                            label     : "<i class='fa fa-times'></i> Cancelar",
+                            className : "btn-primary",
+                            callback  : function () {
+                            }
+                        },
+                    } //buttons
+                }); //dialog
+            } //success
+        }); //ajax
+    }
 
     $.switcher('input[type=checkbox]');
 

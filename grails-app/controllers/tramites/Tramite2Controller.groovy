@@ -121,7 +121,7 @@ class Tramite2Controller {
         }
 
         def sql = "SELECT * FROM salida_dpto($persona.id) ${where} ORDER BY ${params.sort} ${params.order}"
-        println "sql: $sql"
+//        println "sql: $sql"
         def cn = dbConnectionService.getConnection()
         def rows = cn.rows(sql.toString())
         return [rows: rows, busca: busca]
@@ -2199,6 +2199,14 @@ class Tramite2Controller {
 
     def passwordFirma_ajax(){
 
+    }
+
+    def informacionDepartamento_ajax(){
+        return [texto: params.texto]
+    }
+
+    def informacion_ajax(){
+        return [texto: params.texto]
     }
 
 }
