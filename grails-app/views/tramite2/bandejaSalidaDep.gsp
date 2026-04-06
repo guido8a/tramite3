@@ -143,7 +143,6 @@
 <div class="buscar" hidden="hidden" style="margin-bottom: 20px">
     <fieldset>
         <legend>Búsqueda de trámites</legend>
-
         <div>
             <div class="col-md-2">
                 <label>Documento</label>
@@ -183,7 +182,7 @@
                 <th style="width: 4%">De</th>
                 <th style="width: 10%" class="cabecera sortable ${params.sort == 'trmtfccr' ? (params.order + ' sorted') : ''}" data-sort="trmtfccr" data-order="${params.order}">Fecha Creación</th>
                 <th style="width: 4%" class="cabecera sortable ${params.sort == 'prtrdpto' ? (params.order + ' sorted') : ''}" data-sort="prtrdpto" data-order="${params.order}">Para</th>
-                <th style="width: 29%">Destinatario</th>
+                <th style="width: 28%">Destinatario</th>
                 <th style="width: 7%" class="cabecera sortable ${params.sort == 'trmttppd' ? (params.order + ' sorted') : ''}" data-sort="trmttppd" data-order="${params.order}">Prioridad</th>
                 <th style="width: 10%" class="cabecera sortable ${params.sort == 'trmtfcen' ? (params.order + ' sorted') : ''}" data-sort="trmtfcen" data-order="${params.order}">Fecha Envío</th>
                 <th style="width: 10%" class="cabecera sortable ${params.sort == 'trmtfcbq' ? (params.order + ' sorted') : ''}" data-sort="trmtfcbq" data-order="${params.order}">Fecha Límite Recepción</th>
