@@ -104,41 +104,58 @@
                 </g:else>
             </td>
             <td style="width: 24%;" class="titleEspecial">%{--el title con los destinatarios y si recibieron o no--}%
-                <span class="para">
-                    <g:if test="${row.prtrprsn}">%{--para persona (squi guarda la persona, interna o externa)--}%
-                        ${row.prtrprsn}
-                    </g:if>
-                    <g:else>
-                        <g:set var="triangulos" value="${row.paradpto.split(',')}"/>
-                        <g:each in="${triangulos}" var="t" status="i">%{--para dpto--}%
-                            <i class="fa fa-download"></i>
-                            ${t}${i < triangulos.size() - 1 ? ', ' : ''}
-                        </g:each>
-                    </g:else>
-                </span>
-                <g:if test="${row.copidpto && row.copidpto != "" || row.copiprsn && row.copiprsn != ""}">
-                    <br>
-                    <strong style="float: right">
-                        <a href="#"
-                           name="informacion" class="btn btn-info btn-xs btnCopias"
-                           title="Copias"
-                           data-row="${row.copidpto.replaceAll('cc: *', '[CC] ')}"
-                           data-row2="${row.copidpto && row.copidpto != "" && row.copiprsn && row.copiprsn != "" ? ', ' : ''}"
-                           data-row3="${row.copiprsn.replaceAll('cc: *', '[CC] ')}"
-                           data-row4="${row.paratitl}"
-                           style="margin-left: 2px"><i class="fa fa-info"></i>
-                        </a>
-                    </strong>
-                </g:if>
-
-                <g:if test="${!((row.prtrprsn && row.prtrprsn != '') ||
-                        (row.paradpto && row.paradpto != '') ||
-                        (row.copidpto && row.copidpto != '') ||
-                        (row.copiprsn && row.copiprsn != ''))}">
-                    <span class="label label-danger" style="margin-top: 3px;">
-                        <i class="fa fa-warning"></i> Sin destinatario ni copias
-                    </span>
-                </g:if>
+                <table style="width: 100%">
+                    <tr style="width: 100%">
+                        <td style="width: 80%">
+                            <span class="para">
+                                <g:if test="${row.prtrprsn}">%{--para persona (squi guarda la persona, interna o externa)--}%
+                                    <ul>
+                                        <li>
+                                            ${row.prtrprsn}
+                                        </li>
+                                    </ul>
+                                </g:if>
+                                <g:else>
+                                    <g:set var="triangulos" value="${row.paradpto.split(',')}"/>
+                                    <ul>
+                                        <g:each in="${triangulos}" var="t" status="i">%{--para dpto--}%
+                                            <li>
+                                                <i class="fa fa-download"></i>
+                                                ${t}${i < triangulos.size() - 1 ? ', ' : ''}
+                                            </li>
+                                        </g:each>
+                                    </ul>
+                                </g:else>
+                                <g:if test="${!((row.prtrprsn && row.prtrprsn != '') ||
+                                        (row.paradpto && row.paradpto != '') ||
+                                        (row.copidpto && row.copidpto != '') ||
+                                        (row.copiprsn && row.copiprsn != ''))}">
+                                    <span class="label label-danger" style="margin-top: 3px;">
+                                        <i class="fa fa-warning"></i> Sin destinatario ni copias
+                                    </span>
+                                </g:if>
+                            </span>
+                        </td>
+                        <td style="width: 20%; text-align: right">
+                            <span>
+                                <g:if test="${row.copidpto && row.copidpto != "" || row.copiprsn && row.copiprsn != ""}">
+                                    <br>
+                                    <strong style="float: right">
+                                        <a href="#"
+                                           name="informacion" class="btn btn-info btn-xs btnCopias"
+                                           title="Copias"
+                                           data-row="${row.copidpto.replaceAll('cc: *', '[CC] ')}"
+                                           data-row2="${row.copidpto && row.copidpto != "" && row.copiprsn && row.copiprsn != "" ? ', ' : ''}"
+                                           data-row3="${row.copiprsn.replaceAll('cc: *', '[CC] ')}"
+                                           data-row4="${row.paratitl}"
+                                           style="margin-left: 2px"><i class="fa fa-info"></i>
+                                        </a>
+                                    </strong>
+                                </g:if>
+                            </span>
+                        </td>
+                    </tr>
+                </table>
             </td>
             <td style="width: 7%;">
                 ${row.trmttppd}
@@ -159,9 +176,7 @@
                     </div>
                 </g:if>
             </td>
-            <g:if test="${rows.size() < 7}">
-                <td style="width: 1%"></td>
-            </g:if>
+            <td style="width: 1%"></td>
         </tr>
     </g:each>
 </g:else>
