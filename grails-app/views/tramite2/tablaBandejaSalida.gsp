@@ -105,7 +105,15 @@
             </td>
             <td style="width: 24%;" class="titleEspecial">%{--el title con los destinatarios y si recibieron o no--}%
                 <table style="width: 100%">
-                    <tr style="width: 100%">
+                    <tr style="width: 100%" id="${row.trmt__id}" data-id="${row.trmt__id} "
+                        class="trTramite ${clase}  "
+                        estado="${row.edtrcdgo}" %{--estado tramite codigo--}%
+                        de="${row.depr__id}" %{--id de la persona q crea el tram.--}%
+                        codigo="${row.trmtcdgo}" %{--codigo del tramite--}%
+                        ern="${row.trmtesrn}" %{--es respuesta nueva--}%
+                        departamento="${row.deprdpto}" %{--dpto. de la pers. q crea el tramite--}%
+                        anio="${row.trmtfccr.format('yyyy')}" %{--fecha de creacion--}%
+                        padre="${row.trmtpdre}" >
                         <td style="width: 80%">
                             <span class="para">
                                 <g:if test="${row.prtrprsn}">%{--para persona (squi guarda la persona, interna o externa)--}%

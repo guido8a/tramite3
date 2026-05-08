@@ -253,7 +253,8 @@ class TramiteExportController{
 
     def crearYGuardarPdf() {
 //        println("params editor " + params)
-        def tramite = Tramite.get(params.id.toLong())
+//        def tramite = Tramite.get(params.id.toLong())
+        def tramite = Tramite.get(params.id)
         def usuario = Persona.get(session.usuario.id)
         def realPath = "/var/tramites/"
         def mensaje = "/var/tramites/"

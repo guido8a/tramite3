@@ -11,6 +11,7 @@ import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.pdf.PdfRectangle;
 import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.security.ExternalDigest;
 import com.itextpdf.text.pdf.security.ExternalSignature;
@@ -19,8 +20,13 @@ import com.lowagie.text.Document;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Table;
 import com.lowagie.text.pdf.PdfPageEvent;
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
+import java.io.File;
 import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
@@ -54,6 +60,7 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -83,13 +90,37 @@ public class Firma_java {
         PdfDocument doc = new PdfDocument(reader);
         int num_pags = doc.getNumberOfPages();
 
+        PdfRectangle boundingBox = new PdfRectangle(20, 30, 300, 100);
+
         StampingProperties stampingProperties = new StampingProperties();
         PdfSigner signer = new PdfSigner(reader2, new FileOutputStream(dest), new StampingProperties());
         Rectangle rect = new Rectangle(100, 100, 400, 100);
 
         signer.setFieldName("firma");
-//        rect = new Rectangle(100, 92, 400, 100);  /* mover para no sobreponer el rect */
-        rect = new Rectangle(20, 30, 300, 60);  /* mover para no sobreponer el rect */
+
+        File file = new File(src);
+        java.awt.geom.Rectangle2D boundingBox2;
+        PDRectangle mediaBox;
+        PDDocument document = Loader.loadPDF(file);
+        PDPage pdPage = document.getPage(0);
+        BoundingBoxFinder boundingBoxFinder = new BoundingBoxFinder(pdPage);
+        boundingBoxFinder.processPage(pdPage);
+        boundingBox2 = boundingBoxFinder.getBoundingBox();
+        mediaBox = pdPage.getMediaBox();
+
+//        System.out.println("1 " + boundingBox2);
+//        System.out.println("2 " + mediaBox);
+//        System.out.println("3 " + mediaBox.getLowerLeftX());
+//        System.out.println("4 " + mediaBox.getLowerLeftY());
+//        System.out.println("5 " + mediaBox.getUpperRightX());
+//        System.out.println("6 " + mediaBox.getUpperRightY());
+//        System.out.println("7 " + boundingBox2.getY());
+//        System.out.println("8 " + boundingBox2.getHeight());
+        float y = 600 - (float)boundingBox2.getHeight();
+
+//        rect = new Rectangle(20, 30, 300, 100);  /* mover para no sobreponer el rect */
+//        rect = new Rectangle(20, y ,300, 100);  /* mover para no sobreponer el rect */
+        rect = new Rectangle(20, y ,300, 100);  /* mover para no sobreponer el rect */
 
         PdfSigner signer2 = new PdfSigner(reader3, new FileOutputStream(dest), new StampingProperties());
         PdfSignatureAppearance appearance2 = signer2.getSignatureAppearance();
@@ -115,8 +146,6 @@ public class Firma_java {
 
 //        System.out.println("digest:" + digest + " pks: " + pks + " chain:" + chain + "Pdf: " + PdfSigner.CryptoStandard.CMS);
         signer2.signDetached(digest, pks, chain, null, null, null, 8096, PdfSigner.CryptoStandard.CMS);
-
-
     }
 
     /* firmar sobre un documento firmado. Puedens er N firmas adicionales */

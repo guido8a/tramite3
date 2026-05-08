@@ -1,9 +1,16 @@
 package firma
 
+import com.itextpdf.awt.geom.Rectangle2D
+import com.itextpdf.text.pdf.PdfRectangle
 import com.itextpdf.text.pdf.security.MakeSignature
+import firmapdf.BoundingBoxFinder
 import firmapdf.ExtraeFirma
 import firmapdf.Firma_java
 import firmapdf.Verifica_java
+import org.apache.pdfbox.Loader
+import org.apache.pdfbox.pdmodel.PDDocument
+import org.apache.pdfbox.pdmodel.PDPage
+import org.apache.pdfbox.pdmodel.common.PDRectangle
 import seguridad.Persona
 import tramites.Tramite
 
@@ -185,6 +192,20 @@ class FirmapdfController {
                     String alias = ks.aliases().nextElement();
                     PrivateKey pk = (PrivateKey) ks.getKey(alias, pass);
                     Certificate[] chain = ks.getCertificateChain(alias);
+
+
+
+//                    java.awt.geom.Rectangle2D boundingBox;
+//                    PDRectangle mediaBox;
+//                    PDDocument document = Loader.loadPDF(file)
+//                    PDPage pdPage = document.getPage(0);
+//                    BoundingBoxFinder boundingBoxFinder = new BoundingBoxFinder(pdPage);
+//                    boundingBoxFinder.processPage(pdPage);
+//                    boundingBox = boundingBoxFinder.getBoundingBox();
+//                    mediaBox = pdPage.getMediaBox();
+//
+//                    println("1 " + boundingBox)
+//                    println("2 " + mediaBox)
 
 //        println "ks: $ks, lista: ${ks.aliases()}, alias: $alias, pk: $pk"
 //        println "ks:" + ks.getCertificate(alias)
