@@ -108,15 +108,18 @@ public class Firma_java {
         boundingBox2 = boundingBoxFinder.getBoundingBox();
         mediaBox = pdPage.getMediaBox();
 
-//        System.out.println("1 " + boundingBox2);
-//        System.out.println("2 " + mediaBox);
-//        System.out.println("3 " + mediaBox.getLowerLeftX());
-//        System.out.println("4 " + mediaBox.getLowerLeftY());
-//        System.out.println("5 " + mediaBox.getUpperRightX());
-//        System.out.println("6 " + mediaBox.getUpperRightY());
-//        System.out.println("7 " + boundingBox2.getY());
-//        System.out.println("8 " + boundingBox2.getHeight());
-        float y = 600 - (float)boundingBox2.getHeight();
+        System.out.println("1 " + boundingBox2);
+        System.out.println("2 " + mediaBox);
+        System.out.println("3 " + mediaBox.getLowerLeftX());
+        System.out.println("4 " + mediaBox.getLowerLeftY());
+        System.out.println("5 " + mediaBox.getUpperRightX());
+        System.out.println("6 " + mediaBox.getUpperRightY());
+        System.out.println("7 " + boundingBox2.getY());
+        System.out.println("8 " + boundingBox2.getHeight());
+//        float y = (mediaBox.getUpperRightY() - (float)boundingBox2.getHeight());
+        float y = (mediaBox.getUpperRightY() - (float)boundingBox2.getY());
+
+        System.out.println("y " + y);
 
 //        rect = new Rectangle(20, 30, 300, 100);  /* mover para no sobreponer el rect */
 //        rect = new Rectangle(20, y ,300, 100);  /* mover para no sobreponer el rect */
