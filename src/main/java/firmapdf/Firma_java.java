@@ -118,7 +118,8 @@ public class Firma_java {
         System.out.println("8 " + boundingBox2.getHeight());
 //        float y = (mediaBox.getUpperRightY() - (float)boundingBox2.getHeight());
 //        float y = (mediaBox.getUpperRightY() - (float)boundingBox2.getY());
-        float y = (float)boundingBox2.getY() - 50;
+//        float y = (float)boundingBox2.getY() - 50;
+        float y = (float)boundingBox2.getHeight() + 50;
 
         System.out.println("y " + y);
 

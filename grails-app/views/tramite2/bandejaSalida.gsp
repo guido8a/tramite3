@@ -1269,7 +1269,6 @@
         }); //ajax
     } //createEdit
 
-
     function comprobarArchivoFirmado(id) {
         $.ajax({
             type: 'POST',

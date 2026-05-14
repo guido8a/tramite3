@@ -2209,4 +2209,8 @@ class Tramite2Controller {
         return [texto: params.texto]
     }
 
+    def visorPdf(){
+
+    }
+
 }
