@@ -132,6 +132,8 @@ class FirmapdfController {
 
     def firmarTramite(){
 
+        String coordenadasX = params."coordenadas[]"[0]
+        String coordenadasY = params."coordenadas[]"[1]
         def valido
         def usro = Persona.get(params.persona)
         def tramite = Tramite.get(params.id)
@@ -240,8 +242,8 @@ class FirmapdfController {
                     Firma_java app = new Firma_java();
                     app.generarCodigoQR(alist.last()?.toUpperCase()?.toString(), fecha?.toString(), tx_firma?.toString(), location?.toString(), tramite?.id?.toInteger())
 
-                    app.sign(src, dest + res1, chain, pk, DigestAlgorithms.SHA256, provider.getName(),
-                            PdfSigner.CryptoStandard.CMS, tx_firma, location, alist[1], tramite?.id?.toInteger());
+                    app.sign2(src, dest + res1, chain, pk, DigestAlgorithms.SHA256, provider.getName(),
+                            PdfSigner.CryptoStandard.CMS, tx_firma, location, alist[1], tramite?.id?.toInteger(),coordenadasX?.toDouble(), coordenadasY?.toDouble(), params.pagina?.toInteger());
 
                     render "ok_Documento firmado correctamente"
                 }else{

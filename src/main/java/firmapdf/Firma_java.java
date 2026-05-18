@@ -81,6 +81,72 @@ public class Firma_java {
 //            "hello_signed4.pdf"
 //    };
 
+
+    public void sign2(String src, String dest, Certificate[] chain, PrivateKey pk, String digestAlgorithm,
+                     String provider, PdfSigner.CryptoStandard signatureType, String reason, String location, String nombreFirma, int idTramite, double coordenadasX, double coordenadasY, int pagina)
+            throws GeneralSecurityException, IOException, DocumentException  {
+        PdfReader reader = new PdfReader(src);
+        PdfReader reader2 = new PdfReader(src);
+        PdfReader reader3 = new PdfReader(src);
+        PdfDocument doc = new PdfDocument(reader);
+        int num_pags = doc.getNumberOfPages();
+
+        PdfRectangle boundingBox = new PdfRectangle(20, 30, 300, 100);
+
+        StampingProperties stampingProperties = new StampingProperties();
+        PdfSigner signer = new PdfSigner(reader2, new FileOutputStream(dest), new StampingProperties());
+        Rectangle rect = new Rectangle(100, 100, 400, 100);
+
+        signer.setFieldName("firma");
+
+        File file = new File(src);
+        java.awt.geom.Rectangle2D boundingBox2;
+        PDRectangle mediaBox;
+        PDDocument document = Loader.loadPDF(file);
+        PDPage pdPage = document.getPage(0);
+        BoundingBoxFinder boundingBoxFinder = new BoundingBoxFinder(pdPage);
+        boundingBoxFinder.processPage(pdPage);
+        boundingBox2 = boundingBoxFinder.getBoundingBox();
+        mediaBox = pdPage.getMediaBox();
+
+        System.out.println("paginas " + num_pags);
+        System.out.println("x " + coordenadasX);
+        System.out.println("y " + coordenadasY);
+        System.out.println("num pagina " + pagina);
+
+        float x = (float) coordenadasX;
+        float y = (float) coordenadasY;
+
+//        rect = new Rectangle(20, 30, 300, 100);  /* mover para no sobreponer el rect */
+        rect = new Rectangle(x-50, y -40, 300, 100);  /* mover para no sobreponer el rect */
+
+        PdfSigner signer2 = new PdfSigner(reader3, new FileOutputStream(dest), new StampingProperties());
+        PdfSignatureAppearance appearance2 = signer2.getSignatureAppearance();
+        appearance2.setPageRect(rect); // x, y, width, height for the signature field
+//        appearance2.setPageNumber(num_pags);
+        appearance2.setPageNumber(pagina);
+        appearance2.setReason(reason);
+        appearance2.setLocation(location);
+        appearance2.setLayer2FontSize(8);
+//        appearance2.setLayer2Text(nombreFirma);
+//        appearance2.setRenderingMode(PdfSignatureAppearance.RenderingMode.NAME_AND_DESCRIPTION);
+//        appearance2.setRenderingMode(PdfSignatureAppearance.RenderingMode.DESCRIPTION);
+
+        String imFile = "/var/tramites/images/" + idTramite + ".png";
+        ImageData data = ImageDataFactory.create(imFile);
+
+        appearance2.setSignatureGraphic(data);
+        appearance2.setRenderingMode(PdfSignatureAppearance.RenderingMode.GRAPHIC_AND_DESCRIPTION);
+
+        IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm, provider);
+        IExternalDigest digest = new BouncyCastleDigest();
+
+        stampingProperties.useAppendMode();
+
+        signer2.signDetached(digest, pks, chain, null, null, null, 8096, PdfSigner.CryptoStandard.CMS);
+    }
+
+
     public void sign(String src, String dest, Certificate[] chain, PrivateKey pk, String digestAlgorithm,
                      String provider, PdfSigner.CryptoStandard signatureType, String reason, String location, String nombreFirma, int idTramite)
             throws GeneralSecurityException, IOException, DocumentException  {
@@ -116,16 +182,10 @@ public class Firma_java {
         System.out.println("6 " + mediaBox.getUpperRightY());
         System.out.println("7 " + boundingBox2.getY());
         System.out.println("8 " + boundingBox2.getHeight());
-//        float y = (mediaBox.getUpperRightY() - (float)boundingBox2.getHeight());
-//        float y = (mediaBox.getUpperRightY() - (float)boundingBox2.getY());
-//        float y = (float)boundingBox2.getY() - 50;
+
         float y = (float)boundingBox2.getHeight() + 50;
 
-        System.out.println("y " + y);
-
-//        rect = new Rectangle(20, 30, 300, 100);  /* mover para no sobreponer el rect */
-//        rect = new Rectangle(20, y ,300, 100);  /* mover para no sobreponer el rect */
-        rect = new Rectangle(20, y ,300, 100);  /* mover para no sobreponer el rect */
+        rect = new Rectangle(20, 30, 300, 100);  /* mover para no sobreponer el rect */
 
         PdfSigner signer2 = new PdfSigner(reader3, new FileOutputStream(dest), new StampingProperties());
         PdfSignatureAppearance appearance2 = signer2.getSignatureAppearance();
@@ -149,7 +209,6 @@ public class Firma_java {
 
         stampingProperties.useAppendMode();
 
-//        System.out.println("digest:" + digest + " pks: " + pks + " chain:" + chain + "Pdf: " + PdfSigner.CryptoStandard.CMS);
         signer2.signDetached(digest, pks, chain, null, null, null, 8096, PdfSigner.CryptoStandard.CMS);
     }
 

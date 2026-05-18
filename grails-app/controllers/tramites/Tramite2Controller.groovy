@@ -2210,7 +2210,9 @@ class Tramite2Controller {
     }
 
     def visorPdf(){
-
+        def tramite = Tramite.get(params.id)
+        def persona = Persona.get(params.persona)
+        return [id: tramite?.id, persona: persona]
     }
 
 }
