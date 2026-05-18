@@ -4,10 +4,24 @@
     <meta charset="UTF-8">
     <meta name="layout" content="main">
     <title>Firmar PDF</title>
-    <style>canvas{border: 1px solid #000}
+    <style>
+
+    canvas{border: 1px solid #000}
+
+    .cursor {
+        position: fixed;
+        width: 300px;
+        height: 100px;
+        left: -100px;
+        cursor: none;
+        pointer-events: none;
+    }
+
     </style>
 </head>
 <body>
+
+<img src="${resource(dir: '/assets/images', file: 'fe2.png')}" alt="Cursor" class="cursor" />
 
 <div class="col-md-12">
     <div class="col-md-2 row btn-group" style="margin-bottom: 10px">
@@ -32,6 +46,19 @@
 <asset:javascript src="/apli/pdf.min.js"/>
 
 <script type="text/javascript">
+
+
+    $(function () {
+        $("#cnv").mousemove(function (e) {
+            $(".cursor").show().css({
+                "left": e.clientX,
+                "top": e.clientY
+            });
+        }).mouseout(function () {
+            $(".cursor").hide();
+        });
+    });
+
 
     $("#btnRegresar").click(function () {
         location.href="${createLink(controller: 'tramite2', action: 'bandejaSalida')}"
@@ -126,7 +153,7 @@
 
     function  startPdf() {
         %{--PDFStart(src="${resource(dir: '/assets/images', file: '1779311.pdf', absolute: true)}");--}%
-        PDFStart(src="${resource(dir: '/assets/images', file: '1875930.pdf', absolute: true)}");
+        PDFStart(src="${resource(dir: '/assets/images', file: '1875928.pdf', absolute: true)}");
     }
 
     window.addEventListener('load', startPdf);
