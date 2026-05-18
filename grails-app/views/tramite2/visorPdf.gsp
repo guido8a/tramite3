@@ -126,7 +126,7 @@
 
     function  startPdf() {
         %{--PDFStart(src="${resource(dir: '/assets/images', file: '1779311.pdf', absolute: true)}");--}%
-        PDFStart(src="${resource(dir: '/assets/images', file: '1875928.pdf', absolute: true)}");
+        PDFStart(src="${resource(dir: '/assets/images', file: '1875930.pdf', absolute: true)}");
     }
 
     window.addEventListener('load', startPdf);

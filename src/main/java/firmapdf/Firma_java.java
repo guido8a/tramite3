@@ -118,7 +118,8 @@ public class Firma_java {
         float y = (float) coordenadasY;
 
 //        rect = new Rectangle(20, 30, 300, 100);  /* mover para no sobreponer el rect */
-        rect = new Rectangle(x-50, y -40, 300, 100);  /* mover para no sobreponer el rect */
+//        rect = new Rectangle(x-50, y -40, 300, 100);  /* mover para no sobreponer el rect */
+        rect = new Rectangle(x-60, y-110, 300, 100);  /* mover para no sobreponer el rect */
 
         PdfSigner signer2 = new PdfSigner(reader3, new FileOutputStream(dest), new StampingProperties());
         PdfSignatureAppearance appearance2 = signer2.getSignatureAppearance();
