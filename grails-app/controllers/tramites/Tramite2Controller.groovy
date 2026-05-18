@@ -2117,19 +2117,24 @@ class Tramite2Controller {
 
     def downloadFile() {
         def tramite = Tramite.get(params.id)
-
+        def ext = 'pdf'
         def pathSinFirma = "/var/tramites/" + tramite?.id + ".pdf"
         def path = "/var/tramites/" + tramite?.id + "_firmado.pdf"
 
-
         def file = new File(path)
 
+        println("rrrr " + file.exists())
+
         if (file.exists()) {
+
+            println("entro")
+
             def b = file.getBytes()
-            def ext = 'pdf'
+
 
             response.setContentType(ext == 'pdf' ? "application/pdf" : "image/" + ext)
             response.setHeader("Content-disposition", "attachment; filename=" + tramite?.id)
+//            response.setHeader("Content-disposition", "attachment; filename=" + tramite?.id + "_firmado.pdf")
             response.setContentLength(b.length)
             response.getOutputStream().write(b)
         } else {
@@ -2138,7 +2143,6 @@ class Tramite2Controller {
 
             if(fileSF.exists()){
                 def b = fileSF.getBytes()
-                def ext = 'pdf'
 
                 response.setContentType(ext == 'pdf' ? "application/pdf" : "image/" + ext)
                 response.setHeader("Content-disposition", "attachment; filename=" + tramite?.id)
@@ -2215,4 +2219,8 @@ class Tramite2Controller {
         return [id: tramite?.id, persona: persona]
     }
 
+    def visorPdfFirmado(){
+        def tramite = Tramite.get(params.id)
+        return [id: tramite?.id]
+    }
 }

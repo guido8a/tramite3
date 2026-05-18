@@ -47,7 +47,6 @@
 
 <script type="text/javascript">
 
-
     $(function () {
         $("#cnv").mousemove(function (e) {
             $(".cursor").show().css({
@@ -58,7 +57,6 @@
             $(".cursor").hide();
         });
     });
-
 
     $("#btnRegresar").click(function () {
         location.href="${createLink(controller: 'tramite2', action: 'bandejaSalida')}"
@@ -82,9 +80,7 @@
             ctx = canvas.getContext('2d'),
             scale = 1.5,
             numPage = 1,
-            paginaActual = 1
-
-
+            paginaActual = 1;
         loadingTask.promise.then(function (pdfDoc_) {
             pdfDoc = pdfDoc_;
             document.querySelector('#npages').innerHTML = pdfDoc.numPages;
@@ -123,8 +119,8 @@
                 var mouseX = event.clientX - rect.left;
                 var mouseY = event.clientY - rect.top;
                 var coordenadasPDF = viewport.convertToPdfPoint(mouseX, mouseY);
-                console.log("coordenadas " + mouseX + " " + mouseY);
-                console.log("coord. pdf " + coordenadasPDF);
+                // console.log("coordenadas " + mouseX + " " + mouseY);
+                // console.log("coord. pdf " + coordenadasPDF);
 
                 firmarPDF('${id}', paginaActual, coordenadasPDF)
             });
@@ -152,8 +148,8 @@
     }
 
     function  startPdf() {
-        %{--PDFStart(src="${resource(dir: '/assets/images', file: '1779311.pdf', absolute: true)}");--}%
-        PDFStart(src="${resource(dir: '/assets/images', file: '1875928.pdf', absolute: true)}");
+        %{--PDFStart(src="${resource(dir: '/assets/images', file: '1875928.pdf', absolute: true)}");--}%
+        PDFStart(src="${createLink(controller: 'tramite2', action: 'downloadFile', id: id)}");
     }
 
     window.addEventListener('load', startPdf);
@@ -205,7 +201,9 @@
                                             var parts = msg.split("_");
                                             if (parts[0] === "ok") {
                                                 bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-check-circle text-success' style='font-size: 20px'></i>" + parts[1]  + "</strong>");
-                                                // cargarBandeja();
+                                                setTimeout(function () {
+                                                    location.href="${createLink(controller: 'tramite2', action: 'visorPdfFirmado')}?id=" + id
+                                                }, 1000)
                                             } else {
                                                 bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-exclamation-triangle text-danger' style='font-size: 20px'></i>" + parts[1]  + "</strong>")
                                             }
@@ -221,6 +219,7 @@
             }
         })
     }
+
 
 
 
