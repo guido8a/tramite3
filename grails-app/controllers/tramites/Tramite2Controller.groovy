@@ -2154,6 +2154,21 @@ class Tramite2Controller {
         }
     }
 
+    def downloadFileFirmado() {
+        def tramite = Tramite.get(params.id)
+        def path = "/var/tramites/" + tramite?.id + "_firmado.pdf"
+
+        def file = new File(path)
+
+        if (file.exists()) {
+            def f = file.getBytes()
+            response.setContentType("application/pdf")
+            response.setHeader("Content-disposition", "attachment; filename=" + tramite?.id + "_firmado.pdf")
+            response.setContentLength(f.length)
+            response.getOutputStream().write(f)
+        }
+    }
+
     def verPdf_ajax(){
         def tramite = Tramite.get(params.id)
         return [tramite: tramite]

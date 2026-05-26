@@ -1,18 +1,23 @@
 package firmapdf;
 
+import com.itextpdf.forms.fields.PdfSignatureFormField;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.colors.Color;
+import com.itextpdf.kernel.colors.ColorConstants;
 import com.itextpdf.kernel.events.Event;
 import com.itextpdf.kernel.events.IEventHandler;
 import com.itextpdf.kernel.events.PdfDocumentEvent;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.*;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfReader;
+import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
+import com.itextpdf.kernel.pdf.xobject.PdfFormXObject;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Image;
-import com.itextpdf.text.pdf.PdfContentByte;
-import com.itextpdf.text.pdf.PdfRectangle;
-import com.itextpdf.text.pdf.PdfStamper;
+import com.itextpdf.text.pdf.*;
 import com.itextpdf.text.pdf.security.ExternalDigest;
 import com.itextpdf.text.pdf.security.ExternalSignature;
 import com.itextpdf.text.pdf.security.MakeSignature;
@@ -26,6 +31,7 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
+import java.awt.*;
 import java.io.File;
 import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
@@ -100,14 +106,10 @@ public class Firma_java {
         signer.setFieldName("firma");
 
         File file = new File(src);
-        java.awt.geom.Rectangle2D boundingBox2;
-        PDRectangle mediaBox;
         PDDocument document = Loader.loadPDF(file);
         PDPage pdPage = document.getPage(0);
         BoundingBoxFinder boundingBoxFinder = new BoundingBoxFinder(pdPage);
         boundingBoxFinder.processPage(pdPage);
-        boundingBox2 = boundingBoxFinder.getBoundingBox();
-        mediaBox = pdPage.getMediaBox();
 
         System.out.println("paginas " + num_pags);
         System.out.println("x " + coordenadasX);
@@ -117,8 +119,6 @@ public class Firma_java {
         float x = (float) coordenadasX;
         float y = (float) coordenadasY;
 
-//        rect = new Rectangle(20, 30, 300, 100);  /* mover para no sobreponer el rect */
-//        rect = new Rectangle(x-50, y -40, 300, 100);  /* mover para no sobreponer el rect */
         rect = new Rectangle(x-60, y-110, 300, 100);  /* mover para no sobreponer el rect */
 
         PdfSigner signer2 = new PdfSigner(reader3, new FileOutputStream(dest), new StampingProperties());
@@ -138,6 +138,15 @@ public class Firma_java {
 
         appearance2.setSignatureGraphic(data);
         appearance2.setRenderingMode(PdfSignatureAppearance.RenderingMode.GRAPHIC_AND_DESCRIPTION);
+
+        PdfFormXObject layer2 = appearance2.getLayer0();
+        PdfCanvas canvas = new PdfCanvas(layer2, doc);
+        canvas.setLineWidth(2)
+                .setStrokeColor(ColorConstants.BLACK)
+                .setLineWidth(1)
+                .rectangle(0, 0, 300, 100)
+                .stroke();
+
 
         IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm, provider);
         IExternalDigest digest = new BouncyCastleDigest();
