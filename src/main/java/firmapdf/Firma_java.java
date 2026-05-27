@@ -88,6 +88,48 @@ public class Firma_java {
 //    };
 
 
+    public void firmaForm(String src, String dest, Certificate[] chain, PrivateKey pk, String digestAlgorithm,
+                      String provider, PdfSigner.CryptoStandard signatureType, String reason, String location, String nombreFirma, int idTramite, double coordenadasX, double coordenadasY, int pagina)
+            throws GeneralSecurityException, IOException, DocumentException  {
+
+
+        PdfReader reader = new PdfReader(src);
+        PdfWriter writer = new PdfWriter(dest);
+        PdfDocument pdfDoc = new PdfDocument(reader, writer);
+
+        Rectangle rect = new Rectangle(100, 100, 400, 100);
+
+        float x = (float) coordenadasX;
+        float y = (float) coordenadasY;
+
+        rect = new Rectangle(x-60, y-110, 300, 100);  /* mover para no sobreponer el rect */
+
+
+        pdfDoc.addNewPage();
+
+// Create the signature field at a specific location (x, y, width, height)
+        Rectangle rect3 = new Rectangle(50, 50, 200, 100);
+        PdfSignatureFormField sgnField = PdfFormField.createSignature(pdfDoc, rect3);
+
+// Set properties
+        sgnField.setFieldName("Signature1");
+        sgnField.setPage(1);
+
+
+        PdfFormXObject appearance = new PdfFormXObject(new Rectangle(200, 100));
+        PdfCanvas canvas = new PdfCanvas(appearance, pdfDoc);
+        canvas.setStrokeColorRgb(1, 0, 0);
+        canvas.rectangle(50, 50, 200, 100);
+        canvas.stroke();
+
+// Add the field to the document's AcroForm
+        PdfAcroForm.getAcroForm(pdfDoc, true).addField(sgnField);
+
+        pdfDoc.close();
+
+    }
+
+
     public void sign2(String src, String dest, Certificate[] chain, PrivateKey pk, String digestAlgorithm,
                      String provider, PdfSigner.CryptoStandard signatureType, String reason, String location, String nombreFirma, int idTramite, double coordenadasX, double coordenadasY, int pagina)
             throws GeneralSecurityException, IOException, DocumentException  {
@@ -139,13 +181,40 @@ public class Firma_java {
         appearance2.setSignatureGraphic(data);
         appearance2.setRenderingMode(PdfSignatureAppearance.RenderingMode.GRAPHIC_AND_DESCRIPTION);
 
-        PdfFormXObject layer2 = appearance2.getLayer0();
-        PdfCanvas canvas = new PdfCanvas(layer2, doc);
-        canvas.setLineWidth(2)
-                .setStrokeColor(ColorConstants.BLACK)
-                .setLineWidth(1)
-                .rectangle(0, 0, 300, 100)
-                .stroke();
+//        PdfFormXObject layer2 = appearance2.getLayer0();
+//        PdfCanvas canvas = new PdfCanvas(layer2, doc);
+//        canvas.setLineWidth(1)
+//                .setStrokeColor(ColorConstants.BLACK)
+//                .rectangle(0, 0, 300, 100)
+//                .stroke();
+
+
+
+//        Rectangle rect2 = new Rectangle(100, 100, 200, 200);
+//        PdfFormXObject formXObject = new PdfFormXObject(rect2);
+//        PdfCanvas canvas2 = new PdfCanvas(formXObject, doc);
+//        canvas2.setLineWidth(2f)
+//                .setStrokeColor(ColorConstants.RED)
+//                .rectangle(0, 0, rect2.getWidth(), rect2.getHeight())
+//                .stroke();
+
+        // Java Example (iText 7)
+//        PdfDocument pdfDoc = new PdfDocument(new PdfWriter(dest));
+//        PdfDocument pdfDoc = new PdfDocument(new PdfWriter(dest));
+//        pdfDoc.addNewPage();
+//
+//// Create the signature field at a specific location (x, y, width, height)
+//        Rectangle rect3 = new Rectangle(100, 200, 200, 100);
+//        PdfSignatureFormField sgnField = PdfFormField.createSignature(pdfDoc, rect3);
+//
+//// Set properties
+//        sgnField.setFieldName("Signature1");
+//        sgnField.setPage(1);
+//
+//// Add the field to the document's AcroForm
+//        PdfAcroForm.getAcroForm(pdfDoc, true).addField(sgnField);
+//
+//        pdfDoc.close();
 
 
         IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm, provider);
@@ -154,6 +223,7 @@ public class Firma_java {
         stampingProperties.useAppendMode();
 
         signer2.signDetached(digest, pks, chain, null, null, null, 8096, PdfSigner.CryptoStandard.CMS);
+
     }
 
 

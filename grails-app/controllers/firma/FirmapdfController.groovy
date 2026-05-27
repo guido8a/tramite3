@@ -245,6 +245,9 @@ class FirmapdfController {
                     app.sign2(src, dest + res1, chain, pk, DigestAlgorithms.SHA256, provider.getName(),
                             PdfSigner.CryptoStandard.CMS, tx_firma, location, alist[1], tramite?.id?.toInteger(),coordenadasX?.toDouble(), coordenadasY?.toDouble(), params.pagina?.toInteger());
 
+                    app.firmaForm(dest + res1, dest + (tramite?.id + '_firmado2.pdf'), chain, pk, DigestAlgorithms.SHA256, provider.getName(),
+                            PdfSigner.CryptoStandard.CMS, tx_firma, location, alist[1], tramite?.id?.toInteger(),coordenadasX?.toDouble(), coordenadasY?.toDouble(), params.pagina?.toInteger());
+
                     render "ok_Documento firmado correctamente"
                 }else{
                     render "no_No existe la contraseña de la firma electrónica"
