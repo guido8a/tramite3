@@ -33,9 +33,10 @@
         <button class="btn btn-info" id="next"> Siguiente <i class="fa fa-arrow-right"></i></button>
 
     </div>
-    <div class="col-md-2" style="margin-top: 15px">
+    <div class="col-md-3" style="margin-top: 15px">
         <span style="font-size: 12px; font-weight: bold">Página número: </span>
-        <span  style="font-size: 16px; font-weight: bold" class="breadcrumb" id="npages">nada cargado</span>
+        <span  style="font-size: 16px; font-weight: bold" class="breadcrumb" id="npages">0</span>
+       / <span  style="font-size: 16px; font-weight: bold" class="breadcrumb" id="totalPages">0</span>
     </div>
 </div>
 
@@ -43,7 +44,10 @@
     <canvas id="cnv"></canvas>
 </div>
 
-<asset:javascript src="/apli/pdf.min.js"/>
+%{--<asset:javascript src="/apli/pdf.min.js"/>--}%
+<asset:javascript src="/apli/pdf.mjs"/>
+%{--<asset:javascript src="/apli/pdf.worker.mjs"/>--}%
+<asset:javascript src="/apli/pdf.worker.min.js"/>
 
 <script type="text/javascript">
 
@@ -84,6 +88,7 @@
         loadingTask.promise.then(function (pdfDoc_) {
             pdfDoc = pdfDoc_;
             document.querySelector('#npages').innerHTML = pdfDoc.numPages;
+            document.querySelector('#totalPages').innerHTML = pdfDoc.numPages;
             GeneratePDF(numPage);
             clicPDF(numPage);
         });
