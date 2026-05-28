@@ -150,6 +150,7 @@
     function  startPdf() {
         %{--PDFStart(src="${resource(dir: '/assets/images', file: '1875928.pdf', absolute: true)}");--}%
         PDFStart(src="${createLink(controller: 'tramite2', action: 'downloadFile', id: id)}");
+        %{--PDFStart(src="${createLink(controller: 'tramite2', action: 'downloadFileFirmado', id: id)}");--}%
     }
 
     window.addEventListener('load', startPdf);

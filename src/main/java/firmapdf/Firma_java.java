@@ -11,6 +11,7 @@ import com.itextpdf.kernel.events.PdfDocumentEvent;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.*;
 import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfPage;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
@@ -105,25 +106,40 @@ public class Firma_java {
         rect = new Rectangle(x-60, y-110, 300, 100);  /* mover para no sobreponer el rect */
 
 
-        pdfDoc.addNewPage();
+//        pdfDoc.addNewPage();
+//
+//// Create the signature field at a specific location (x, y, width, height)
+//        Rectangle rect3 = new Rectangle(50, 50, 200, 100);
+//        PdfSignatureFormField sgnField = PdfFormField.createSignature(pdfDoc, rect3);
+//
+//// Set properties
+//        sgnField.setFieldName("Signature1");
+//        sgnField.setPage(1);
 
-// Create the signature field at a specific location (x, y, width, height)
-        Rectangle rect3 = new Rectangle(50, 50, 200, 100);
-        PdfSignatureFormField sgnField = PdfFormField.createSignature(pdfDoc, rect3);
 
-// Set properties
-        sgnField.setFieldName("Signature1");
-        sgnField.setPage(1);
+//        PdfFormXObject appearance = new PdfFormXObject(new Rectangle(200, 100));
+//        PdfCanvas canvas = new PdfCanvas(appearance, pdfDoc);
+//        canvas.setStrokeColorRgb(1, 0, 0);
+//        canvas.rectangle(50, 50, 200, 100);
+//        canvas.stroke();
 
 
-        PdfFormXObject appearance = new PdfFormXObject(new Rectangle(200, 100));
-        PdfCanvas canvas = new PdfCanvas(appearance, pdfDoc);
-        canvas.setStrokeColorRgb(1, 0, 0);
-        canvas.rectangle(50, 50, 200, 100);
-        canvas.stroke();
+//        PdfPage page = pdfDoc.addNewPage();
+        PdfPage page = pdfDoc.getPage(pagina);
+
+// 3. Initialize PdfCanvas for that page
+        PdfCanvas pdfCanvas = new PdfCanvas(page);
+//        PdfCanvas pdfCanvas = new PdfCanvas(pagina);
+//
+// 4. Perform drawing operations (e.g., drawing a rectangle)
+//        pdfCanvas.rectangle(36, 650, 300, 100);
+        pdfCanvas.rectangle(rect);
+        pdfCanvas.stroke();
+
+
 
 // Add the field to the document's AcroForm
-        PdfAcroForm.getAcroForm(pdfDoc, true).addField(sgnField);
+//        PdfAcroForm.getAcroForm(pdfDoc, true).addField(sgnField);
 
         pdfDoc.close();
 
