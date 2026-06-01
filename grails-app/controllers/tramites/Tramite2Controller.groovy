@@ -2123,14 +2123,8 @@ class Tramite2Controller {
 
         def file = new File(path)
 
-        println("rrrr " + file.exists())
-
         if (file.exists()) {
-
-            println("entro")
-
             def b = file.getBytes()
-
 
             response.setContentType(ext == 'pdf' ? "application/pdf" : "image/" + ext)
             response.setHeader("Content-disposition", "attachment; filename=" + tramite?.id)
@@ -2236,6 +2230,7 @@ class Tramite2Controller {
 
     def visorPdfFirmado(){
         def tramite = Tramite.get(params.id)
-        return [id: tramite?.id]
+        def persona = Persona.get(params.persona)
+        return [id: tramite?.id, persona: persona]
     }
 }

@@ -208,7 +208,7 @@
                                             if (parts[0] === "ok") {
                                                 bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-check-circle text-success' style='font-size: 20px'></i>" + parts[1]  + "</strong>");
                                                 setTimeout(function () {
-                                                    location.href="${createLink(controller: 'tramite2', action: 'visorPdfFirmado')}?id=" + id
+                                                    location.href="${createLink(controller: 'tramite2', action: 'visorPdfFirmado')}?id=" + id + "&persona=" + '${persona?.id}'
                                                 }, 1000)
                                             } else {
                                                 bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-exclamation-triangle text-danger' style='font-size: 20px'></i>" + parts[1]  + "</strong>")

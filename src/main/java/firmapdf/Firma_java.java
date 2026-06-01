@@ -89,10 +89,8 @@ public class Firma_java {
 //    };
 
 
-    public void firmaForm(String src, String dest, Certificate[] chain, PrivateKey pk, String digestAlgorithm,
-                      String provider, PdfSigner.CryptoStandard signatureType, String reason, String location, String nombreFirma, int idTramite, double coordenadasX, double coordenadasY, int pagina)
+    public void rectanguloFirma(String src, String dest, double coordenadasX, double coordenadasY, int pagina)
             throws GeneralSecurityException, IOException, DocumentException  {
-
 
         PdfReader reader = new PdfReader(src);
         PdfWriter writer = new PdfWriter(dest);
@@ -103,8 +101,7 @@ public class Firma_java {
         float x = (float) coordenadasX;
         float y = (float) coordenadasY;
 
-        rect = new Rectangle(x-60, y-110, 300, 100);  /* mover para no sobreponer el rect */
-
+        rect = new Rectangle(x-60, y-110, 300, 100);
 
 //        pdfDoc.addNewPage();
 //
@@ -116,35 +113,17 @@ public class Firma_java {
 //        sgnField.setFieldName("Signature1");
 //        sgnField.setPage(1);
 
-
-//        PdfFormXObject appearance = new PdfFormXObject(new Rectangle(200, 100));
-//        PdfCanvas canvas = new PdfCanvas(appearance, pdfDoc);
-//        canvas.setStrokeColorRgb(1, 0, 0);
-//        canvas.rectangle(50, 50, 200, 100);
-//        canvas.stroke();
-
+        // Add the field to the document's AcroForm
+//        PdfAcroForm.getAcroForm(pdfDoc, true).addField(sgnField);
 
 //        PdfPage page = pdfDoc.addNewPage();
         PdfPage page = pdfDoc.getPage(pagina);
-
-// 3. Initialize PdfCanvas for that page
         PdfCanvas pdfCanvas = new PdfCanvas(page);
-//        PdfCanvas pdfCanvas = new PdfCanvas(pagina);
-//
-// 4. Perform drawing operations (e.g., drawing a rectangle)
-//        pdfCanvas.rectangle(36, 650, 300, 100);
         pdfCanvas.rectangle(rect);
         pdfCanvas.stroke();
-
-
-
-// Add the field to the document's AcroForm
-//        PdfAcroForm.getAcroForm(pdfDoc, true).addField(sgnField);
-
         pdfDoc.close();
 
     }
-
 
     public void sign2(String src, String dest, Certificate[] chain, PrivateKey pk, String digestAlgorithm,
                      String provider, PdfSigner.CryptoStandard signatureType, String reason, String location, String nombreFirma, int idTramite, double coordenadasX, double coordenadasY, int pagina)
@@ -169,10 +148,10 @@ public class Firma_java {
         BoundingBoxFinder boundingBoxFinder = new BoundingBoxFinder(pdPage);
         boundingBoxFinder.processPage(pdPage);
 
-        System.out.println("paginas " + num_pags);
-        System.out.println("x " + coordenadasX);
-        System.out.println("y " + coordenadasY);
-        System.out.println("num pagina " + pagina);
+//        System.out.println("paginas " + num_pags);
+//        System.out.println("x " + coordenadasX);
+//        System.out.println("y " + coordenadasY);
+//        System.out.println("num pagina " + pagina);
 
         float x = (float) coordenadasX;
         float y = (float) coordenadasY;
