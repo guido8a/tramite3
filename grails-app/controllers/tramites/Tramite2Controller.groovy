@@ -2233,4 +2233,31 @@ class Tramite2Controller {
         def persona = Persona.get(params.persona)
         return [id: tramite?.id, persona: persona]
     }
+
+    def firmarPdf(){
+        def tramite = Tramite.get(params.id)
+        def persona = Persona.get(params.persona)
+        return [id: tramite?.id, persona: persona]
+    }
+
+    def quitarFirma_ajax(){
+        def tramite = Tramite.get(params.id)
+        def path = "/var/tramites/" + tramite?.id + "_firmado${tramite?.firmados > 1 ? tramite?.firmados : ''}.pdf"
+        def file = new File(path)
+
+        if (file.exists()) {
+            file.delete()
+
+            tramite.firmados --
+            tramite.save(flush:true)
+
+            if(tramite.firmados == 0){
+                render "ok_1"
+            }else{
+                render "ok_2"
+            }
+        }else{
+            render "no"
+        }
+    }
 }

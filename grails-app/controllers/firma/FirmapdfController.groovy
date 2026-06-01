@@ -247,6 +247,9 @@ class FirmapdfController {
 
 //                    app.rectanguloFirma(dest + res1, dest + (tramite?.id + '_firmado2.pdf'), coordenadasX?.toDouble(), coordenadasY?.toDouble(), params.pagina?.toInteger());
 
+                    tramite.firmados ++
+                    tramite.save(flush:true)
+
                     render "ok_Documento firmado correctamente"
                 }else{
                     render "no_No existe la contraseña de la firma electrónica"

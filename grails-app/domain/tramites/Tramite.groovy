@@ -65,6 +65,7 @@ class Tramite implements Auditable{
 
     String aip           //S: si es de acceso a la información pública, N: normal
     String vivo = '1'         //0: ya procesado 1: en bandeja de entrada si se reactiva debe volver a 1
+    int firmados = 0
 
     def diasLaborablesServiceOld
 
@@ -101,37 +102,27 @@ class Tramite implements Auditable{
             fechaRevision column: 'trmtfcrv'
             fechaEnvio column: 'trmtfcen'
             deDepartamento column: 'dpto__de'  //el trámite envía el departamento
-//            guia column: 'trmtguia'
-
             aQuienContesta column: 'prtrcnts'
-
             contacto column: 'trmtcntc'
             telefono column: 'trmttfct'
             numeroDocExterno column: 'trmtndex'
-
             estadoTramiteExterno column: 'edtx__id'
-
             esRespuesta column: 'trmtesrs'
-
             conMembrete column: 'trmtcnmm'
             departamento column: 'dpto__id'
-
             tramitePrincipal column: 'trmttrpr'
-
             esRespuestaNueva column: 'trmtesrn'
-
             agregadoA column: 'trmtagrg'
             mail column: 'trmtmail'
             textoPara column: 'trmtpara'
             persona column: 'trmtprsn'
             departamentoNombre column: 'trmtdpto'
             departamentoSigla  column: 'trmtdpsg'
-
             creador column: 'prsn__id'
             login column: 'trmtprlg'
-
             aip column: 'trmt_aip'
             vivo column: 'trmtvivo'
+            firmados column: 'trmtfrmd'
         }
     }
     static constraints = {
@@ -162,20 +153,14 @@ class Tramite implements Auditable{
 //        guia(blank: true, nullable: true, attributes: [title: 'guia'])
         departamento(blank: true, nullable: true, attributes: [title: 'departamento'])
         aQuienContesta(blank: true, nullable: true)
-
         contacto(blank: true, nullable: true, maxSize: 63)
         telefono(blank: true, nullable: true, maxSize: 15)
         numeroDocExterno(blank: true, nullable: true, maxSize: 35)
         estadoTramiteExterno(blank: true, nullable: true)
-
         conMembrete(blank: true, nullable: true, maxSize: 1)
-
         esRespuestaNueva(blank: true, nullable: true, maxSize: 1)
-
         agregadoA(blank: true, nullable: true)
-
         mail(blank: true, nullable: true, maxSize: 40)
-
         textoPara(blank: true, nullable: true)
 /*
         persona(blank: false, nullable: false)
@@ -189,6 +174,7 @@ class Tramite implements Auditable{
         login(blank: true, nullable: true)
         aip(blank: true, nullable: true, maxSize: 1)
         vivo(blank: true, nullable: true, maxSize: 1)
+        firmados(blank: true, nullable: true)
     }
 
     def beforeValidate(List propertiesBeingValidated) {

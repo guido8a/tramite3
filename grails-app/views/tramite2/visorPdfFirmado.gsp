@@ -28,9 +28,6 @@
 %{--<img src="${resource(dir: '/assets/images', file: 'fe2.png')}" alt="Cursor" class="cursor" />--}%
 
 <div class="col-md-12">
-%{--    <div class="col-md-2 row btn-group" style="margin-bottom: 10px">--}%
-%{--        <a href="#" class="btn btn-primary" id="btnRegresar"><i class="fa fa-arrow-left"></i> Regresar </a>--}%
-%{--    </div>--}%
     <div class="col-md-1"></div>
     <div class="col-md-2 row btn-group" style="margin-bottom: 10px">
         <a href="#" class="btn btn-success" id="btnAceptar"><i class="fa fa-check"></i> Aceptar el PDF firmado </a></div>
@@ -38,7 +35,7 @@
         <a href="#" class="btn btn-danger" id="btnBorrarFirma"><i class="fa fa-times"></i> Firma incorrecta </a>
     </div>
     <div class="col-md-2 row btn-group" style="margin-bottom: 10px">
-        <a href="#" class="btn btn-warning" id="btnSegundaFirma"><i class="fa fa-key"></i> Colocar segunda firma </a>
+        <a href="#" class="btn btn-warning" id="btnOtraFirma"><i class="fa fa-key"></i> Colocar otra firma </a>
     </div>
 
     <div class="col-md-3 row btn-group" style="margin-bottom: 10px;">
@@ -82,8 +79,8 @@
     //     });
     // });
 
-    $("#btnRegresar").click(function () {
-        location.href="${createLink(controller: 'tramite2', action: 'bandejaSalida')}"
+    $("#btnOtraFirma").click(function () {
+        location.href="${createLink(controller: 'tramite2', action: 'firmarPdf')}?id=" + '${id}' + '&persona=' + '${persona?.id}'
     });
 
     var targetElement = document.getElementById("cnv");
@@ -278,7 +275,26 @@
                     className: "btn-success",
                     callback: function () {
                         var v = cargarLoader("Cargando...");
-                        location.href="${createLink(controller: 'tramite2', action: 'visorPdf')}?id=" + '${id}' + "&persona=" + '${persona?.id}'
+                        $.ajax({
+                            type    : "POST",
+                            url     : "${g.createLink(controller: 'tramite2',action: 'quitarFirma_ajax')}",
+                            data    : {
+                                id : '${id}'
+                            },
+                            success : function (msg) {
+                                v.modal("hide");
+                                var parts = msg.split("_");
+                                if(parts[0] ==="ok"){
+                                    if(parts[1] === '1'){
+                                        location.href="${createLink(controller: 'tramite2', action: 'visorPdf')}?id=" + '${id}' + "&persona=" + '${persona?.id}'
+                                    }else{
+                                        location.href="${createLink(controller: 'tramite2', action: 'firmarPdf')}?id=" + '${id}' + "&persona=" + '${persona?.id}'
+                                    }
+                                }else{
+                                    bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-exclamation-triangle text-danger' style='font-size: 20px'></i>" + "Error al borrar el pdf firmado"  + "</strong>")
+                                }
+                            }
+                        });
                     }
                 }
             }
