@@ -34,10 +34,11 @@
     <div class="col-md-2 row btn-group" style="margin-bottom: 10px">
         <a href="#" class="btn btn-danger" id="btnBorrarFirma"><i class="fa fa-times"></i> Firma incorrecta </a>
     </div>
-    <div class="col-md-2 row btn-group" style="margin-bottom: 10px">
-        <a href="#" class="btn btn-warning" id="btnOtraFirma"><i class="fa fa-key"></i> Colocar otra firma </a>
-    </div>
+%{--    <div class="col-md-2 row btn-group" style="margin-bottom: 10px">--}%
+%{--        <a href="#" class="btn btn-warning" id="btnOtraFirma"><i class="fa fa-key"></i> Colocar otra firma </a>--}%
+%{--    </div>--}%
 
+    <div class="col-md-1"></div>
     <div class="col-md-3 row btn-group" style="margin-bottom: 10px;">
         <button class="btn btn-info" id="prev"> <i class="fa fa-arrow-left"></i> Anterior</button>
         <button class="btn btn-info" id="next"> Siguiente <i class="fa fa-arrow-right"></i></button>

@@ -351,6 +351,7 @@
         var esRespuestaNueva = $tr.attr("ern");
         var esExternoCC = $tr.hasClass("externoCC");
         var firmado = $tr.hasClass("firmado");
+        var yaFirmado = $tr.hasClass("conFirmas");
 
         var copia = {
             separator_before : true,
@@ -630,61 +631,6 @@
                                                     bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-exclamation-triangle text-danger' style='font-size: 20px'></i>" + "     El documento ya fue firmado con anterioridad"  + "</strong>")
                                                 }else{
                                                     location.href="${createLink(controller: 'tramite2', action: 'visorPdf')}?id=" + id + "&persona=" + '${persona?.id}';
-                                                    %{--$.ajax({--}%
-                                                    %{--    type:'POST',--}%
-                                                    %{--    url: '${createLink(controller: 'tramite2', action: 'passwordFirma_ajax')}',--}%
-                                                    %{--    data:{--}%
-                                                    %{--        id: id--}%
-                                                    %{--    },--}%
-                                                    %{--    success: function (msg1){--}%
-                                                    %{--        var b = bootbox.dialog({--}%
-                                                    %{--            id      : "dlgPassFirma",--}%
-                                                    %{--            title   : "Contraseña de la firma electrónica",--}%
-                                                    %{--            class: 'modal-sm',--}%
-                                                    %{--            message : msg1,--}%
-                                                    %{--            buttons : {--}%
-                                                    %{--                cancelar : {--}%
-                                                    %{--                    label     : '<i class="fa fa-times"></i> Cancelar',--}%
-                                                    %{--                    className : 'btn-danger',--}%
-                                                    %{--                    callback  : function () {--}%
-                                                    %{--                    }--}%
-                                                    %{--                },--}%
-                                                    %{--                aceptar  : {--}%
-                                                    %{--                    label     : '<i class="fa fa-check"></i> Aceptar',--}%
-                                                    %{--                    className : 'btn-success',--}%
-                                                    %{--                    callback  : function () {--}%
-                                                    %{--                        var passwordFirma = $("#password").val();--}%
-                                                    %{--                        if(passwordFirma !== ''){--}%
-                                                    %{--                            var cl = cargarLoader("Firmando...");--}%
-                                                    %{--                            $.ajax({--}%
-                                                    %{--                                type: 'POST',--}%
-                                                    %{--                                url: '${createLink(controller: 'firmapdf', action: 'firmarTramite')}',--}%
-                                                    %{--                                async: true,--}%
-                                                    %{--                                data: {--}%
-                                                    %{--                                    id: id,--}%
-                                                    %{--                                    persona: '${persona?.id}',--}%
-                                                    %{--                                    password: passwordFirma--}%
-                                                    %{--                                },--}%
-                                                    %{--                                success: function (msg) {--}%
-                                                    %{--                                    cl.modal("hide");--}%
-                                                    %{--                                    var parts = msg.split("_");--}%
-                                                    %{--                                    if (parts[0] === "ok") {--}%
-                                                    %{--                                        bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-check-circle text-success' style='font-size: 20px'></i>" + parts[1]  + "</strong>")--}%
-                                                    %{--                                        cargarBandeja();--}%
-                                                    %{--                                    } else {--}%
-                                                    %{--                                        bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-exclamation-triangle text-danger' style='font-size: 20px'></i>" + parts[1]  + "</strong>")--}%
-                                                    %{--                                    }--}%
-                                                    %{--                                }--}%
-                                                    %{--                            });--}%
-                                                    %{--                        }else{--}%
-                                                    %{--                            bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-exclamation-triangle text-danger' style='font-size: 20px'></i>" + "Ingrese una contraseña"  + "</strong>")--}%
-                                                    %{--                        }--}%
-                                                    %{--                    }--}%
-                                                    %{--                }--}%
-                                                    %{--            }--}%
-                                                    %{--        })--}%
-                                                    %{--    }--}%
-                                                    %{--})--}%
                                                 }
                                             }
                                         });
@@ -701,6 +647,15 @@
                 });
             }
         }; //firmar
+
+        var otraFirma = {
+            label  : "Otra Firma",
+            icon   : "fa fa-lock",
+            action : function () {
+                var cl = cargarLoader("Cargando...");
+                location.href="${createLink(controller: 'tramite2', action: 'firmarPdf')}?id=" + id + "&persona=" + '${persona?.id}';
+            }
+        };
 
         var verificar = {
             label  : "Verificar firma",
@@ -1069,8 +1024,12 @@
         if (!esSumilla) {
             items.ver = ver;
             items.firmar = firmar;
-            items.verificar = verificar;
+            if(yaFirmado){
+                items.verificar = verificar;
+                items.otraFirma = otraFirma
+            }
         }
+
         <g:if test="${session.usuario.getPuedeVer()}">
         items.detalles = detalles;
         items.arbol = arbol;

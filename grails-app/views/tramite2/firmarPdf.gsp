@@ -25,7 +25,7 @@
 
 <div class="col-md-12">
     <div class="col-md-2 row btn-group" style="margin-bottom: 10px">
-        <a href="#" class="btn btn-primary" id="btnRegresar"><i class="fa fa-arrow-left"></i> Cancelar firma </a>
+        <a href="#" class="btn btn-primary" id="btnRegresar"><i class="fa fa-arrow-left"></i> Regresar</a>
     </div>
     <div class="col-md-3"></div>
     <div class="col-md-4 row btn-group" style="margin-bottom: 10px">
@@ -61,7 +61,7 @@
     });
 
     $("#btnRegresar").click(function () {
-        location.href="${createLink(controller: 'tramite2', action: 'visorPdfFirmado')}?id=" + '${id}' + "&persona=" + '${persona?.id}'
+        location.href="${createLink(controller: 'tramite2', action: 'bandejaSalida')}"
     });
 
     var targetElement = document.getElementById("cnv");
