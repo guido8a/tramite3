@@ -49,6 +49,8 @@
 
 <script type="text/javascript">
 
+    var fe;
+
     $(function () {
         $("#cnv").mousemove(function (e) {
             $(".cursor").show().css({
@@ -122,10 +124,10 @@
                 var mouseX = event.clientX - rect.left;
                 var mouseY = event.clientY - rect.top;
                 var coordenadasPDF = viewport.convertToPdfPoint(mouseX, mouseY);
-                // console.log("coordenadas " + mouseX + " " + mouseY);
-                // console.log("coord. pdf " + coordenadasPDF);
 
-                firmarPDF('${id}', paginaActual, coordenadasPDF)
+                cargarCertificadoFirma('${id}', paginaActual, coordenadasPDF);
+
+                %{--firmarPDF('${id}', paginaActual, coordenadasPDF)--}%
             });
         }
 
@@ -155,70 +157,99 @@
 
     window.addEventListener('load', startPdf);
 
-    function firmarPDF(id, pagina, coordenadas){
+    %{--function firmarPDF(id, pagina, coordenadas){--}%
+    %{--    $.ajax({--}%
+    %{--        type:'POST',--}%
+    %{--        url: '${createLink(controller: 'tramite2', action: 'passwordFirma_ajax')}',--}%
+    %{--        data:{--}%
+    %{--            id: id--}%
+    %{--        },--}%
+    %{--        success: function (msg1){--}%
+    %{--            var b = bootbox.dialog({--}%
+    %{--                id      : "dlgPassFirma",--}%
+    %{--                title   : "Contraseña de la firma electrónica",--}%
+    %{--                class: 'modal-sm',--}%
+    %{--                message : msg1,--}%
+    %{--                buttons : {--}%
+    %{--                    cancelar : {--}%
+    %{--                        label     : '<i class="fa fa-times"></i> Cancelar',--}%
+    %{--                        className : 'btn-danger',--}%
+    %{--                        callback  : function () {--}%
+    %{--                        }--}%
+    %{--                    },--}%
+    %{--                    aceptar  : {--}%
+    %{--                        label     : '<i class="fa fa-check"></i> Aceptar',--}%
+    %{--                        className : 'btn-success',--}%
+    %{--                        callback  : function () {--}%
+    %{--                            var passwordFirma = $("#password").val();--}%
+    %{--                            if(passwordFirma !== ''){--}%
+    %{--                                var cl = cargarLoader("Firmando...");--}%
+    %{--                                $.ajax({--}%
+    %{--                                    type: 'POST',--}%
+    %{--                                    url: '${createLink(controller: 'firmapdf', action: 'firmarTramite')}',--}%
+    %{--                                    async: true,--}%
+    %{--                                    data: {--}%
+    %{--                                        id: id,--}%
+    %{--                                        persona: '${persona?.id}',--}%
+    %{--                                        password: passwordFirma,--}%
+    %{--                                        coordenadas: coordenadas,--}%
+    %{--                                        pagina: pagina--}%
+    %{--                                    },--}%
+    %{--                                    success: function (msg) {--}%
+    %{--                                        cl.modal("hide");--}%
+    %{--                                        var parts = msg.split("_");--}%
+    %{--                                        if (parts[0] === "ok") {--}%
+    %{--                                            bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-check-circle text-success' style='font-size: 20px'></i>" + parts[1]  + "</strong>");--}%
+    %{--                                            setTimeout(function () {--}%
+    %{--                                                location.href="${createLink(controller: 'tramite2', action: 'visorPdfFirmado')}?id=" + id + "&persona=" + '${persona?.id}'--}%
+    %{--                                            }, 1000)--}%
+    %{--                                        } else {--}%
+    %{--                                            bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-exclamation-triangle text-danger' style='font-size: 20px'></i>" + parts[1]  + "</strong>")--}%
+    %{--                                        }--}%
+    %{--                                    }--}%
+    %{--                                });--}%
+    %{--                            }else{--}%
+    %{--                                bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-exclamation-triangle text-danger' style='font-size: 20px'></i>" + "Ingrese una contraseña"  + "</strong>")--}%
+    %{--                            }--}%
+    %{--                        }--}%
+    %{--                    }--}%
+    %{--                }--}%
+    %{--            })--}%
+    %{--        }--}%
+    %{--    })--}%
+    %{--}--}%
+
+    function cargarCertificadoFirma(id, pagina, coordenadas){
         $.ajax({
-            type:'POST',
-            url: '${createLink(controller: 'tramite2', action: 'passwordFirma_ajax')}',
-            data:{
-                id: id
+            type    : "POST",
+            url     : "${createLink(controller: 'tramite2', action:'cargarFirma_ajax')}",
+            data    : {
+                id: id,
+                persona: '${persona?.id}',
+                coordenadas: coordenadas,
+                pagina: pagina
             },
-            success: function (msg1){
-                var b = bootbox.dialog({
-                    id      : "dlgPassFirma",
-                    title   : "Contraseña de la firma electrónica",
-                    class: 'modal-sm',
-                    message : msg1,
+            success : function (msg) {
+                fe = bootbox.dialog({
+                    id      : "dlgCargarFirma",
+                    title   : "Cargar certificado de firma electrónica",
+                    message : msg,
                     buttons : {
                         cancelar : {
-                            label     : '<i class="fa fa-times"></i> Cancelar',
-                            className : 'btn-danger',
+                            label     : "<i class='fa fa-times'></i> Cerrar",
+                            className : "btn btn-primary",
                             callback  : function () {
-                            }
-                        },
-                        aceptar  : {
-                            label     : '<i class="fa fa-check"></i> Aceptar',
-                            className : 'btn-success',
-                            callback  : function () {
-                                var passwordFirma = $("#password").val();
-                                if(passwordFirma !== ''){
-                                    var cl = cargarLoader("Firmando...");
-                                    $.ajax({
-                                        type: 'POST',
-                                        url: '${createLink(controller: 'firmapdf', action: 'firmarTramite')}',
-                                        async: true,
-                                        data: {
-                                            id: id,
-                                            persona: '${persona?.id}',
-                                            password: passwordFirma,
-                                            coordenadas: coordenadas,
-                                            pagina: pagina
-                                        },
-                                        success: function (msg) {
-                                            cl.modal("hide");
-                                            var parts = msg.split("_");
-                                            if (parts[0] === "ok") {
-                                                bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-check-circle text-success' style='font-size: 20px'></i>" + parts[1]  + "</strong>");
-                                                setTimeout(function () {
-                                                    location.href="${createLink(controller: 'tramite2', action: 'visorPdfFirmado')}?id=" + id + "&persona=" + '${persona?.id}'
-                                                }, 1000)
-                                            } else {
-                                                bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-exclamation-triangle text-danger' style='font-size: 20px'></i>" + parts[1]  + "</strong>")
-                                            }
-                                        }
-                                    });
-                                }else{
-                                    bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-exclamation-triangle text-danger' style='font-size: 20px'></i>" + "Ingrese una contraseña"  + "</strong>")
-                                }
                             }
                         }
-                    }
-                })
-            }
-        })
+                    } //buttons
+                }); //dialog
+            } //success
+        }); //ajax
     }
 
-
-
+    function cerrarCargarCertificado() {
+        fe.modal("hide");
+    }
 
 </script>
 </body>

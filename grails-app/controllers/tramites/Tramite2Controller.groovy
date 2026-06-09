@@ -625,7 +625,7 @@ class Tramite2Controller {
                         }
                     }
                 }else{
-                   contestados += "No se puede quitar el enviado del trámite!"
+                    contestados += "No se puede quitar el enviado del trámite!"
                 }
             }
 
@@ -2150,7 +2150,7 @@ class Tramite2Controller {
 
     def downloadFileFirmado() {
         def tramite = Tramite.get(params.id)
-        def path = "/var/tramites/" + tramite?.id + "_firmado2.pdf"
+        def path = "/var/tramites/" + tramite?.id + "_firmado_${tramite?.firmados}.pdf"
 
         def file = new File(path)
 
@@ -2204,9 +2204,9 @@ class Tramite2Controller {
         def file = new File(path)
 
         if(file.exists()){
-           return true
+            return true
         }else{
-           return false
+            return false
         }
     }
 
@@ -2231,7 +2231,7 @@ class Tramite2Controller {
     def visorPdfFirmado(){
         def tramite = Tramite.get(params.id)
         def persona = Persona.get(params.persona)
-        return [id: tramite?.id, persona: persona]
+        return [id: tramite?.id, persona: persona, tramite: tramite]
     }
 
     def firmarPdf(){
@@ -2242,13 +2242,13 @@ class Tramite2Controller {
 
     def quitarFirma_ajax(){
         def tramite = Tramite.get(params.id)
-        def path = "/var/tramites/" + tramite?.id + "_firmado${tramite?.firmados > 1 ? tramite?.firmados : ''}.pdf"
+        def path = "/var/tramites/" + tramite?.id + "_firmado${tramite?.firmados > 1 ? ("_" + tramite?.firmados) : ''}.pdf"
         def file = new File(path)
 
         if (file.exists()) {
             file.delete()
 
-            tramite.firmados --
+            tramite.firmados = (tramite.firmados - 1)
             tramite.save(flush:true)
 
             if(tramite.firmados == 0){
@@ -2258,6 +2258,61 @@ class Tramite2Controller {
             }
         }else{
             render "no"
+        }
+    }
+
+    def cargarFirma_ajax(){
+        String coordenadasX = params."coordenadas[]"[0]
+        String coordenadasY = params."coordenadas[]"[1]
+        def tramite = Tramite.get(params.id)
+        def persona = Persona.get(params.persona)
+        return [tramite: tramite, persona: persona, coordenadasX: coordenadasX, coordenadasY: coordenadasY,  paginaActual: params.pagina]
+    }
+
+    def uploadCertificadoFirma() {
+
+        def acceptedExt = ["p12"]
+        def tramite = Tramite.get(params.id)
+        def path = "/var/tramites/certificado/"
+        new File(path).mkdirs()
+
+        def f = request.getFile('file')  //archivo = name del input type file
+
+        if (f && !f.empty) {
+            def fileName = f.getOriginalFilename() //nombre original del archivo
+            def ext
+            def parts = fileName.split("\\.")
+            fileName = ""
+            parts.eachWithIndex { obj, i ->
+                if (i < parts.size() - 1) {
+                    fileName += obj
+                } else {
+                    ext = obj
+                }
+            }
+            if (acceptedExt.contains(ext.toLowerCase())) {
+                fileName = tramite?.id + "_${tramite?.firmados}." + ext.toLowerCase()
+                def pathFile = path + fileName
+                def file = new File(pathFile)
+
+//                def old = empresa?.firma
+//                if (old && old.trim() != "") {
+                def oldPath = "/var/tramites/certificado/" + fileName
+                def oldFile = new File(oldPath)
+                if (oldFile.exists()) {
+                    oldFile.delete()
+                }
+//                }
+
+                f.transferTo(file)
+
+                render "ok_Certificado de firma electrónica subido correctamente"
+
+            } else {
+                render "no_Seleccione un archivo de tipo P12"
+            }
+        } else {
+            render "no_Seleccione un archivo"
         }
     }
 }

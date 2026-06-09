@@ -366,4 +366,113 @@ class FirmapdfController {
     }
 
 
+    def firmaSecundaria(){
+
+        String coordenadasX = params.coordenadasX
+        String coordenadasY = params.coordenadasY
+        def valido
+        def usro = Persona.get(params.persona)
+        def tramite = Tramite.get(params.id)
+        def fecha = new Date().format('dd-MM-yyyy HH:mm')
+        String src = tramite?.firmados == 1 ? ('/var/tramites/' + tramite?.id + "_firmado.pdf") : ('/var/tramites/' + tramite?.id + "_firmado_${tramite?.firmados}.pdf")
+        String dest = '/var/tramites/'
+        String res1 = tramite?.id + "_firmado_${tramite?.firmados + 1}.pdf"
+        char[] pass = params.password?.toCharArray();
+        String certificado = '/var/tramites/certificado/' + tramite?.id + "_${tramite?.firmados + 1}.p12";
+
+        def archivoFirma = new File(certificado)
+        def existeArchivoFirma = archivoFirma.exists()
+
+        def archivoFirmado = dest + src
+        File fileFirmado = new File(archivoFirmado);
+
+        if(fileFirmado.exists()){
+            render "no_El documento no ha sido firmado previamente"
+        }else{
+            if(existeArchivoFirma){
+                if(pass) {
+                    File file = new File(src);
+                    file.mkdirs();
+
+                    BouncyCastleProvider provider = new BouncyCastleProvider();
+                    Security.addProvider(provider);
+                    KeyStore ks = KeyStore.getInstance("pkcs12", provider.getName());
+
+                    try {
+                        ks.load(new FileInputStream(certificado), pass)
+                        System.out.println("Keystore password is correct.");
+                    } catch (e) {
+                        System.out.println("Keystore password is incorrect.");
+                        render "no_La contraseña del certificado de firma electrónica es incorrecto"
+                        return
+                    }
+
+                    //comprobación de valides de certificado
+                    Enumeration<String> aliases = ks.aliases();
+
+                    while ( aliases.hasMoreElements()) {
+                        String alias2 =aliases.nextElement();
+                        Certificate cert = ks.getCertificate(alias2);
+                        if (cert instanceof X509Certificate) {
+                            X509Certificate x509Cert = (X509Certificate) cert;
+                            try {
+                                x509Cert.checkValidity(new Date());
+                                println("valido")
+                            } catch (Exception e) {
+                                println("expirado")
+                                render "no_El certificado de firma electrónica ya ha expirado"
+                                return true
+                            }
+                        }
+                    }
+
+                    ks.load(new FileInputStream(certificado), pass);
+                    String alias = ks.aliases().nextElement();
+                    PrivateKey pk = (PrivateKey) ks.getKey(alias, pass);
+                    Certificate[] chain = ks.getCertificateChain(alias);
+
+                    Enumeration elist = ks.aliases();
+                    int count = 0;
+                    while (elist.hasMoreElements()) {
+                        elist.nextElement();
+                        count++;
+                    }
+
+                    String[] alist = new String[count];
+                    elist = ks.aliases();
+                    count = 0;
+
+                    while (elist.hasMoreElements()) {
+                        alist[count] = new String(((String)elist.nextElement()).toString());
+
+                        if( (PrivateKey) ks.getKey(alist[count], pass) ) {
+                            pk = (PrivateKey) ks.getKey(alist[count], pass)
+                            chain = ks.getCertificateChain(alist[count])
+                        }
+                        count++;
+                    }
+
+                    def tx_firma = "Documento ${tramite?.codigo} firmado electrónicamente"
+                    def location = "Quito, Ecuador"
+
+                    Firma_java app = new Firma_java();
+                    app.generarCodigoQROtros(alist.last()?.toUpperCase()?.toString(), fecha?.toString(), tx_firma?.toString(), location?.toString(), tramite?.id?.toInteger(), (tramite?.firmados + 1))
+
+                    app.signOtros(src, dest + res1, chain, pk, DigestAlgorithms.SHA256, provider.getName(),
+                            PdfSigner.CryptoStandard.CMS, tx_firma, location, alist[1], tramite?.id?.toInteger(),coordenadasX?.toDouble(), coordenadasY?.toDouble(), params.pagina?.toInteger(), (tramite?.firmados + 1));
+
+                    tramite.firmados = tramite.firmados + 1
+                    tramite.save(flush:true)
+
+                    render "ok_Documento firmado correctamente"
+                }else{
+                    render "no_No existe la contraseña de la firma electrónica"
+                }
+            }else{
+                render "no_No existe el certificado de la firma electrónica"
+            }
+        }
+    }
+
+
 }
