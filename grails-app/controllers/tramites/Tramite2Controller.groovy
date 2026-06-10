@@ -2237,12 +2237,12 @@ class Tramite2Controller {
     def firmarPdf(){
         def tramite = Tramite.get(params.id)
         def persona = Persona.get(params.persona)
-        return [id: tramite?.id, persona: persona]
+        return [id: tramite?.id, persona: persona, tramite: tramite]
     }
 
     def quitarFirma_ajax(){
         def tramite = Tramite.get(params.id)
-        def path = "/var/tramites/" + tramite?.id + "_firmado${tramite?.firmados > 1 ? ("_" + tramite?.firmados) : ''}.pdf"
+        def path = "/var/tramites/" + tramite?.id + "_firmado${tramite?.firmados != 1 ? ("_" + tramite?.firmados) : ''}.pdf"
         def file = new File(path)
 
         if (file.exists()) {
@@ -2291,7 +2291,7 @@ class Tramite2Controller {
                 }
             }
             if (acceptedExt.contains(ext.toLowerCase())) {
-                fileName = tramite?.id + "_${tramite?.firmados}." + ext.toLowerCase()
+                fileName = tramite?.id + "_${tramite?.firmados + 1}." + ext.toLowerCase()
                 def pathFile = path + fileName
                 def file = new File(pathFile)
 

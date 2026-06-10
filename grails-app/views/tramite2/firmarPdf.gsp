@@ -152,7 +152,12 @@
     }
 
     function  startPdf() {
+        <g:if test="${tramite?.firmados != 1}">
+        PDFStart(src="${createLink(controller: 'tramite2', action: 'downloadFileFirmado', id: id)}");
+        </g:if>
+        <g:else>
         PDFStart(src="${createLink(controller: 'tramite2', action: 'downloadFile', id: id)}");
+        </g:else>
     }
 
     window.addEventListener('load', startPdf);
