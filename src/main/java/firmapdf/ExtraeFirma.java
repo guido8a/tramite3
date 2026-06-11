@@ -148,7 +148,7 @@ public class ExtraeFirma {
 
 
                         String signerName = cert.getSubjectX500Principal().getName();
-//                        System.out.println("Signer Name for signature '" + signatureName + "': " + signerName);
+                        System.out.println("Signer Name for signature '" + signatureName + "': " + signerName);
 
                         respuestas[1] = signerName;
                     }

@@ -653,7 +653,6 @@
             icon   : "fa fa-lock",
             action : function () {
                 var cl = cargarLoader("Cargando...");
-
                 location.href="${createLink(controller: 'tramite2', action: 'firmarPdf')}?id=" + id + "&persona=" + '${persona?.id}';
             }
         };

@@ -345,7 +345,7 @@ class FirmapdfController {
 
     def verificarFirma2_ajax(){
         def tramite = Tramite.get(params.id)
-        String dest = '/var/tramites/' + tramite?.id + '_firmado.pdf'
+        String dest = "/var/tramites/" + tramite?.id + "_firmado${tramite?.firmados != 1 ? ("_" + tramite?.firmados) : ""}.pdf"
 
         BouncyCastleProvider provider = new BouncyCastleProvider();
         Security.addProvider(provider);
@@ -358,6 +358,9 @@ class FirmapdfController {
 
             ExtraeFirma extraeFirma = new ExtraeFirma()
             def respuesta = extraeFirma.leerFirma(dest)
+//            def respuesta2 = extraeFirma.cuenta(dest)
+//
+//            println("--- " + respuesta2)
 
             render "ok_" +  respuesta[0] + "_" + respuesta[1].split("CN=").last()
         }else{

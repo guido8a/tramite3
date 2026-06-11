@@ -136,7 +136,7 @@ public class Firma_java {
 
         PdfRectangle boundingBox = new PdfRectangle(20, 30, 300, 100);
 
-        StampingProperties stampingProperties = new StampingProperties();
+        StampingProperties stampingProperties = new StampingProperties().useAppendMode();
         PdfSigner signer = new PdfSigner(reader2, new FileOutputStream(dest), new StampingProperties());
         Rectangle rect = new Rectangle(100, 100, 400, 100);
 
@@ -299,7 +299,7 @@ public class Firma_java {
 
         PdfRectangle boundingBox = new PdfRectangle(20, 30, 300, 100);
 
-        StampingProperties stampingProperties = new StampingProperties();
+        StampingProperties stampingProperties = new StampingProperties().useAppendMode();
         PdfSigner signer = new PdfSigner(reader2, new FileOutputStream(dest), new StampingProperties());
         Rectangle rect = new Rectangle(100, 100, 400, 100);
 
