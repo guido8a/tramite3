@@ -115,7 +115,6 @@ public class ExtraeFirma {
 
             String[] respuestas = new String[2];
 
-
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(archivo));
             SignatureUtil signatureUtil = new SignatureUtil(pdfDoc);
 
@@ -137,23 +136,27 @@ public class ExtraeFirma {
 
                     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
                     String formatted = sdf.format(pkcs7.getSignDate().getTime());
-//                    System.out.println("formateado '" + formatted);
+                    System.out.println("formateado '" + formatted);
 
-                    respuestas[0] = formatted;
+                    respuestas[0] += formatted;
 
                     if (cert != null) {
                         // Extract the signer's name from the certificate's subject distinguished name
 
                         cert.checkValidity(new Date());
-
-
                         String signerName = cert.getSubjectX500Principal().getName();
                         System.out.println("Signer Name for signature '" + signatureName + "': " + signerName);
 
-                        respuestas[1] = signerName;
+                        respuestas[1] += signerName;
                     }
                 }
             }
+
+
+
+            System.out.println("respuesta '" + respuestas[0]);
+            System.out.println("respuesta '" + respuestas[1]);
+
             pdfDoc.close();
             return respuestas;
         }

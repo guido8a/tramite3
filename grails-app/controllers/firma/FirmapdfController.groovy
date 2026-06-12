@@ -344,6 +344,8 @@ class FirmapdfController {
     }
 
     def verificarFirma2_ajax(){
+        def fechas
+        def personas
         def tramite = Tramite.get(params.id)
         String dest = "/var/tramites/" + tramite?.id + "_firmado${tramite?.firmados != 1 ? ("_" + tramite?.firmados) : ""}.pdf"
 
@@ -359,8 +361,19 @@ class FirmapdfController {
             ExtraeFirma extraeFirma = new ExtraeFirma()
             def respuesta = extraeFirma.leerFirma(dest)
 //            def respuesta2 = extraeFirma.cuenta(dest)
-//
 //            println("--- " + respuesta2)
+
+            respuesta[0].each {
+                fechas += it
+            }
+
+            respuesta[1].each {
+                personas += it
+            }
+
+            println("fde " + fechas)
+            println("prsonas " + personas)
+
 
             render "ok_" +  respuesta[0] + "_" + respuesta[1].split("CN=").last()
         }else{
