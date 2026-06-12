@@ -158,7 +158,7 @@ public class Firma_java {
 
         rect = new Rectangle(x-60, y-110, 300, 100);  /* mover para no sobreponer el rect */
 
-        PdfSigner signer2 = new PdfSigner(reader3, new FileOutputStream(dest), new StampingProperties());
+        PdfSigner signer2 = new PdfSigner(reader3, new FileOutputStream(dest), new StampingProperties().useAppendMode());
         PdfSignatureAppearance appearance2 = signer2.getSignatureAppearance();
         appearance2.setPageRect(rect); // x, y, width, height for the signature field
 //        appearance2.setPageNumber(num_pags);
@@ -316,7 +316,7 @@ public class Firma_java {
 
         rect = new Rectangle(x-60, y-110, 300, 100);  /* mover para no sobreponer el rect */
 
-        PdfSigner signer2 = new PdfSigner(reader3, new FileOutputStream(dest), new StampingProperties());
+        PdfSigner signer2 = new PdfSigner(reader3, new FileOutputStream(dest), new StampingProperties().useAppendMode());
         PdfSignatureAppearance appearance2 = signer2.getSignatureAppearance();
         appearance2.setPageRect(rect); // x, y, width, height for the signature field
 //        appearance2.setPageNumber(num_pags);
