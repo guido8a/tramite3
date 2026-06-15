@@ -664,18 +664,25 @@
                 var cl = cargarLoader("Comprobando...");
                 $.ajax({
                     type    : 'POST',
-                    url     : '${createLink(controller: 'firmapdf', action: 'verificarFirma2_ajax')}',
+                    url     : '${createLink(controller: 'firmapdf', action: 'verificarFirmas_ajax')}',
                     data    : {
                         id : id
                     },
                     success : function (msg) {
                         cl.modal("hide");
-                        var parts = msg.split("_");
-                        if(parts[0] === 'ok'){
-                            bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-check-circle text-success' style='font-size: 20px'></i>" + "<br/>" + "Firmado por: " + parts[2]  + "<br/>" + "Fecha firma:" +  parts[1]  +  " </strong>")
-                        }else{
-                            bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-exclamation-triangle text-danger' style='font-size: 20px'></i>" + parts[1] + " </strong>")
-                        }
+                        var b = bootbox.dialog({
+                            id      : "dlgFirmas",
+                            title   : "Firmas en el documento",
+                            message : msg,
+                            buttons : {
+                                cancelar : {
+                                    label     : '<i class="fa fa-times"></i> Cerrar',
+                                    className : 'btn-primary',
+                                    callback  : function () {
+                                    }
+                                }
+                            }
+                        })
                     }
                 });
             }

@@ -13,12 +13,10 @@ import java.io.IOException;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
+import java.sql.Array;
 import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ExtraeFirma {
 
@@ -111,9 +109,13 @@ public class ExtraeFirma {
         return signatureCount;
     }
 //
-        public static String[] leerFirma(String archivo) throws Exception {
+//        public static String[] leerFirma(String archivo) throws Exception {
+        public static ArrayList<String> leerFirma(String archivo, int tipo) throws Exception {
 
             String[] respuestas = new String[2];
+            ArrayList<String> fechas = new ArrayList<>();
+            ArrayList<String> nombres = new ArrayList<>();
+
 
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(archivo));
             SignatureUtil signatureUtil = new SignatureUtil(pdfDoc);
@@ -136,31 +138,34 @@ public class ExtraeFirma {
 
                     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
                     String formatted = sdf.format(pkcs7.getSignDate().getTime());
-                    System.out.println("formateado '" + formatted);
+//                    System.out.println("fechas " + formatted);
 
                     respuestas[0] += formatted;
+                    fechas.add(formatted);
+
 
                     if (cert != null) {
                         // Extract the signer's name from the certificate's subject distinguished name
 
                         cert.checkValidity(new Date());
                         String signerName = cert.getSubjectX500Principal().getName();
-                        System.out.println("Signer Name for signature '" + signatureName + "': " + signerName);
+//                        System.out.println("Signer Name for signature '" + signatureName + "': " + signerName);
 
                         respuestas[1] += signerName;
+                        nombres.add(signerName.split("CN=")[1]);
                     }
                 }
             }
 
-
-
-            System.out.println("respuesta '" + respuestas[0]);
-            System.out.println("respuesta '" + respuestas[1]);
+//            System.out.println("fechas " + fechas);
+//            System.out.println("nombres " + nombres);
 
             pdfDoc.close();
-            return respuestas;
+            if(tipo == 0){
+                return fechas;
+            }else{
+                return nombres;
+            }
         }
-
-
 }
 

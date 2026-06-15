@@ -343,9 +343,7 @@ class FirmapdfController {
         }
     }
 
-    def verificarFirma2_ajax(){
-        def fechas
-        def personas
+    def verificarFirmas_ajax(){
         def tramite = Tramite.get(params.id)
         String dest = "/var/tramites/" + tramite?.id + "_firmado${tramite?.firmados != 1 ? ("_" + tramite?.firmados) : ""}.pdf"
 
@@ -357,30 +355,16 @@ class FirmapdfController {
         def existe = src.exists()
 
         if(existe){
-
             ExtraeFirma extraeFirma = new ExtraeFirma()
-            def respuesta = extraeFirma.leerFirma(dest)
+            def fechas = extraeFirma.leerFirma(dest,0)
+            def nombres = extraeFirma.leerFirma(dest,1)
 //            def respuesta2 = extraeFirma.cuenta(dest)
 //            println("--- " + respuesta2)
-
-            respuesta[0].each {
-                fechas += it
-            }
-
-            respuesta[1].each {
-                personas += it
-            }
-
-            println("fde " + fechas)
-            println("prsonas " + personas)
-
-
-            render "ok_" +  respuesta[0] + "_" + respuesta[1].split("CN=").last()
+            return [fechas: fechas, nombres: nombres, tramite: tramite]
         }else{
-            render"no_No existe un documento firmado"
+           return null
         }
     }
-
 
     def firmaSecundaria(){
 
