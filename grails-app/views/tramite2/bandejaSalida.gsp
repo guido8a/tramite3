@@ -93,7 +93,7 @@
     }
 
     .firmado{
-        border: solid 2px #00aa00;
+        border: solid 2px #9eb6d9;
     }
 
     </style>
