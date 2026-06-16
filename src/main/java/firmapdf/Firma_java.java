@@ -126,7 +126,7 @@ public class Firma_java {
     }
 
     public void sign2(String src, String dest, Certificate[] chain, PrivateKey pk, String digestAlgorithm,
-                     String provider, PdfSigner.CryptoStandard signatureType, String reason, String location, String nombreFirma, int idTramite, double coordenadasX, double coordenadasY, int pagina)
+                      String provider, PdfSigner.CryptoStandard signatureType, String reason, String location, String nombreFirma, int idTramite, double coordenadasX, double coordenadasY, int pagina)
             throws GeneralSecurityException, IOException, DocumentException  {
         PdfReader reader = new PdfReader(src);
         PdfReader reader2 = new PdfReader(src);
@@ -148,6 +148,10 @@ public class Firma_java {
         BoundingBoxFinder boundingBoxFinder = new BoundingBoxFinder(pdPage);
         boundingBoxFinder.processPage(pdPage);
 
+        Rectangle pageSize = doc.getPage(pagina).getPageSizeWithRotation();
+//        System.out.println("size " + pageSize.getWidth());
+
+
 //        System.out.println("paginas " + num_pags);
 //        System.out.println("x " + coordenadasX);
 //        System.out.println("y " + coordenadasY);
@@ -156,7 +160,11 @@ public class Firma_java {
         float x = (float) coordenadasX;
         float y = (float) coordenadasY;
 
-        rect = new Rectangle(x-60, y-110, 300, 100);  /* mover para no sobreponer el rect */
+        if(pageSize.getWidth() > 600){
+            rect = new Rectangle(x-10, y-60, 100, 300);  /* mover para no sobreponer el rect */
+        }else{
+            rect = new Rectangle(x-60, y-110, 300, 100);  /* mover para no sobreponer el rect */
+        }
 
         PdfSigner signer2 = new PdfSigner(reader3, new FileOutputStream(dest), new StampingProperties().useAppendMode());
         PdfSignatureAppearance appearance2 = signer2.getSignatureAppearance();
@@ -289,7 +297,7 @@ public class Firma_java {
 
 
     public void signOtros(String src, String dest, Certificate[] chain, PrivateKey pk, String digestAlgorithm,
-                      String provider, PdfSigner.CryptoStandard signatureType, String reason, String location, String nombreFirma, int idTramite, double coordenadasX, double coordenadasY, int pagina, int numeroFirma)
+                          String provider, PdfSigner.CryptoStandard signatureType, String reason, String location, String nombreFirma, int idTramite, double coordenadasX, double coordenadasY, int pagina, int numeroFirma)
             throws GeneralSecurityException, IOException, DocumentException  {
         PdfReader reader = new PdfReader(src);
         PdfReader reader2 = new PdfReader(src);
@@ -370,35 +378,35 @@ public class Firma_java {
 
 
 
-        public static void generateQRCode(String data, String filePath, int width, int height)
-                throws WriterException, IOException {
+    public static void generateQRCode(String data, String filePath, int width, int height)
+            throws WriterException, IOException {
 
-            Map<EncodeHintType, Object> hints = new HashMap<>();
-            hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
-            hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H); // High error correction
-            hints.put(EncodeHintType.MARGIN, 4); // White border around the QR code
+        Map<EncodeHintType, Object> hints = new HashMap<>();
+        hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+        hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H); // High error correction
+        hints.put(EncodeHintType.MARGIN, 4); // White border around the QR code
 
-            BitMatrix bitMatrix = new MultiFormatWriter().encode(
-                    data, BarcodeFormat.QR_CODE, width, height, hints);
+        BitMatrix bitMatrix = new MultiFormatWriter().encode(
+                data, BarcodeFormat.QR_CODE, width, height, hints);
 
-            Path path = Paths.get(filePath);
-            MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
-            System.out.println("QR Code generated successfully at: " + filePath);
-        }
+        Path path = Paths.get(filePath);
+        MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
+        System.out.println("QR Code generated successfully at: " + filePath);
+    }
 
-        public void generarCodigoQR(String nombre, String fecha, String razon, String lugar, int idTramite) {
+    public void generarCodigoQR(String nombre, String fecha, String razon, String lugar, int idTramite) {
 //            String data = "https://www.example.com"; // Data to encode in the QR code
-            String data = (nombre + '\n' + " Fecha:" + fecha + '\n' + "Razon:" + razon + '\n' + "Lugar:" + lugar); // Data to encode in the QR code
-            String filePath = "/var/tramites/images/" + idTramite  + ".png"; // Output file path
-            int width = 150; // Width of the QR code image
-            int height = 150; // Height of the QR code image
+        String data = (nombre + '\n' + " Fecha:" + fecha + '\n' + "Razon:" + razon + '\n' + "Lugar:" + lugar); // Data to encode in the QR code
+        String filePath = "/var/tramites/images/" + idTramite  + ".png"; // Output file path
+        int width = 150; // Width of the QR code image
+        int height = 150; // Height of the QR code image
 
-            try {
-                generateQRCode(data, filePath, width, height);
-            } catch (WriterException | IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            generateQRCode(data, filePath, width, height);
+        } catch (WriterException | IOException e) {
+            e.printStackTrace();
         }
+    }
 
     public void generarCodigoQROtros(String nombre, String fecha, String razon, String lugar, int idTramite, int numeroFirma) {
         String data = (nombre + '\n' + " Fecha:" + fecha + '\n' + "Razon:" + razon + '\n' + "Lugar:" + lugar); // Data to encode in the QR code
