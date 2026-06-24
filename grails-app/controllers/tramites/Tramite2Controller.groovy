@@ -2150,7 +2150,7 @@ class Tramite2Controller {
 
     def downloadFileFirmado() {
         def tramite = Tramite.get(params.id)
-        def path = "/var/tramites/" + tramite?.id + "_firmado${tramite?.firmados != 1 ? tramite?.firmados : ''}.pdf"
+        def path = "/var/tramites/" + tramite?.id + "_firmado${tramite?.firmados != 1 ? ('_' + tramite?.firmados) : ''}.pdf"
 
         def file = new File(path)
 
