@@ -1,5 +1,8 @@
 package seguridad
 
+import groovy.json.JsonBuilder
+import groovy.json.JsonSlurper
+
 class InicioController {
 
     def dbConnectionService
@@ -487,5 +490,69 @@ class InicioController {
     def grafico() {
 
     }
+
+
+    def consulta_ai() {
+        // 1. Configurar la URL de destino
+        def url = new URL("http://localhost:1234/v1/chat/completions")
+        def conexion = (HttpURLConnection) url.openConnection()
+
+// 2. Configurar el método HTTP y las cabeceras (Headers)
+        conexion.requestMethod = "POST"
+        conexion.setRequestProperty("Content-Type", "application/json")
+        conexion.doOutput = true
+
+// 3. Construir el cuerpo JSON dinámicamente con JsonBuilder
+        def cuerpoJson = new JsonBuilder([
+                model: "gemma-1.1-2b-it",
+                messages: [
+//                        [role: "user",
+                        [role: "user",
+                         content: "¿Cuál es la capital de Ecuador?"]
+//                         content: "hacer un pedido de permiso para vaciones adelantadas, dirigirla al Director de Recuros Humanos. Firma Gonzalo Sánchez"]
+                ],
+                temperature: 0.7
+        ]).toString()
+
+        // 4. Enviar los datos del JSON
+        conexion.outputStream.withWriter("UTF-8") { writer ->
+            writer.write(cuerpoJson)
+        }
+
+        // 5. Leer y procesar la respuesta del servidor
+        def codigoRespuesta = conexion.responseCode
+        def respuesta = ""
+        if (codigoRespuesta == 200) {
+            def respuestaTexto = conexion.inputStream.text
+
+            // Parsear el JSON recibido para extraer el texto de la respuesta fácilmente
+            def jsonSlurper = new JsonSlurper()
+            def jsonRespuesta = jsonSlurper.parseText(respuestaTexto)
+
+            println "--- Respuesta del Modelo ---"
+            println jsonRespuesta.choices[0].message.content
+            respuesta = jsonRespuesta.choices[0].message.content
+        } else {
+            println "Error en la petición (Código HTTP: ${codigoRespuesta})"
+            println conexion.errorStream?.text
+        }
+
+        def respuestaTx = """
+**Pedimiento de permiso para vacaciones adelantadas** 
+**Fecha:** [Día] de [Mes] de [Año] **Atención:** 
+Director de Recuros Humanos **Asunto:** Pedido de permiso para vacaciones adelantadas Estimado/Estimada director, 
+Me dirijo a ustedes con el presente solicitud para un permiso de vacaciones adelantadas. 
+Como empleado del departamento [del departamento], necesito dedicar una cantidad importante de tiempo al 
+desempeño de mis responsabilidades y tareas laborales. He estado trabajando durante [tiempo] en la empresa, y 
+he realizado un buen trabajo. He cumplido todos los requisitos y expectativas de este puesto. 
+Sin embargo, necesito tomar vacaciones adelantadas para atender a mi familia y descansar. 
+He intentado solicitar permiso por vacaciones adelantadas antes, pero no he sido aceptada. 
+Por lo tanto, solicito su permiso para una vacación adelantada del [inicio] al [fin], de un 
+total de [tiempo]. Agradezco su atención y consideración a esta solicitud. 
+Atentamente, [Nombre completo] [Cargo]
+"""
+        render "ok --> respuesta: $respuesta"
+    }
+
 
 }
