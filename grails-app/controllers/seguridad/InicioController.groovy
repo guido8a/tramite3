@@ -1,6 +1,7 @@
 package seguridad
 
 import groovy.json.JsonBuilder
+import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 
 class InicioController {
@@ -686,6 +687,91 @@ Atentamente, [Nombre completo] [Cargo]
     }
 
     def editorTramites(){
+
+    }
+
+
+    def resumen() {
+        // 1. Extraer el texto del PDF (ejemplo con comando pdftotext)
+        def pdfPath = "/var/tramites/cuento.txt"
+//        def command = "pdftotext $pdfPath -"
+//        def process = command.execute()
+//        def textoPDF = process.text
+        def textoPDF = new File(pdfPath).text
+
+        // Verificar si se extrajo texto
+        if (textoPDF.isEmpty()) {
+            println "ERROR: No se pudo extraer texto del PDF"
+//            System.exit(1)
+            return "Error de pdf"
+        }
+
+        // 2. Construir el payload JSON
+        def payload = [
+//                model: "deepseek-r1-distill-llama-8b",  // Cambia por tu modelo
+                model: "gemma-1.1-2b-it",
+                messages: [
+                        [
+                                role: "user",
+                                content: """
+                Aquí está el contenido de un documento:
+                
+                ${textoPDF}
+                
+                Por favor, dame un resumen de este documento.
+            """.stripIndent()
+                        ]
+                ],
+                temperature: 0.7,
+                max_tokens: 600
+        ]
+
+        // max_tokens limita el texto de la respuesta
+
+        // 3. Convertir a JSON
+        def jsonPayload = JsonOutput.toJson(payload)
+
+        // 4. Configurar la conexión HTTP
+        def url = new URL("http://localhost:1234/v1/chat/completions")
+        def connection = (HttpURLConnection) url.openConnection()
+        connection.setRequestMethod("POST")
+        connection.setRequestProperty("Content-Type", "application/json")
+        connection.setDoOutput(true)
+
+        // 5. Enviar la solicitud
+        def outputStream = connection.getOutputStream()
+        outputStream.write(jsonPayload.getBytes("UTF-8"))
+        outputStream.flush()
+        outputStream.close()
+
+
+        // 6. Leer la respuesta
+        def responseCode = connection.getResponseCode()
+        def inputStream = (responseCode == 200) ? connection.getInputStream() : connection.getErrorStream()
+        def reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"))
+        def response = new StringBuilder()
+        String line
+        while ((line = reader.readLine()) != null) {
+            response.append(line)
+        }
+        reader.close()
+
+        // 7. Procesar y mostrar la respuesta
+        def respuesta = ""
+        if (responseCode == 200) {
+            def jsonResponse = new JsonSlurper().parseText(response.toString())
+            def message = jsonResponse.choices[0].message.content
+            respuesta = message.toString()
+//            println message
+//            println "------------------------"
+            println "Respuesta: ${respuesta}"
+        } else {
+            println "ERROR: Código $responseCode"
+            println response.toString()
+        }
+
+//        render "ok --> respuesta resumen: ${response.toString()}"
+        render "<h1>Respuesta</h1><br> ${respuesta}"
 
     }
 
