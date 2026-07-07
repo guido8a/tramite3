@@ -593,7 +593,6 @@
             }
         }; //ver
 
-        /* completar todo **/
         var firmar = {
             label  : "Firma electrónica" + '<strong id="divLabelFirma" style="color: #00aa00"></strong>',
             icon   : "fa fa-lock",

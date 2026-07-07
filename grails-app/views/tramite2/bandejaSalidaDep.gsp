@@ -336,6 +336,9 @@
 
         var esRespuestaNueva = $tr.attr("ern");
 
+        var firmado = $tr.hasClass("firmado");
+        var yaFirmado = $tr.hasClass("conFirmas");
+
         var copia = {
             separator_before : true,
             label            : "Crear Copia",
@@ -564,6 +567,100 @@
                 });
             }
         }; //ver
+
+        var firmar = {
+            label  : "Firma electrónica" + '<strong id="divLabelFirma" style="color: #00aa00"></strong>',
+            icon   : "fa fa-lock",
+            onload: comprobarArchivoFirmado(id),
+            action : function () {
+                $.ajax({
+                    type    : 'POST',
+                    url     : '${createLink(controller: 'tramite3', action: 'verificarEstado')}',
+                    async: true,
+                    data    : {
+                        id : id
+                    },
+                    success : function (msg) {
+                        if (msg === "ok") {
+                            var timestamp = new Date().getTime();
+                            $.ajax({
+                                type: 'POST',
+                                url: '${createLink(controller: 'tramiteExport', action: 'crearYGuardarPdf')}',
+                                data: {
+                                    id: id,
+                                    type: "download",
+                                    enviar: 1,
+                                    timestamp: timestamp
+                                },
+                                success: function (msg) {
+                                    if (msg === "ok") {
+                                        $.ajax({
+                                            type:'POST',
+                                            url: '${createLink(controller: 'tramite2', action: 'verificarPdfExiste_ajax')}',
+                                            data:{
+                                                id: id
+                                            },
+                                            success: function (msg2){
+                                                if(msg2 === 'ok'){
+                                                    bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-exclamation-triangle text-danger' style='font-size: 20px'></i>" + "     El documento ya fue firmado con anterioridad"  + "</strong>")
+                                                }else{
+                                                    location.href="${createLink(controller: 'tramite2', action: 'visorPdf')}?id=" + id + "&persona=" + '${persona?.id}';
+                                                }
+                                            }
+                                        });
+                                    } else {
+                                        bootbox.alert("<strong style='font-size: 16px'> <i class='fa fa-exclamation-triangle text-danger' style='font-size: 20px'></i>" + "Error al crear el documento"  + "</strong>")
+                                    }
+                                }
+                            });
+                        }
+                        else{
+                            bootbox.alert("El documento esta anulado, por favor refresque su bandeja de salida.")
+                        }
+                    }
+                });
+            }
+        }; //firmar
+
+        var otraFirma = {
+            label  : "Otra Firma",
+            icon   : "fa fa-lock",
+            action : function () {
+                var cl = cargarLoader("Cargando...");
+                location.href="${createLink(controller: 'tramite2', action: 'firmarPdf')}?id=" + id + "&persona=" + '${persona?.id}';
+            }
+        };
+
+        var verificar = {
+            label  : "Verificar firma",
+            icon   : "fa fa-check",
+            action : function () {
+                var cl = cargarLoader("Comprobando...");
+                $.ajax({
+                    type    : 'POST',
+                    url     : '${createLink(controller: 'firmapdf', action: 'verificarFirmas_ajax')}',
+                    data    : {
+                        id : id
+                    },
+                    success : function (msg) {
+                        cl.modal("hide");
+                        var b = bootbox.dialog({
+                            id      : "dlgFirmas",
+                            title   : "Firmas en el documento",
+                            message : msg,
+                            buttons : {
+                                cancelar : {
+                                    label     : '<i class="fa fa-times"></i> Cerrar',
+                                    className : 'btn-primary',
+                                    callback  : function () {
+                                    }
+                                }
+                            }
+                        })
+                    }
+                });
+            }
+        }; //detalles
 
         var detalles = {
             label  : "Detalles",
@@ -878,6 +975,11 @@
         items.header.label = "Acciones";
         if (!esSumilla) {
             items.ver = ver;
+            items.firmar = firmar;
+            if(yaFirmado){
+                items.verificar = verificar;
+                items.otraFirma = otraFirma
+            }
         }
         <g:if test="${session.usuario.getPuedeVer()}">
         items.detalles = detalles;
@@ -1039,6 +1141,53 @@
             return false;
         });
     });
+
+
+    function cargarPdf(id) {
+        $.ajax({
+            type    : "POST",
+            url     : "${createLink(controller: 'tramite2', action:'verPdf_ajax')}",
+            data    : {
+                id:id
+            },
+            success : function (msg) {
+                var di = bootbox.dialog({
+                    id      : "dlgVerPdfTramite",
+                    title   : "PDF del trámite",
+                    message : msg,
+                    buttons : {
+                        cancelar : {
+                            label     : "<i class='fa fa-times'></i> Cerrar",
+                            className : "btn-primary",
+                            callback  : function () {
+
+                            }
+                        }
+                    } //buttons
+                }); //dialog
+            } //success
+        }); //ajax
+    } //createEdit
+
+    function comprobarArchivoFirmado(id) {
+        $.ajax({
+            type: 'POST',
+            url: '${createLink(controller: 'tramite2', action: 'verificarPdfExiste_ajax')}',
+            data: {
+                id: id
+            },
+            success: function (msg) {
+                if (msg === "ok") {
+                    $("#divLabelFirma").html(" FIRMADO");
+                    $("#" + id).addClass("firmado")
+                } else {
+                    $("#divLabelFirma").html("");
+                    $("#" + id).removeClass("firmado")
+                }
+            }
+        });
+    }
+
 </script>
 
 </body>
