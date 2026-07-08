@@ -90,6 +90,10 @@
         font-size : 8pt;
     }
 
+    .firmado{
+        border: solid 2px #9eb6d9;
+    }
+
     </style>
 </head>
 
@@ -172,9 +176,7 @@
 %{--//bandeja--}%
 <div id="" style=";height: 600px;overflow: auto;position: relative">
     <div class="modalTabelGray" id="bloqueo-salida"></div>
-
     <div id="bandeja">
-
         <table class="table table-bordered  table-condensed table-hover">
             <thead>
             <tr style="width: 100%">
@@ -199,7 +201,6 @@
                 </tbody>
             </table>
         </div>
-
     </div>
 </div>
 
@@ -490,10 +491,10 @@
                                                 ids : ids
                                             },
                                             success : function (msg) {
-                                                cl3.modal("hide")
+                                                cl3.modal("hide");
                                                 var parts = msg.split("_");
-                                                log(parts[1], parts[0] == "OK" ? "success" : "error"); // log(msg, type, title, hide)
-                                                if (parts[0] == "OK") {
+                                                log(parts[1], parts[0] === "OK" ? "success" : "error"); // log(msg, type, title, hide)
+                                                if (parts[0] === "OK") {
                                                     setTimeout(function () {
                                                         $("#bloqueo-warning").hide();
                                                         location.href = "${createLink(controller: "tramite2", action: "bandejaSalidaDep")}";
@@ -531,13 +532,13 @@
                     success : function (msg) {
                         var parts = msg.split('_');
                         openLoader();
-                        resetValues()
+                        resetValues();
                         closeLoader();
-                        if (parts[0] == 'NO') {
+                        if (parts[0] === 'NO') {
                             log(parts[1], "error");
-                        } else if (parts[0] == "OK") {
+                        } else if (parts[0] === "OK") {
                             log(parts[1], "success")
-                        } else if (parts[0] == "ERROR") {
+                        } else if (parts[0] === "ERROR") {
                             bootbox.alert(parts[1]);
                         }
                     }
@@ -548,7 +549,7 @@
 
         var ver = {
             label  : "Ver - Imprimir",
-            icon   : "fa fa-search",
+            icon   : "fa fa-print",
             action : function () {
                 $.ajax({
                     type    : 'POST',
@@ -557,12 +558,12 @@
                         id : id
                     },
                     success : function (msg) {
-                        if (msg == "ok"){
-                            var timestamp = new Date().getTime();
-                            location.href = "${createLink(controller:'tramiteExport', action:'crearPdf')}?id=" + id + "&type=download" + "&enviar=1" + "&timestamp=" + timestamp;
+                        if (msg === "ok") {
+                            cargarPdf(id);
                         }
                         else{
-                            bootbox.alert("El documento esta anulado, por favor refresque su bandeja de salida.")}
+                            bootbox.alert("El documento esta anulado, por favor refresque su bandeja de salida.")
+                        }
                     }
                 });
             }

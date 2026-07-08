@@ -67,7 +67,7 @@
             <g:set var="clase" value="${clase + ' conPadre'}"/>
         </g:if>
         <tr style="width: 100%;" id="${row.trmt__id}" data-id="${row.trmt__id}"
-            class="trTramite ${clase}"
+            class="trTramite ${clase}  ${firmados.contains(row.trmt__id) ? 'firmado' : ''}  ${tramites.Tramite.get(row.trmt__id)?.firmados >= 1 ? 'conFirmas' : ''}"
             estado="${row.edtrcdgo}" %{--estado tramite codigo--}%
             de="${row.depr__id}" %{--id de la persona q crea el tram.--}%
             codigo="${row.trmtcdgo}" %{--codigo del tramite--}%
@@ -103,7 +103,7 @@
             <td style="width: 28%;" class="titleEspecial" >%{--el title con los destinatarios y si recibieron o no--}%
                 <table style="width: 100%">
                     <tr style="width: 100%" id="${row.trmt__id}" data-id="${row.trmt__id}"
-                        class="trTramite ${clase}"
+                        class="trTramite ${clase}  ${tramites.Tramite.get(row.trmt__id)?.firmados >= 1 ? 'conFirmas' : ''}"
                         estado="${row.edtrcdgo}" %{--estado tramite codigo--}%
                         de="${row.depr__id}" %{--id de la persona q crea el tram.--}%
                         codigo="${row.trmtcdgo}" %{--codigo del tramite--}%

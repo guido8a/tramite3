@@ -86,6 +86,7 @@ class Tramite2Controller {
         def persona = Persona.get(session.usuario.id)
         def busca = false
         def where = ""
+        def firmados = []
 
         if (!params.sort || params.sort == "") {
             params.sort = "trmtfcrc"
@@ -124,7 +125,17 @@ class Tramite2Controller {
 //        println "sql: $sql"
         def cn = dbConnectionService.getConnection()
         def rows = cn.rows(sql.toString())
-        return [rows: rows, busca: busca]
+
+        rows.each {
+            def path = "/var/tramites/" + it.trmt__id + "_firmado.pdf"
+            def file = new File(path)
+
+            if(file.exists()){
+                firmados += it.trmt__id
+            }
+        }
+
+        return [rows: rows, busca: busca, firmados: firmados]
     }
 
 
@@ -737,8 +748,6 @@ class Tramite2Controller {
 
         def sql = "SELECT * FROM $procedure($persona.id) ${where} ORDER BY ${params.sort} ${params.order}"
 
-        println("-- " + sql)
-
         def cn = dbConnectionService.getConnection()
         def rows = cn.rows(sql.toString())
 
@@ -749,7 +758,6 @@ class Tramite2Controller {
             if(file.exists()){
                 firmados += it.trmt__id
             }
-
         }
 
         return [rows: rows, busca: busca, esEditor: session.usuario.puedeEditor, firmados: firmados]
